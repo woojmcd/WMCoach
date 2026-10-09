@@ -38,7 +38,7 @@ test('fixtures are valid backups with seeded data; the sample is at the current 
     assert.ok(f.stores.meta.find((m) => m.key === 'settings'), name);
   }
   assert.equal(fixture.schema_version, DB_VERSION, 'run npm run fixture after adding a migration');
-  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence', 'sessions', 'stairs', 'exercise_prefs']) assert.ok(fixture.stores[store].length > 0, store);
+  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence', 'sessions', 'stairs', 'exercise_prefs', 'plans', 'foods']) assert.ok(fixture.stores[store].length > 0, store);
 });
 
 test('fresh DB: all migrations run, every fixture imports and every record survives', async () => {
@@ -77,7 +77,7 @@ test('a stage-1 phone (v1 database) upgrades in place and keeps everything', asy
   const db = await openDB({ idb });
   assert.equal(db.version, DB_VERSION);
   await assertAllRecordsSurvive(db, v1);
-  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence', 'sessions', 'stairs', 'exercise_prefs']) assert.ok(storeNames(db).includes(store), store);
+  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence', 'sessions', 'stairs', 'exercise_prefs', 'plans', 'foods']) assert.ok(storeNames(db).includes(store), store);
   db.close();
 });
 

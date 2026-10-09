@@ -5,6 +5,8 @@
 // walter-coach-backup-*.json over the fixture instead of running this.
 import 'fake-indexeddb/auto';
 import { readFile, writeFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
+import { startingPlan, withMacros, diffPlans } from '../coach/meals.js';
 import { openDB, writeAtomic } from '../app/db.js';
 import { seedFirstLaunch } from '../app/seed.js';
 import { buildBackup } from '../app/backup.js';
@@ -55,6 +57,16 @@ await writeAtomic(db, {
       ],
     }],
     stairs: [{ id: 'stairs-fixture-1', ...at, local_date: '2026-10-10', minutes: 30 }],
+    plans: [(() => {
+      const plansJson = JSON.parse(readFileSync(new URL('data/plans.json', root), 'utf8'));
+      const plan = startingPlan(plansJson, { weightLb: 168.4, weekStart: '2026-10-04', id: 'BULK-2026-10-04' });
+      const tpl = withMacros(plansJson.food_db, plansJson.plans.find((p) => p.id === 'CUT26-V4'));
+      return {
+        id: '2026-10-04', week_start: '2026-10-04', week_end: '2026-10-10', mode: 'bulk', plan, source: 'seed', based_on: 'CUT26-V4',
+        changes: diffPlans(tpl, plan), reason: 'Starting plan (spec §8.0)', created_utc: utc, updated_utc: utc,
+      };
+    })()],
+    foods: [{ id: 'lean_beef', gi_flag: true, updated_utc: utc }],
     exercise_prefs: [{ id: 'thu-pec-deck-flyes', increment_lb: 7.5, alternates: ['Machine Flyes'], swap: null, updated_utc: utc }],
     adherence: [
       { id: 'plan-fixture-1', ...at, local_date: '2026-10-08', status: 'yes', kcal: null },

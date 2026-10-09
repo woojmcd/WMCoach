@@ -8,7 +8,7 @@ import assert from 'node:assert/strict';
 import { startServer } from '../../scripts/serve.mjs';
 import { DB_VERSION } from '../../app/db.js';
 
-const STAGE = process.env.E2E_STAGE || 'stage-3';
+const STAGE = process.env.E2E_STAGE || 'stage-4';
 const OUT = new URL(`../../docs/screenshots/${STAGE}/`, import.meta.url).pathname;
 const PORT = Number(process.env.E2E_PORT || 4173);
 await mkdir(OUT, { recursive: true });
@@ -449,6 +449,81 @@ try {
   }
   await tab(page, 'History');
 
+  // ---- Stage 4: Meals ---------------------------------------------------------------
+  const S4 = { stage: 'stage-4' };
+  step('Meals: §8.0 starting plan with "What changed" vs CUT26-V4');
+  await tab(page, 'Meals');
+  await page.locator('.title', { hasText: 'Lead-in week' }).waitFor();
+  const changed = page.locator('.card.changed');
+  await changed.waitFor();
+  const changedText = await changed.innerText();
+  for (const needle of ['Carb cycling off: one plan every day.', 'Pre-workout rice cakes 4 → 5', 'Post-workout rice 200 → 270 g', 'M4 sweet potato 200 → 300 g', '2,192 → 2,353 kcal (+161)', 'vs CUT26-V4']) {
+    assert.ok(changedText.includes(needle), `What changed should include "${needle}"\n${changedText}`);
+  }
+  assert.match(await page.locator('.hero').first().innerText(), /2,353/);
+  assert.match(await page.locator('.macros').innerText(), /189 g protein.*282 g carbs.*52 g fat/s);
+  for (const food of ['3 eggs', '3 slices Ezekiel bread', '5 rice cakes', '19 g nut butter', '1 scoop whey isolate', '5 oz chicken (cooked)', '270 g jasmine rice (cooked)', '6 oz 93/7 beef or turkey (cooked)', '300 g sweet potato', '70 g blueberries']) {
+    await page.locator('.food', { hasText: food }).first().waitFor();
+  }
+  await page.getByText(/You’re in maintenance now; this week’s food is the bulk plan/).waitFor(); // Body test switched mode
+  await page.waitForTimeout(2500);
+  await shot(page, 'd01-meals-plan', { ...S4, full: true });
+
+  step('Meals: prep list (cooked) and grocery list (raw/store units)');
+  const prepItem = (label) => page.locator('.item', { hasText: label }).first().innerText();
+  assert.match(await prepItem('Chicken (cooked)'), /35 oz · 992 g/);
+  assert.match(await prepItem('Jasmine rice (cooked)'), /1,890 g/);
+  assert.match(await prepItem('Eggs'), /21/);
+  const groceryRow = page.locator('.grocery', { hasText: 'Chicken breast, raw' });
+  assert.match(await groceryRow.innerText(), /2\.9 lb/);
+  assert.match(await page.locator('.grocery', { hasText: 'Jasmine rice, dry' }).innerText(), /630 g/);
+  await groceryRow.click();
+  await page.locator('.grocery.got', { hasText: 'Chicken breast, raw' }).waitFor();
+  await page.locator('.grocery', { hasText: 'Eggs' }).click();
+  await page.locator('.grocery', { hasText: 'Eggs' }).scrollIntoViewIfNeeded();
+  await page.waitForTimeout(200);
+  await shot(page, 'd02-grocery', S4);
+
+  step('Meals: GI flag and travel mode');
+  await page.locator('.food', { hasText: '93/7 beef or turkey' }).first().click();
+  await page.getByText('Coach-approved swaps').waitFor();
+  await shot(page, 'd03-food-swaps', S4);
+  await page.getByRole('button', { name: 'Flag for GI issues' }).click();
+  await toastText(page, 'Flagged');
+  await page.locator('.food.flagged', { hasText: '93/7 beef or turkey' }).waitFor();
+  assert.deepEqual((await readStore('foods')).map((f) => [f.id, f.gi_flag]), [['lean_beef', true]]);
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.getByRole('button', { name: 'Travel', exact: true }).click();
+  await page.getByText('Travel targets').waitFor();
+  assert.match(await page.locator('.travel-grid').innerText(), /189\s*g[\s\S]*2,353\s*kcal/);
+  await page.waitForFunction(() => !document.querySelector('.toast.show'));
+  await page.waitForTimeout(400);
+  await shot(page, 'd04-travel', S4);
+  await page.getByRole('button', { name: 'Meal plan', exact: true }).click();
+  await page.locator('.card.changed').waitFor();
+  const afterMeals = await context.storageState({ indexedDB: true });
+
+  step('Meals: on prep day the plan carries into the new week on the phone (no signal needed)');
+  {
+    const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: afterMeals });
+    const p = await c.newPage();
+    watch(p);
+    await p.clock.install({ time: new Date('2026-10-11T08:00:00Z') }); // Sun 11 Oct, 01:00 in LA
+    await p.goto(`${url}#/meals`);
+    await p.getByText('Continue in Safari (testing only)').click();
+    await p.locator('.title', { hasText: 'Week 1' }).waitFor();
+    await p.getByText('Same plan as last week: prep as usual.').waitFor();
+    assert.equal(await p.locator('.card.changed').count(), 0, 'no What changed card when nothing changed');
+    const plans = await p.evaluate(() => new Promise((resolve) => {
+      indexedDB.open('wmcoach').onsuccess = (e) => { e.target.result.transaction('plans').objectStore('plans').getAll().onsuccess = (r) => resolve(r.target.result.map((x) => [x.week_start, x.source, x.plan.weekly_avg.kcal])); };
+    }));
+    assert.deepEqual(plans, [['2026-10-04', 'seed', 2353], ['2026-10-11', 'carry', 2353]]);
+    await p.waitForTimeout(300);
+    await shot(p, 'd05-week1-carried', S4);
+    await c.close();
+  }
+  await tab(page, 'History');
+
   step('Settings: manual timezone → toast + history; back to auto');
   await page.getByLabel('Settings').click();
   await page.getByText('Timezone', { exact: true }).waitFor();
@@ -604,7 +679,7 @@ try {
   }));
   assert.equal(info.version, DB_VERSION);
   assert.equal(info.weighins, v1.stores.weighins.length);
-  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence', 'sessions', 'stairs', 'exercise_prefs']) assert.ok(info.stores.includes(store), store);
+  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence', 'sessions', 'stairs', 'exercise_prefs', 'plans', 'foods']) assert.ok(info.stores.includes(store), store);
   await old.close();
 
   const real = errors.filter((e) => !/favicon/.test(e));

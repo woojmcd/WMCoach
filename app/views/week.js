@@ -7,6 +7,7 @@ import { checkinState } from '../../coach/phase.js';
 import { header, note, sessionList } from './common.js';
 import { loadTraining, planFor, progressCount } from '../training.js';
 import { planItem } from './log.js';
+import { ensurePlans, planNotice } from '../meal-plans.js';
 import { weekDates, isoWeekday, WEEKDAYS, formatDayMonth, formatLong, tzCity } from '../../coach/time.js';
 import { dayForWeekday } from '../../coach/program.js';
 
@@ -14,7 +15,8 @@ const OPEN_DAY = 'Stairs by default, or runs, rides, swims and social sessions, 
 
 export async function render(screen, ctx) {
   const today = ctx.today();
-  const [checkins, training] = await Promise.all([getAll(ctx.db, 'checkins'), loadTraining(ctx)]);
+  const [checkins, training, plans] = await Promise.all([getAll(ctx.db, 'checkins'), loadTraining(ctx), ensurePlans(ctx).catch(() => null)]);
+  const notice = plans ? planNotice(plans) : null;
   const ci = checkinState(today, ctx.settings.checkin_day, live(checkins));
   const dates = weekDates(today);
   const dayOf = (date) => (ctx.program ? dayForWeekday(ctx.program, isoWeekday(date)) : null);
@@ -90,6 +92,12 @@ export async function render(screen, ctx) {
     banners.push(h('div', { class: 'banner' }, h('span', { class: 'grow' }, h('div', { class: 'strong' }, 'Deload week'), h('div', { class: 'muted xsmall' }, `Half the sets, same loads, RIR 3+. ${training.deload.reason || ''}`.trim()))));
   } else if (training.deload.announceNext) {
     banners.push(h('div', { class: 'banner' }, h('span', { class: 'grow' }, h('div', { class: 'strong' }, 'Deload next week'), h('div', { class: 'muted xsmall' }, `From ${formatDayMonth(training.deload.nextDeloadWeekStart)}: half the sets, same loads, easy reps.`))));
+  }
+  if (notice) {
+    banners.push(h('div', { class: 'banner' },
+      h('span', { class: 'accent' }, icon('meals', { size: 20 })),
+      h('span', { class: 'grow' }, h('div', { class: 'strong' }, `New plan ${WEEKDAYS[isoWeekday(notice.week_start) - 1]}`), h('div', { class: 'muted xsmall' }, notice.delta ? `${notice.delta > 0 ? '+' : ''}${notice.delta} kcal a day: see the changes` : 'See the changes')),
+      h('button', { type: 'button', class: 'btn small primary', onClick: () => ctx.navigate('#/meals') }, 'View')));
   }
   if (ci.open && !ci.done) {
     banners.push(h('div', { class: 'banner' },

@@ -1,7 +1,7 @@
 {
  "app": "wmcoach",
- "schema_version": 4,
- "app_version": "0.4.0",
+ "schema_version": 3,
+ "app_version": "0.3.0",
  "exported_at": "2026-10-09T07:30:00.000Z",
  "exported_tz": "Europe/Berlin",
  "exported_local_date": "2026-10-09",
@@ -57,13 +57,6 @@
      "Machine Flyes"
     ],
     "swap": null,
-    "updated_utc": "2026-10-09T07:30:00.000Z"
-   }
-  ],
-  "foods": [
-   {
-    "id": "lean_beef",
-    "gi_flag": true,
     "updated_utc": "2026-10-09T07:30:00.000Z"
    }
   ],
@@ -277,7 +270,7 @@
      "completed_utc": "2026-10-09T07:30:00.000Z",
      "completed_local_date": "2026-10-09",
      "tz": "Europe/Berlin",
-     "app_version": "0.4.0",
+     "app_version": "0.3.0",
      "history_weighins": 279
     },
     "updated_utc": "2026-10-09T07:30:00.000Z"
@@ -388,210 +381,6 @@
     "start": "2026-02-01",
     "end": "2026-05-14",
     "source": "history",
-    "updated_utc": "2026-10-09T07:30:00.000Z"
-   }
-  ],
-  "plans": [
-   {
-    "id": "2026-10-04",
-    "week_start": "2026-10-04",
-    "week_end": "2026-10-10",
-    "mode": "bulk",
-    "plan": {
-     "structure": "single",
-     "days": {
-      "MP": {
-       "M1": [
-        {
-         "food": "egg",
-         "name": "Whole egg, large",
-         "qty": 3,
-         "unit": "each"
-        },
-        {
-         "food": "ezekiel",
-         "name": "Ezekiel 4:9 bread",
-         "qty": 3,
-         "unit": "slice"
-        }
-       ],
-       "Pre-workout": [
-        {
-         "food": "rice_cake",
-         "name": "Flavored rice cake",
-         "qty": 5,
-         "unit": "each"
-        },
-        {
-         "food": "nut_butter",
-         "name": "Natural peanut/almond butter",
-         "qty": 19,
-         "unit": "g"
-        },
-        {
-         "food": "whey_iso",
-         "name": "Whey protein isolate",
-         "qty": 1,
-         "unit": "scoop"
-        }
-       ],
-       "Post-workout": [
-        {
-         "food": "chicken",
-         "name": "Chicken breast, cooked",
-         "qty": 5,
-         "unit": "oz"
-        },
-        {
-         "food": "rice",
-         "name": "Jasmine/white rice, cooked",
-         "qty": 270,
-         "unit": "g"
-        },
-        {
-         "food": "green_veg",
-         "name": "Green beans/broccoli/asparagus",
-         "qty": 65,
-         "unit": "g"
-        }
-       ],
-       "M4": [
-        {
-         "food": "lean_beef",
-         "name": "93/7 ground beef/turkey, cooked",
-         "qty": 6,
-         "unit": "oz"
-        },
-        {
-         "food": "sweet_potato",
-         "name": "Sweet potato",
-         "qty": 300,
-         "unit": "g"
-        },
-        {
-         "food": "green_veg",
-         "name": "Green beans/broccoli/asparagus",
-         "qty": 65,
-         "unit": "g"
-        }
-       ],
-       "Snack": [
-        {
-         "food": "greek_yogurt",
-         "name": "0% Greek yogurt, single-serve cup",
-         "qty": 1,
-         "unit": "cup"
-        },
-        {
-         "food": "granola",
-         "name": "Granola (15 g carbs worth)",
-         "qty": 1,
-         "unit": "each"
-        },
-        {
-         "food": "blueberries",
-         "name": "Blueberries",
-         "qty": 70,
-         "unit": "g"
-        }
-       ]
-      }
-     },
-     "macros": {
-      "MP": {
-       "P": 189.2,
-       "C": 281.8,
-       "F": 52.2,
-       "kcal": 2353,
-       "per_meal": {
-        "M1": {
-         "P": 33.9,
-         "C": 46.2,
-         "F": 15.9,
-         "kcal": 464
-        },
-        "Pre-workout": {
-         "P": 33.2,
-         "C": 60.2,
-         "F": 11.5,
-         "kcal": 477
-        },
-        "Post-workout": {
-         "P": 52.9,
-         "C": 80,
-         "F": 6.1,
-         "kcal": 587
-        },
-        "M4": {
-         "P": 51.5,
-         "C": 64.2,
-         "F": 15,
-         "kcal": 597
-        },
-        "Snack": {
-         "P": 17.8,
-         "C": 31.1,
-         "F": 3.7,
-         "kcal": 229
-        }
-       }
-      }
-     },
-     "weekly_avg": {
-      "P": 189.2,
-      "C": 281.8,
-      "F": 52.2,
-      "kcal": 2353
-     },
-     "id": "BULK-2026-10-04",
-     "phase": "Bulk",
-     "start": "2026-10-04",
-     "based_on": "CUT26-V4",
-     "carb_steps": 0,
-     "coach_note": "Week 1 of the bulk: CUT26-V4's high-carb day (MP2) every day. Carb cycling off."
-    },
-    "source": "seed",
-    "based_on": "CUT26-V4",
-    "changes": {
-     "structure": "Carb cycling off: one plan every day.",
-     "items": [
-      {
-       "where": "on your former low days",
-       "meal": "Pre-workout",
-       "food": "rice_cake",
-       "name": "Flavored rice cake",
-       "unit": "each",
-       "from": 4,
-       "to": 5
-      },
-      {
-       "where": "on your former low days",
-       "meal": "Post-workout",
-       "food": "rice",
-       "name": "Jasmine/white rice, cooked",
-       "unit": "g",
-       "from": 200,
-       "to": 270
-      },
-      {
-       "where": "on your former low days",
-       "meal": "M4",
-       "food": "sweet_potato",
-       "name": "Sweet potato",
-       "unit": "g",
-       "from": 200,
-       "to": 300
-      }
-     ],
-     "kcal": {
-      "from": 2192,
-      "to": 2353,
-      "delta": 161
-     },
-     "changed": true
-    },
-    "reason": "Starting plan (spec §8.0)",
-    "created_utc": "2026-10-09T07:30:00.000Z",
     "updated_utc": "2026-10-09T07:30:00.000Z"
    }
   ],

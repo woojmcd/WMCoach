@@ -64,5 +64,13 @@ The new service worker installs in the background and waits. Walter sees "Update
 - Program weeks: week 1 is the first Mon–Sun week of training; a first session on Fri–Sun is a lead-in week 0. Deloads fall every 6th week, or early after rep drops on 3 main lifts.
 - Training loads are always in lb (gym equipment); the units setting only changes body weight and lengths.
 
+## Meals (stage 4)
+- Macro math is pure code in `coach/meals.js`: kcal = round(4P + 4C + 9F) per day, Python half-even rounding (`roundHalfEven`), and the weekly average comes from the rounded day values. This reproduces every plan in `data/plans.json` exactly (a test checks it). Carb steps follow spec §8.0 (odd steps: post-workout rice +70 g and +1 rice cake; even steps: M4 sweet potato +100 g and +1 rice cake). The routine must reuse these functions.
+- The §8.0 starting plan is CUT26-V4 MP2 every day; `startingPlan()` picks the carb step nearest the target from `data/plans.json`.
+- One `plans` record per prep week (`week_start` = prep day, locked 7 days). `ensurePlans()` (`app/meal-plans.js`) seeds the first one and, if no plan covers today, carries the latest forward on the phone. A published plan from the weekly run (stage 6) supersedes the carried one.
+- Every plan stores `changes` from `diffPlans(previous, next)`; the Meals tab shows them as "What changed", and the Week tab shows a banner from the day before the new week starts.
+- GI flags live in the `foods` store (`gi_flag: true`). The plan generator (stage 6) must avoid flagged foods and offer the `SWAPS`.
+- Grocery amounts are raw or store units (meat ≈ cooked ÷ 0.75, dry rice ≈ cooked ÷ 3). Ticks are a per-phone convenience in `localStorage` (`wm.grocery.<week_start>`), not synced.
+
 ## Timezone
 Walter travels. "Today" always means his current local date in the zone from `settings.tz_current`. It follows the iPhone by default (Settings → Timezone); `coach/time.js` has the helpers. Every stored entry carries `utc`, `local_date` and `tz`. Daily records are keyed by `local_date` and never auto-merged when a date repeats after a date-line crossing.

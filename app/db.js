@@ -45,6 +45,14 @@ export const MIGRATIONS = [
       db.createObjectStore('exercise_prefs', { keyPath: 'id' });
     },
   },
+  {
+    version: 4,
+    description: 'Meals: one plan per prep week (local copy; the weekly run publishes later ones), food flags (GI issues)',
+    up(db) {
+      db.createObjectStore('plans', { keyPath: 'id' }).createIndex('week_start', 'week_start');
+      db.createObjectStore('foods', { keyPath: 'id' });
+    },
+  },
 ];
 
 export const DB_VERSION = MIGRATIONS[MIGRATIONS.length - 1].version;
