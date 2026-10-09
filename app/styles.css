@@ -596,3 +596,22 @@ textarea.input { min-height: 88px; padding: 12px 14px; resize: vertical; line-he
 .weekstrip .dot.logged { background: var(--accent); }
 .day-row.logged .meta { color: var(--text); }
 body.resting .screen { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 112px); }
+
+/* ---- Meals tab ---------------------------------------------------------------------- */
+
+.card.changed { border-color: rgba(212, 180, 119, 0.35); }
+.card.changed .list > .item { padding-left: 0; padding-right: 0; min-height: 40px; font-size: 15px; }
+.macros { display: flex; gap: 16px; flex-wrap: wrap; color: var(--text-2); font-size: 15px; }
+.macros b { color: var(--text); font-weight: 600; }
+.meal { padding: 14px 16px; border-top: 1px solid var(--hairline); }
+.meal:first-child { border-top: 0; }
+.meal-name { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+.foods { margin-top: 6px; }
+.food { display: flex; width: 100%; align-items: center; gap: 8px; min-height: 40px; padding: 0; background: none; border: 0; text-align: left; font-size: 16px; color: var(--text); cursor: pointer; }
+.food.flagged .grow { color: var(--text-2); }
+.flag { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: var(--warn); border: 1px solid rgba(217, 164, 65, 0.5); border-radius: 6px; padding: 1px 6px; }
+.grocery .box { width: 24px; height: 24px; flex: 0 0 auto; border-radius: 7px; border: 1.5px solid rgba(255, 255, 255, 0.2); color: transparent; display: inline-flex; align-items: center; justify-content: center; }
+.grocery.got .box { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.grocery.got .grow, .grocery.got .value { color: var(--text-3); text-decoration: line-through; }
+.grocery .value, .prep .value { white-space: nowrap; padding-left: 12px; }
+.travel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }

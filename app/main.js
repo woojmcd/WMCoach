@@ -9,6 +9,7 @@ import { deviceTimeZone, localDate, tzCity } from '../coach/time.js';
 import { IN_TO_CM } from '../coach/body.js';
 import { applyPendingMode, MODE_LABEL } from '../coach/phase.js';
 import { finishStaleSessions } from './training.js';
+import { ensurePlans } from './meal-plans.js';
 import { renderInstall } from './views/install.js';
 import { renderOnboarding } from './views/onboarding.js';
 import * as week from './views/week.js';
@@ -149,6 +150,8 @@ async function housekeeping() {
   if (!ctx.settings) return false;
   // A session left open on an earlier day counts as finished.
   await finishStaleSessions(ctx.db, ctx.today());
+  // Prep day: carry the meal plan into the new week if the weekly run hasn't (spec §2b).
+  try { await ensurePlans(ctx); } catch { /* plans.json not cached yet: Meals retries */ }
   if (!ctx.settings.pending_mode) return false;
   const r = applyPendingMode(ctx.settings, await getAll(ctx.db, 'phases'), ctx.today(), new Date());
   if (!r) return false;
