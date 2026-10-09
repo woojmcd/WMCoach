@@ -19,6 +19,9 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 - Build in the stages Walter asks for; open a PR per stage and stop for him to test on his iPhone.
 - Ask only when the spec doesn't answer something; otherwise use the defaults in spec §13.
 
+## Decisions Walter has made (don't re-ask)
+- **The repo stays public** (2026-10-09), so GitHub Pages works on a free account. Synced data under `data/` (`log/`, `health/`, `strava/`, …) is publicly readable; Walter accepted that. Still never commit tokens or secrets.
+
 ## Repo layout (spec §12a)
 | Path | What |
 |---|---|
