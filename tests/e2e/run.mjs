@@ -6,8 +6,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { startServer } from '../../scripts/serve.mjs';
+import { DB_VERSION } from '../../app/db.js';
 
-const STAGE = process.env.E2E_STAGE || 'stage-2';
+const STAGE = process.env.E2E_STAGE || 'stage-3';
 const OUT = new URL(`../../docs/screenshots/${STAGE}/`, import.meta.url).pathname;
 const PORT = Number(process.env.E2E_PORT || 4173);
 await mkdir(OUT, { recursive: true });
@@ -293,6 +294,161 @@ try {
   await noHorizontalScroll(page, 'body');
   await tab(page, 'History');
 
+  // ---- Stage 3: Log a session ---------------------------------------------------------
+  const S3 = { stage: 'stage-3' };
+  const card = (name) => page.locator('.ex-card', { has: page.locator('.ex-name', { hasText: name }) });
+  async function logVia(name, { load, reps, rir } = {}) {
+    const ed = page.locator('.set-editor');
+    await ed.waitFor();
+    if (load !== undefined) await page.getByLabel(`${name} weight`, { exact: true }).fill(String(load));
+    if (reps !== undefined) await page.getByLabel(`${name} reps`, { exact: true }).fill(String(reps));
+    if (rir !== undefined) await page.getByRole('group', { name: `${name} reps in reserve` }).getByRole('button', { name: String(rir), exact: true }).click();
+    await ed.getByRole('button', { name: /Log set|Done|Save/ }).click();
+    await page.waitForTimeout(250);
+  }
+  const doneCount = async () => (await readStore('sessions')).flatMap((x) => x.exercises.flatMap((e) => e.sets)).filter((x) => x.done).length;
+
+  step('Log: today\'s session prefilled; first time is a calibration');
+  await tab(page, 'Log');
+  await page.locator('.title', { hasText: 'Upper Pull #2' }).waitFor();
+  await page.getByText('Calibration', { exact: true }).waitFor();
+  await page.getByText('Easing back in', { exact: true }).waitFor(); // answered Yes to "lifted less since May"
+  await page.locator('.set-editor').waitFor();
+  await page.waitForTimeout(3000); // let toasts fade
+  await shot(page, 'c01-log-start', S3);
+
+  step('Log: enter the calibration weight; it carries to the next sets; rest timer starts');
+  await logVia('Reverse Pec Deck Flyes', { load: 100, reps: 12, rir: 1 });
+  await page.locator('.rest.show').waitFor();
+  const restText = await page.locator('.rest-time').innerText();
+  assert.match(restText, /^1:[23]\d$/, `90 s rest (${restText})`);
+  assert.equal(await page.getByLabel('Reverse Pec Deck Flyes weight', { exact: true }).inputValue(), '100', 'load carried to set 2');
+  await page.getByRole('button', { name: 'Rest 15 seconds less' }).click();
+  await shot(page, 'c02-set-logged-rest', S3);
+  await logVia('Reverse Pec Deck Flyes', { reps: 12 });
+  await logVia('Reverse Pec Deck Flyes', { reps: 12 });
+  assert.equal(await doneCount(), 3);
+  const [sess] = await readStore('sessions');
+  assert.equal(sess.status, 'in_progress');
+  // set 1 logged at RIR 1; sets 2–3 keep the prefilled target RIR (2 while easing back)
+  assert.deepEqual(sess.exercises[0].sets.map((x) => [x.load, x.reps, x.rir]), [[100, 12, 1], [100, 12, 2], [100, 12, 2]]);
+
+  step('Log: one-tap ✓ refuses a calibration set without a weight; the weight then fills the empty sets');
+  await card('Cable Lat Pullovers').locator('.set-row', { hasText: 'Set 2' }).locator('.check').click();
+  await toastText(page, 'Enter the weight you used');
+  await card('Cable Lat Pullovers').locator('.set-editor', { hasText: 'Set 2' }).waitFor();
+  await logVia('Cable Lat Pullovers', { load: 50, reps: 15 });
+  await card('Cable Lat Pullovers').locator('.set-editor', { hasText: 'Set 3' }).waitFor(); // carries on forward
+  assert.equal(await page.getByLabel('Cable Lat Pullovers weight', { exact: true }).inputValue(), '50');
+  await logVia('Cable Lat Pullovers', {}); // set 3: one tap, prefilled 50 × 12
+  const set1 = card('Cable Lat Pullovers').locator('.set-row', { hasText: 'Set 1' });
+  assert.match(await set1.innerText(), /50 lb × 12/, 'the empty set 1 picked up the weight');
+  await set1.locator('.check').click(); // compact row: one-tap ✓ as shown
+  await card('Cable Lat Pullovers').locator('.set-row.done', { hasText: 'Set 1' }).waitFor();
+  assert.equal(await doneCount(), 6);
+
+  step('Log: superset A1 → A2 (timed), swap, skip, note');
+  await page.getByRole('button', { name: 'Stop rest timer' }).click();
+  await card('Cable Ab Crunches').locator('.set-main', { hasText: 'A1 · 1' }).click();
+  await logVia('Cable Ab Crunches', { load: 80, reps: 15 });
+  await card('Cable Ab Crunches').locator('.set-editor', { hasText: 'A2 · 1' }).waitFor(); // straight to the partner
+  assert.equal(await page.locator('.rest.show').count(), 0, 'no rest between A1 and A2 (0 s)');
+  await logVia('Ab Plank');
+  await page.locator('.rest.show').waitFor();
+  // a compact row's ✓ logs it as shown in one tap (timed plank, round 2)
+  await card('Cable Ab Crunches').locator('.set-row', { hasText: 'A2 · 2' }).locator('.check').click();
+  await card('Cable Ab Crunches').locator('.set-row.done', { hasText: 'A2 · 2' }).waitFor();
+  await card('Cable Ab Crunches').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(2500);
+  await shot(page, 'c03-superset', S3);
+  await card('Incline DB Curls').getByRole('button', { name: 'More for Incline DB Curls' }).click();
+  await page.getByRole('button', { name: 'Swap exercise' }).click();
+  await page.getByLabel('Other exercise name').fill('Spider Curls');
+  await shot(page, 'c04-swap', S3);
+  await page.getByRole('button', { name: 'Use this name' }).click();
+  await toastText(page, 'Swapped to Spider Curls');
+  await card('Spider Curls').getByText('Swapped for Incline DB Curls').waitFor();
+  await card('Single Arm Cable Pulldowns').getByRole('button', { name: 'More for Single Arm Cable Pulldowns' }).click();
+  await page.getByRole('button', { name: 'Skip exercise' }).click();
+  await card('Single Arm Cable Pulldowns').getByText('Skipped', { exact: true }).waitFor();
+
+  step('Log: the update banner stays hidden during a session, then appears');
+  state.versionOverride = '9.9.8-e2e';
+  await page.evaluate(() => navigator.serviceWorker.getRegistration().then((r) => r.update()));
+  await page.waitForTimeout(4000);
+  assert.equal(await page.getByText('Update available').count(), 0, 'no update banner mid-session');
+
+  step('Log: Finish → next targets worked out on the phone');
+  await page.getByRole('button', { name: 'Finish session' }).click();
+  await page.getByText('Finish session?').waitFor();
+  await page.getByRole('button', { name: 'Finish', exact: true }).click();
+  await page.getByText('Session saved').waitFor();
+  const nextRow = page.locator('.sheet.show .item', { hasText: 'Reverse Pec Deck Flyes' });
+  assert.match(await nextRow.innerText(), /100 lb × 10–12/, 'week 0–1 back: hold the load');
+  await page.waitForTimeout(300);
+  await shot(page, 'c05-finished-next-targets', S3);
+  await page.locator('.sheet.show').getByRole('button', { name: 'Done' }).click();
+  const [fin] = await readStore('sessions');
+  assert.equal(fin.status, 'finished');
+  assert.equal(fin.exercises.find((e) => e.slot_id === 'fri-incline-db-curls').name, 'Spider Curls');
+  assert.equal(fin.exercises.find((e) => e.slot_id === 'fri-single-arm-cable-pulldowns').skipped, true);
+  await page.getByText('Update available').waitFor({ timeout: 15000 });
+  await Promise.all([page.waitForEvent('load'), page.getByRole('button', { name: 'Reload', exact: true }).click()]);
+  await page.locator('.tabbar').waitFor();
+
+  step('Week + History show the session');
+  await tab(page, 'Week');
+  await page.locator('.day-row.today', { hasText: 'Done' }).waitFor();
+  await shot(page, 'c06-week-done', S3);
+  await page.locator('.day-row', { hasText: 'Push #1' }).click();
+  await page.getByText('No session logged.').waitFor();
+  await page.locator('.sheet.show').getByRole('button', { name: 'Close' }).click();
+  await page.waitForTimeout(250);
+  await tab(page, 'History');
+  await page.locator('.item', { hasText: 'Upper Pull #2' }).first().waitFor();
+  await shot(page, 'c07-history', S3);
+  const trained = await context.storageState({ indexedDB: true });
+
+  // Next Friday (week 1, still easing back) and three weeks on (week 3), plus a Saturday.
+  for (const [when, expect] of [['2026-10-16T16:00:00Z', 'hold'], ['2026-10-30T16:00:00Z', 'up']]) {
+    step(`Log on ${when.slice(0, 10)}: targets from last Friday (${expect})`);
+    const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: trained });
+    const p = await c.newPage();
+    watch(p);
+    await p.clock.install({ time: new Date(when) });
+    await p.goto(`${url}#/log`);
+    await p.getByText('Continue in Safari (testing only)').click();
+    const rp = p.locator('.ex-card', { has: p.locator('.ex-name', { hasText: 'Reverse Pec Deck Flyes' }) });
+    await rp.waitFor();
+    const txt = await rp.innerText();
+    if (expect === 'hold') {
+      assert.match(txt, /Target 100 lb × 10–12 RIR 2/, `week 1: same load, RIR +1\n${txt}`);
+    } else {
+      assert.match(txt, /▲ \+10 lb/, txt);
+      assert.match(txt, /Target 110 lb × 10–12 RIR 1/, txt);
+      assert.match(txt, /Last: 100 × 12, 12, 12/, txt);
+      await p.waitForTimeout(300);
+      await shot(p, 'c08-next-targets', S3);
+    }
+    await c.close();
+  }
+  {
+    step('Saturday: open day with the one-tap Stairs ✓');
+    const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: trained });
+    const p = await c.newPage();
+    watch(p);
+    await p.clock.install({ time: new Date('2026-10-10T18:00:00Z') });
+    await p.goto(`${url}#/log`);
+    await p.getByText('Continue in Safari (testing only)').click();
+    await p.locator('.title', { hasText: 'Open day' }).waitFor();
+    await p.getByRole('button', { name: 'Stairs ✓' }).click();
+    await p.locator('.toast.show', { hasText: 'Stairs 30 min logged' }).waitFor();
+    await p.waitForTimeout(300);
+    await shot(p, 'c09-open-day-stairs', S3);
+    await c.close();
+  }
+  await tab(page, 'History');
+
   step('Settings: manual timezone → toast + history; back to auto');
   await page.getByLabel('Settings').click();
   await page.getByText('Timezone', { exact: true }).waitFor();
@@ -322,10 +478,10 @@ try {
   const backupPath = join(tmp, download.suggestedFilename());
   await download.saveAs(backupPath);
   const backup = JSON.parse(await readFile(backupPath, 'utf8'));
-  assert.equal(backup.schema_version, 2);
+  assert.equal(backup.schema_version, DB_VERSION);
   const nWeighins = await countStore(page, 'weighins');
   assert.equal(backup.stores.weighins.length, nWeighins);
-  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence']) assert.ok(backup.stores[store].length > 0, store);
+  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence', 'sessions']) assert.ok(backup.stores[store].length > 0, store);
   assert.equal(backup.stores.snapshots, undefined);
 
   step('Import (merge) restores a deleted weigh-in');
@@ -383,7 +539,7 @@ try {
   await page.locator('.tabbar').waitFor();
   await page.goto(`${url}#/settings`);
   await page.locator('.item', { hasText: 'Version' }).getByText('9.9.9-e2e').waitFor();
-  assert.equal(await countStore(page, 'snapshots'), 2, 'one import snapshot + one update snapshot');
+  assert.equal(await countStore(page, 'snapshots'), 3, 'one import snapshot + two update snapshots');
   assert.equal(await countStore(page, 'weighins'), nWeighins + 3, 'data survived the update');
   state.versionOverride = null;
 
@@ -446,9 +602,9 @@ try {
       db.transaction('weighins').objectStore('weighins').count().onsuccess = (r) => resolve({ version: db.version, stores: [...db.objectStoreNames], weighins: r.target.result });
     };
   }));
-  assert.equal(info.version, 2);
+  assert.equal(info.version, DB_VERSION);
   assert.equal(info.weighins, v1.stores.weighins.length);
-  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence']) assert.ok(info.stores.includes(store), store);
+  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence', 'sessions', 'stairs', 'exercise_prefs']) assert.ok(info.stores.includes(store), store);
   await old.close();
 
   const real = errors.filter((e) => !/favicon/.test(e));

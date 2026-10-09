@@ -2,7 +2,7 @@
 // Export / Import (§11), local snapshots and app version.
 import { h, icon, toast, openSheet, segmented, chips, stepper, itemRow, formatBytes, fmtInt } from '../ui.js';
 import { header, sectionLabel, backButton } from './common.js';
-import { getMeta } from '../db.js';
+import { getMeta, getAll, put } from '../db.js';
 import { listSnapshots } from '../backup.js';
 import { exportFlow, importFlow, backupFile, shareFile } from '../import-flow.js';
 import { setManualZone, setAutoZone, offsetLabel } from '../tz.js';
@@ -100,6 +100,10 @@ export async function render(screen, ctx) {
       h('div', { class: 'field' }, h('span', { class: 'label' }, 'Between sets'), rest),
       h('div', { class: 'field' }, h('span', { class: 'label' }, 'Between superset partners'), ssRest)),
 
+    sectionLabel('Training'),
+    h('div', { class: 'card flush list' },
+      itemRow({ label: 'Exercises', value: 'increments, alternates', chevron: true, onClick: () => exercisesSheet(ctx) })),
+
     sectionLabel('Backup'),
     h('div', { class: 'stack-sm' },
       h('button', { type: 'button', class: 'btn primary block', onClick: () => exportFlow(ctx) }, icon('share', { size: 20 }), 'Export backup'),
@@ -163,6 +167,55 @@ function heightSheet(ctx, patch) {
           if (f === null) return true;
           patch({ height_in: f * 12 + (inch.getValue() || 0) }, 'Height saved');
           return false;
+        },
+      },
+      { label: 'Cancel', kind: 'outline' },
+    ],
+  });
+}
+
+// Per exercise: the load increment (spec §6.1: next DB / pin / plate) and the
+// alternates offered by "Swap exercise".
+async function exercisesSheet(ctx) {
+  if (!ctx.program) return;
+  const prefs = Object.fromEntries((await getAll(ctx.db, 'exercise_prefs')).map((p) => [p.id, p]));
+  const body = h('div', {}, ctx.program.days.filter((d) => d.exercises.length).map((d) => h('div', {},
+    h('p', { class: 'label', style: 'margin:16px 0 4px' }, `${d.day} · ${d.name}`),
+    h('div', { class: 'list' }, d.exercises.filter((e) => e.load_kind !== 'none').map((e) => {
+      const p = prefs[e.id] || {};
+      const inc = p.increment_lb || e.increment_lb;
+      return h('button', { type: 'button', class: 'item', onClick: () => { sheet.close(); exerciseSheet(ctx, e, p); } },
+        h('span', { class: 'grow' }, p.swap ? `${p.swap.name} (for ${e.name})` : e.name),
+        h('span', { class: 'value xsmall' }, `${e.load_kind === 'assistance' ? '−' : '+'}${inc} lb`), icon('chevron', { size: 16 }));
+    })))));
+  const sheet = openSheet({ title: 'Exercises', subtitle: 'Tap one to change its weight step or alternates.', body, actions: [{ label: 'Close', kind: 'outline' }] });
+}
+
+function exerciseSheet(ctx, ex, pref) {
+  let inc = pref.increment_lb || ex.increment_lb;
+  let alternates = [...new Set([...(ex.alternates || []), ...(pref.alternates || [])])];
+  const step = stepper({ value: inc, step: 2.5, min: 1, max: 50, decimals: 1, unit: 'lb', compact: true, label: 'Weight step', onChange: (v) => { inc = v; } });
+  const list = h('div', { class: 'list' });
+  const draw = () => {
+    list.replaceChildren(...alternates.map((n) => h('div', { class: 'item' }, h('span', { class: 'grow' }, n),
+      (ex.alternates || []).includes(n) ? h('span', { class: 'faint xsmall' }, 'coach') : h('button', { type: 'button', class: 'icon-btn small', 'aria-label': `Remove ${n}`, onClick: () => { alternates = alternates.filter((x) => x !== n); draw(); } }, icon('close', { size: 16 })))));
+    if (!alternates.length) list.append(h('p', { class: 'muted small' }, 'No alternates yet.'));
+  };
+  draw();
+  const add = h('input', { class: 'input', placeholder: 'Add an alternate…', 'aria-label': 'Add an alternate exercise' });
+  add.addEventListener('change', () => { const n = add.value.trim(); if (n && !alternates.includes(n)) { alternates.push(n); draw(); } add.value = ''; });
+  openSheet({
+    title: ex.name,
+    subtitle: ex.load_kind === 'assistance' ? 'Step = one pin of assistance.' : 'Step = the next dumbbell, pin or plate.',
+    body: h('div', { class: 'stack' }, h('span', { class: 'label' }, 'Weight step'), step, h('span', { class: 'label' }, 'Alternates (for Swap)'), list, add),
+    actions: [
+      {
+        label: 'Save', kind: 'primary',
+        onClick: async () => {
+          const v = step.getValue();
+          const own = alternates.filter((n) => !(ex.alternates || []).includes(n));
+          await put(ctx.db, 'exercise_prefs', { ...pref, id: ex.id, increment_lb: v && v !== ex.increment_lb ? v : null, alternates: own, updated_utc: new Date().toISOString() });
+          toast(`${ex.name} saved`);
         },
       },
       { label: 'Cancel', kind: 'outline' },

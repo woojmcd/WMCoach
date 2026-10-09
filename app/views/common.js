@@ -1,5 +1,6 @@
 import { h, icon } from '../ui.js';
 import { daysBetween, formatDayMonth, formatMonthYear } from '../../coach/time.js';
+import { describeEntry } from '../../coach/progression.js';
 
 export function header({ label, title, right = null }) {
   return h('header', { class: 'header' },
@@ -13,32 +14,6 @@ export function sectionLabel(text) {
 
 export function note(text) {
   return h('p', { class: 'empty-note' }, text);
-}
-
-export function rirText(rir) {
-  if (!rir) return null;
-  return rir[0] === rir[1] ? `RIR ${rir[0]}` : `RIR ${rir[0]}–${rir[1]}`;
-}
-
-export function restText(ex) {
-  if (ex.type === 'timed' && ex.rest_s === 0) return 'then partner';
-  if (ex.rest_s === 0) return 'straight to partner';
-  return `rest ${ex.rest_s} s`;
-}
-
-// Read-only preview of a day's exercises (the logging view replaces this in stage 3).
-export function exerciseList(day) {
-  const card = h('div', { class: 'card flush' });
-  for (const ex of day.exercises) {
-    const meta = [ex.prescription, rirText(ex.rir), restText(ex)].filter(Boolean).join(' · ');
-    const partner = ex.label && !ex.label.endsWith('1');
-    card.append(h('div', { class: `ex${partner ? ' paired' : ''}` },
-      h('div', { class: 'ex-name' }, ex.label ? h('span', { class: 'ex-tag' }, ex.label) : null, ex.name),
-      h('div', { class: 'ex-rx' }, meta),
-      ex.same_load_as ? h('div', { class: 'ex-cue' }, 'Same weight as the first exercise; reps only') : null,
-      ex.cue ? h('div', { class: 'ex-cue' }, ex.cue) : null));
-  }
-  return card;
 }
 
 export function phaseRange(p, today) {
@@ -55,4 +30,17 @@ export function monthSpan(a, b) {
 
 export function backButton(onClick) {
   return h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Back', onClick }, icon('back'));
+}
+
+// Read-only list of what was logged in a session.
+export function sessionList(session, program) {
+  const idx = {};
+  for (const d of program.days) for (const e of d.exercises) idx[e.id] = e;
+  return h('div', { class: 'list' }, session.exercises.map((e) => {
+    const pex = idx[e.slot_id] || { load_kind: 'external' };
+    const text = e.skipped ? 'skipped' : describeEntry({ sets: e.sets }, pex) || 'not logged';
+    return h('div', { class: 'item', style: 'align-items:flex-start' },
+      h('span', { class: 'grow' }, e.label ? `${e.label} ${e.name}` : e.name),
+      h('span', { class: 'value xsmall', style: 'max-width:55%' }, text));
+  }));
 }

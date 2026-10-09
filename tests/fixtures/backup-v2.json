@@ -1,7 +1,7 @@
 {
  "app": "wmcoach",
- "schema_version": 3,
- "app_version": "0.3.0",
+ "schema_version": 2,
+ "app_version": "0.2.0",
  "exported_at": "2026-10-09T07:30:00.000Z",
  "exported_tz": "Europe/Berlin",
  "exported_local_date": "2026-10-09",
@@ -47,17 +47,6 @@
     },
     "note": "fixture",
     "measurement_id": "meas-fixture-1"
-   }
-  ],
-  "exercise_prefs": [
-   {
-    "id": "thu-pec-deck-flyes",
-    "increment_lb": 7.5,
-    "alternates": [
-     "Machine Flyes"
-    ],
-    "swap": null,
-    "updated_utc": "2026-10-09T07:30:00.000Z"
    }
   ],
   "measurements": [
@@ -270,7 +259,7 @@
      "completed_utc": "2026-10-09T07:30:00.000Z",
      "completed_local_date": "2026-10-09",
      "tz": "Europe/Berlin",
-     "app_version": "0.3.0",
+     "app_version": "0.2.0",
      "history_weighins": 279
     },
     "updated_utc": "2026-10-09T07:30:00.000Z"
@@ -382,157 +371,6 @@
     "end": "2026-05-14",
     "source": "history",
     "updated_utc": "2026-10-09T07:30:00.000Z"
-   }
-  ],
-  "sessions": [
-   {
-    "id": "sess-fixture-1",
-    "utc": "2026-10-09T07:30:00.000Z",
-    "tz": "Europe/Berlin",
-    "updated_utc": "2026-10-09T07:30:00.000Z",
-    "local_date": "2026-10-09",
-    "started_utc": "2026-10-09T07:30:00.000Z",
-    "finished_utc": "2026-10-09T07:30:00.000Z",
-    "status": "finished",
-    "day_dow": 5,
-    "day_name": "Upper Pull #2",
-    "program_id": "TRAIN-CUT26",
-    "week": 0,
-    "deload": false,
-    "note": null,
-    "exercises": [
-     {
-      "slot_id": "fri-single-arm-db-rows",
-      "movement": "single-arm-db-rows",
-      "name": "Single Arm DB Rows",
-      "swapped_from": null,
-      "label": null,
-      "group": null,
-      "type": "range",
-      "reason": "Calibration",
-      "change": null,
-      "delta_lb": 0,
-      "calibration": true,
-      "last": null,
-      "skipped": false,
-      "note": null,
-      "sets": [
-       {
-        "kind": "work",
-        "target": {
-         "load": null,
-         "reps_min": 8,
-         "reps_max": 10,
-         "aim": null,
-         "rir": [
-          0,
-          1
-         ],
-         "seconds": null,
-         "amrap": false
-        },
-        "load": 60,
-        "reps": 9,
-        "rir": 1,
-        "seconds": null,
-        "done": true,
-        "skipped": false,
-        "utc": "2026-10-09T07:30:00.000Z"
-       },
-       {
-        "kind": "work",
-        "target": {
-         "load": null,
-         "reps_min": 8,
-         "reps_max": 10,
-         "aim": null,
-         "rir": [
-          0,
-          1
-         ],
-         "seconds": null,
-         "amrap": false
-        },
-        "load": 60,
-        "reps": 8,
-        "rir": 1,
-        "seconds": null,
-        "done": true,
-        "skipped": false,
-        "utc": "2026-10-09T07:30:00.000Z"
-       },
-       {
-        "kind": "work",
-        "target": {
-         "load": null,
-         "reps_min": 8,
-         "reps_max": 10,
-         "aim": null,
-         "rir": [
-          0,
-          1
-         ],
-         "seconds": null,
-         "amrap": false
-        },
-        "load": 60,
-        "reps": 8,
-        "rir": 1,
-        "seconds": null,
-        "done": true,
-        "skipped": false,
-        "utc": "2026-10-09T07:30:00.000Z"
-       }
-      ]
-     },
-     {
-      "slot_id": "fri-ab-plank",
-      "movement": "ab-plank",
-      "name": "Ab Plank",
-      "swapped_from": null,
-      "label": "A2",
-      "group": "Fri-A",
-      "type": "timed",
-      "reason": null,
-      "change": null,
-      "delta_lb": 0,
-      "calibration": false,
-      "last": null,
-      "skipped": false,
-      "note": null,
-      "sets": [
-       {
-        "kind": "timed",
-        "target": {
-         "load": null,
-         "reps_min": null,
-         "reps_max": null,
-         "aim": null,
-         "rir": null,
-         "seconds": 30,
-         "amrap": false
-        },
-        "load": null,
-        "reps": null,
-        "rir": null,
-        "seconds": 30,
-        "done": true,
-        "skipped": false,
-        "utc": "2026-10-09T07:30:00.000Z"
-       }
-      ]
-     }
-    ]
-   }
-  ],
-  "stairs": [
-   {
-    "id": "stairs-fixture-1",
-    "utc": "2026-10-09T07:30:00.000Z",
-    "tz": "Europe/Berlin",
-    "updated_utc": "2026-10-09T07:30:00.000Z",
-    "local_date": "2026-10-10",
-    "minutes": 30
    }
   ],
   "weighins": [
