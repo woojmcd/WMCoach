@@ -526,3 +526,73 @@ textarea.input { min-height: 88px; padding: 12px 14px; resize: vertical; line-he
 .wtable .src { color: var(--text-3); font-size: 12px; }
 
 #checkin { scroll-margin-top: calc(var(--safe-top) + 12px); }
+
+/* ---- rest timer (floats above the tab bar) ------------------------------------------- */
+
+.rest {
+  position: fixed; z-index: 30;
+  left: calc(12px + var(--safe-left)); right: calc(12px + var(--safe-right));
+  bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 10px);
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 6px 6px 16px;
+  border-radius: 18px;
+  background: rgba(27, 27, 30, 0.92);
+  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
+  border: 1px solid var(--hairline);
+  transform: translateY(16px); opacity: 0; pointer-events: none;
+  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.rest.show { transform: none; opacity: 1; pointer-events: auto; }
+.rest.done { border-color: rgba(212, 180, 119, 0.6); }
+.rest-main { flex: 1 1 auto; min-width: 0; display: flex; align-items: baseline; gap: 10px; }
+.rest-time { font-size: 28px; font-weight: 300; min-width: 64px; }
+.rest.done .rest-time { color: var(--accent); }
+.rest-label { font-size: 13px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rest-btn { min-width: 44px; height: 44px; border-radius: 12px; border: 0; background: var(--surface-1); color: var(--text); font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.rest-btn:active { background: var(--accent-dim); }
+
+/* ---- Log tab: exercise cards and fast set logging ---------------------------------- */
+
+.ex-card { padding: 0; overflow: hidden; }
+.ex-head { padding: 14px 8px 10px 16px; border-top: 1px solid var(--hairline); }
+.ex-head:first-child { border-top: 0; }
+.ex-head.skipped { opacity: 0.5; }
+.ex-head .ex-name { font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding-top: 12px; }
+.ex-head .ex-tag { color: var(--accent); margin-right: 8px; }
+.ex-head .ex-cue { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+.ex-target { font-size: 15px; margin-top: 6px; font-variant-numeric: tabular-nums; }
+.ex-last { font-size: 13px; color: var(--text-2); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.badge { flex: 0 0 auto; margin-top: 10px; padding: 3px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; color: var(--text-2); background: var(--surface-2); font-variant-numeric: tabular-nums; }
+.badge.up { color: var(--accent); background: var(--accent-dim); }
+.reason-chip { display: inline-block; margin-top: 8px; padding: 4px 10px; border-radius: 10px; font-size: 12px; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--hairline); }
+.icon-btn.small { width: 44px; height: 44px; }
+.dots { font-size: 12px; letter-spacing: 1px; color: var(--text-2); }
+
+.sets { border-top: 1px solid var(--hairline); }
+.set-row { display: flex; align-items: center; min-height: 52px; padding: 0 8px 0 0; border-top: 1px solid var(--hairline); }
+.set-row:first-child { border-top: 0; }
+.set-main { flex: 1 1 auto; min-width: 0; min-height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 0 0 16px; background: none; border: 0; text-align: left; cursor: pointer; }
+.set-label { flex: 0 0 auto; width: 72px; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-2); }
+.set-value { color: var(--text-2); font-size: 16px; }
+.set-row.done .set-value { color: var(--text); }
+.set-row.skipped .set-value { color: var(--text-3); }
+.check { flex: 0 0 auto; width: 44px; height: 44px; border-radius: 22px; border: 1.5px solid rgba(255,255,255,0.18); background: transparent; color: var(--text-3); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: background var(--dur) var(--ease), color var(--dur) var(--ease), transform var(--dur) var(--ease); }
+.check:active { transform: scale(0.94); }
+.check.done { background: var(--accent); border-color: var(--accent); color: var(--bg); animation: pop 200ms var(--ease); }
+
+.set-editor { display: grid; gap: 12px; padding: 14px 16px 16px; background: var(--surface-2); border-top: 1px solid var(--hairline); }
+.set-editor .set-label { width: auto; }
+.editor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 8px; }
+.editor-grid .stepper .input { font-size: 20px; min-height: 48px; padding: 0 4px; }
+.editor-grid .stepper .step { width: 44px; height: 48px; }
+.editor-grid .stepper .unit { font-size: 13px; min-width: 40px; color: var(--text-2); }
+.set-editor .stepper .input { background: var(--surface-1); }
+.fixed-load { display: flex; flex-direction: column; justify-content: center; min-height: 48px; padding: 0 12px; border-radius: var(--radius-sm); border: 1px dashed var(--hairline); }
+.fixed-load .num { font-size: 18px; }
+.rir-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rir-row .chips { gap: 6px; }
+.rir-row .chip { min-width: 44px; padding: 0; }
+
+.weekstrip .dot.logged { background: var(--accent); }
+.day-row.logged .meta { color: var(--text); }
+body.resting .screen { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 112px); }

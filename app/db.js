@@ -34,6 +34,17 @@ export const MIGRATIONS = [
       }
     },
   },
+  {
+    version: 3,
+    description: 'Training: workout sessions (sets nested), weekend stairs taps, per-exercise preferences (increment, alternates, swap)',
+    up(db) {
+      for (const name of ['sessions', 'stairs']) {
+        const store = db.createObjectStore(name, { keyPath: 'id' });
+        store.createIndex('local_date', 'local_date');
+      }
+      db.createObjectStore('exercise_prefs', { keyPath: 'id' });
+    },
+  },
 ];
 
 export const DB_VERSION = MIGRATIONS[MIGRATIONS.length - 1].version;

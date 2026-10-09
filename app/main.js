@@ -8,6 +8,7 @@ import { h, clear, icon, toast } from './ui.js';
 import { deviceTimeZone, localDate, tzCity } from '../coach/time.js';
 import { IN_TO_CM } from '../coach/body.js';
 import { applyPendingMode, MODE_LABEL } from '../coach/phase.js';
+import { finishStaleSessions } from './training.js';
 import { renderInstall } from './views/install.js';
 import { renderOnboarding } from './views/onboarding.js';
 import * as week from './views/week.js';
@@ -49,8 +50,14 @@ const ctx = {
     this.settings = next;
     await setMeta(this.db, 'settings', next);
   },
-  // Stage 3 sets this while a workout is being logged; the update banner hides meanwhile.
-  sessionInProgress() { return false; },
+  // The session being logged right now (the update banner hides meanwhile, spec §12a).
+  activeSession: null,
+  sessionInProgress() { return Boolean(this.activeSession && this.activeSession.status === 'in_progress'); },
+  setActiveSession(session) {
+    const was = this.sessionInProgress();
+    this.activeSession = session;
+    if (was !== this.sessionInProgress()) renderBanners();
+  },
   navigate(hash) {
     if (location.hash === hash) render();
     else location.hash = hash;
@@ -139,7 +146,10 @@ async function checkZone() {
 // A mode switch takes effect at local midnight of the next prep day (spec §8.3),
 // even if the daily routine never runs.
 async function housekeeping() {
-  if (!ctx.settings || !ctx.settings.pending_mode) return false;
+  if (!ctx.settings) return false;
+  // A session left open on an earlier day counts as finished.
+  await finishStaleSessions(ctx.db, ctx.today());
+  if (!ctx.settings.pending_mode) return false;
   const r = applyPendingMode(ctx.settings, await getAll(ctx.db, 'phases'), ctx.today(), new Date());
   if (!r) return false;
   await writeAtomic(ctx.db, { writes: { phases: r.phases, meta: [{ key: 'settings', value: r.settings, updated_utc: r.settings.updated_utc }] } });

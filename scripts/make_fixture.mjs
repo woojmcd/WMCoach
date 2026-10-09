@@ -38,6 +38,24 @@ await writeAtomic(db, {
       adherence_pct: 95, adherence_auto_pct: 93, adherence_taps: 6,
       biofeedback: { hunger: 4, energy: 4, sleep: 3, stress: 4, digestion: 5 }, note: 'fixture', measurement_id: 'meas-fixture-1',
     }],
+    sessions: [{
+      id: 'sess-fixture-1', ...at, local_date: '2026-10-09', started_utc: utc, finished_utc: utc, status: 'finished',
+      day_dow: 5, day_name: 'Upper Pull #2', program_id: 'TRAIN-CUT26', week: 0, deload: false, note: null,
+      exercises: [
+        {
+          slot_id: 'fri-single-arm-db-rows', movement: 'single-arm-db-rows', name: 'Single Arm DB Rows', swapped_from: null, label: null, group: null, type: 'range',
+          reason: 'Calibration', change: null, delta_lb: 0, calibration: true, last: null, skipped: false, note: null,
+          sets: [9, 8, 8].map((reps) => ({ kind: 'work', target: { load: null, reps_min: 8, reps_max: 10, aim: null, rir: [0, 1], seconds: null, amrap: false }, load: 60, reps, rir: 1, seconds: null, done: true, skipped: false, utc })),
+        },
+        {
+          slot_id: 'fri-ab-plank', movement: 'ab-plank', name: 'Ab Plank', swapped_from: null, label: 'A2', group: 'Fri-A', type: 'timed',
+          reason: null, change: null, delta_lb: 0, calibration: false, last: null, skipped: false, note: null,
+          sets: [{ kind: 'timed', target: { load: null, reps_min: null, reps_max: null, aim: null, rir: null, seconds: 30, amrap: false }, load: null, reps: null, rir: null, seconds: 30, done: true, skipped: false, utc }],
+        },
+      ],
+    }],
+    stairs: [{ id: 'stairs-fixture-1', ...at, local_date: '2026-10-10', minutes: 30 }],
+    exercise_prefs: [{ id: 'thu-pec-deck-flyes', increment_lb: 7.5, alternates: ['Machine Flyes'], swap: null, updated_utc: utc }],
     adherence: [
       { id: 'plan-fixture-1', ...at, local_date: '2026-10-08', status: 'yes', kcal: null },
       { id: 'plan-fixture-2', ...at, local_date: '2026-10-09', status: 'partial', kcal: 2600 },

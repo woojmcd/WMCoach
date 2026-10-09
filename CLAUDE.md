@@ -57,5 +57,12 @@ The new service worker installs in the background and waits. Walter sees "Update
 - Nothing is hard-deleted in the app. `removeRecord()` leaves a tombstone (`deleted: true`, `deleted_utc`) so sync and a newer-wins merge can't resurrect it. Read with `live()`.
 - Mode switches never change the current week: they're saved to `mode_changes` and `settings.pending_mode`, and `applyPendingMode()` (`coach/phase.js`) makes them take effect on-device on the next prep day.
 
+## Training (stage 3)
+- Progression is pure code in `coach/progression.js` (`targetFor`, `planDay`, `deloadStatus`, `programWeek`), covering every spec §6.2 type, stalls, the cut rule, deloads (§6.4) and the "lifted less since May" easing (§2a). The daily routine must reuse it, not re-implement it.
+- One `sessions` record per workout with its sets nested. The Log tab shows a draft built from `planDay()`. The first logged set saves it (`in_progress`, update banner hidden). "Finish session" marks it `finished` and shows next targets. A session left open past its day is auto-finished at the next launch.
+- History for a slot is keyed by slot id + movement, so a swapped exercise starts with a calibration (spec §5). Deload sessions never count toward progression.
+- Program weeks: week 1 is the first Mon–Sun week of training; a first session on Fri–Sun is a lead-in week 0. Deloads fall every 6th week, or early after rep drops on 3 main lifts.
+- Training loads are always in lb (gym equipment); the units setting only changes body weight and lengths.
+
 ## Timezone
 Walter travels. "Today" always means his current local date in the zone from `settings.tz_current`. It follows the iPhone by default (Settings → Timezone); `coach/time.js` has the helpers. Every stored entry carries `utc`, `local_date` and `tz`. Daily records are keyed by `local_date` and never auto-merged when a date repeats after a date-line crossing.
