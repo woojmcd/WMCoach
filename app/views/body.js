@@ -28,7 +28,12 @@ const BIO = [
 ];
 
 // View state that survives re-renders while the app is open.
-const ui = { weightDate: null, forceCheckin: false, showTable: false, range: pref('wm.range', '12w'), overlay: pref('wm.overlay', 'none') };
+const ui = { weightDate: null, forceCheckin: false, focusCheckin: false, showTable: false, range: pref('wm.range', '12w'), overlay: pref('wm.overlay', 'none') };
+
+// Called from the Week tab's check-in banner: open Body scrolled to the card.
+export function focusCheckin() {
+  ui.focusCheckin = true;
+}
 
 function pref(key, fallback) {
   try { return window.localStorage.getItem(key) || fallback; } catch { return fallback; }
@@ -78,6 +83,12 @@ export async function render(screen, ctx) {
       h('span', { class: 'grow' }, `${status.reason} ${next ? `Consider switching to ${MODE_LABEL[next]}.` : 'Pick the next phase below.'}`),
       next ? h('button', { type: 'button', class: 'btn small outline', onClick: () => confirmModeChange(ctx, next, { measurements }) }, 'Switch') : null));
   }
+  if (ci.open && !ci.done && !ui.forceCheckin) {
+    banners.append(h('div', { class: 'banner' },
+      h('span', { class: 'accent' }, icon('body', { size: 20 })),
+      h('span', { class: 'grow' }, h('div', { class: 'strong' }, ci.late ? `Check-in due ${dayText(ci.due, today)}` : 'Check-in day'), h('div', { class: 'muted xsmall' }, 'Tape measurements + weekly check-in')),
+      h('button', { type: 'button', class: 'btn small primary', onClick: () => scrollToCheckin() }, 'Start')));
+  }
   const exportAge = lastExport ? daysBetween(lastExport.local_date, today) : Infinity;
   if (ci.done && ci.open && exportAge >= 6) {
     banners.append(h('div', { class: 'banner' },
@@ -94,19 +105,27 @@ export async function render(screen, ctx) {
 
   const showCheckin = (ci.open && !ci.done) || ui.forceCheckin;
   if (showCheckin) {
-    screen.append(sectionLabel(ci.late ? `Check-in · due ${dayText(ci.due, today)}` : 'Weekly check-in'),
+    screen.append(h('div', { id: 'checkin' }, sectionLabel(ci.late ? `Measurements & check-in · due ${dayText(ci.due, today)}` : 'Measurements & check-in')),
       checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }));
   } else if (ci.done && ci.open) {
-    screen.append(sectionLabel('Weekly check-in'), checkinSummary(ctx, ci.done, measurements));
+    screen.append(h('div', { id: 'checkin' }, sectionLabel('Measurements & check-in')), checkinSummary(ctx, ci.done, measurements));
+  } else {
+    screen.append(h('div', { class: 'center', style: 'margin-top:8px' },
+      h('button', { type: 'button', class: 'link-btn', onClick: () => { ui.forceCheckin = true; ui.focusCheckin = true; ctx.refresh(); } },
+        ci.done ? 'Edit this week’s measurements & check-in' : `Log measurements & check-in (due ${WEEKDAYS[s.checkin_day - 1]})`)));
   }
 
   screen.append(sectionLabel('Trend'), trendCard(ctx, { series, phases, measurements, rate, bands, today, lastTrend }));
   screen.append(sectionLabel('On plan today?'), onPlanCard(ctx, { taps, today, tz }));
-  if (!showCheckin && !(ci.done && ci.open)) {
-    screen.append(h('div', { class: 'center', style: 'margin-top:16px' },
-      h('button', { type: 'button', class: 'link-btn', onClick: () => { ui.forceCheckin = true; ctx.refresh(); } },
-        ci.done ? 'Edit this week’s check-in' : `Check in now (due ${WEEKDAYS[s.checkin_day - 1]})`)));
+  if (ui.focusCheckin) {
+    ui.focusCheckin = false;
+    setTimeout(scrollToCheckin, 60); // after the shell has placed this screen
   }
+}
+
+function scrollToCheckin() {
+  const el = document.getElementById('checkin');
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // ---- 1. mode switch -------------------------------------------------------------------------
@@ -317,8 +336,10 @@ function checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }) {
   return h('div', { class: 'card stack' },
     h('p', { class: 'muted small', style: 'margin:0' }, 'Fasted, after the weigh-in, before training. Tape snug, not compressing. Two readings per site; the app averages them.'),
     h('div', {},
+      h('p', { class: 'label', style: 'margin:0 0 4px; color: var(--text)' }, 'Tape measurements'),
       h('div', { class: 'site-row site-head' }, h('span', {}, `Site (${lenUnit})`), h('span', {}, '1st'), h('span', {}, '2nd'), h('span', {}, 'Avg')),
       rows),
+    h('p', { class: 'label', style: 'margin:8px 0 0; color: var(--text)' }, 'Check-in'),
     h('div', { class: 'field' },
       h('span', { class: 'label' }, 'Adherence this week'),
       adherenceField,
@@ -338,7 +359,7 @@ function checkinSummary(ctx, done, measurements) {
   const avgBio = vals.length ? (vals.reduce((a, c) => a + c, 0) / vals.length).toFixed(1) : '–';
   return h('div', { class: 'card flush list' },
     h('div', { class: 'item' }, h('span', { class: 'accent' }, icon('check', { size: 20 })), h('span', { class: 'grow' }, `Done · ${formatDayMonth(done.local_date)}`),
-      h('button', { type: 'button', class: 'link-btn', style: 'padding:0', onClick: () => { ui.forceCheckin = true; ctx.refresh(); } }, 'Edit')),
+      h('button', { type: 'button', class: 'link-btn', style: 'padding:0', onClick: () => { ui.forceCheckin = true; ui.focusCheckin = true; ctx.refresh(); } }, 'Edit')),
     m && m.avg.waist ? h('div', { class: 'item' }, h('span', { class: 'grow' }, 'Waist'), h('span', { class: 'value' }, `${ctx.fmtLength(m.avg.waist)} ${ctx.lengthUnit()}`)) : null,
     h('div', { class: 'item' }, h('span', { class: 'grow' }, 'Adherence'), h('span', { class: 'value' }, done.adherence_pct === null ? '–' : `${done.adherence_pct} %`)),
     h('div', { class: 'item' }, h('span', { class: 'grow' }, 'Biofeedback'), h('span', { class: 'value' }, `${avgBio} / 5`)));

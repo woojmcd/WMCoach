@@ -524,3 +524,5 @@ textarea.input { min-height: 88px; padding: 12px 14px; resize: vertical; line-he
 .wtable .item { min-height: 48px; }
 .wtable .d { width: 92px; flex: 0 0 auto; color: var(--text-2); font-size: 13px; }
 .wtable .src { color: var(--text-3); font-size: 12px; }
+
+#checkin { scroll-margin-top: calc(var(--safe-top) + 12px); }

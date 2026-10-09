@@ -178,8 +178,27 @@ try {
   await toastText(page, 'Staying on Bulk');
   assert.deepEqual((await readStore('mode_changes')).map((c) => c.kind).sort(), ['cancel', 'switch']);
 
+  step('Body: the check-in is easy to find (Week banner → Body card; link on other days)');
+  await tab(page, 'Week');
+  const weekBanner = page.locator('.banner', { hasText: 'Check-in day' });
+  if (await weekBanner.count()) {
+    await shot(page, 'b00-week-checkin-banner', S2);
+    await weekBanner.getByRole('button', { name: 'Open' }).click();
+    await page.locator('#checkin').waitFor();
+    await page.waitForTimeout(800); // smooth scroll
+    const top = await page.locator('#checkin').evaluate((el) => el.getBoundingClientRect().top);
+    assert.ok(top >= 0 && top < 300, `check-in card scrolled into view (top ${top})`);
+    await shot(page, 'b00-body-checkin-focused', S2);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.locator('.banner', { hasText: 'Check-in day' }).getByRole('button', { name: 'Start' }).waitFor();
+  } else {
+    await tab(page, 'Body');
+    await page.getByRole('button', { name: /Log measurements & check-in/ }).click();
+  }
+  assert.ok(!(await page.locator('main').innerText()).includes('null'), 'no stray "null" text');
+
   step('Body: measurements (two readings, averaged) + check-in');
-  if (!(await page.locator('.site-row input').count())) await page.getByRole('button', { name: /Check in now/ }).click();
+  await page.locator('.site-row input').first().waitFor();
   const tape = { Waist: [32.1, 32.3], Neck: [15.2, 15.2], Chest: [40, 40.2], Arm: [14.1, 14.1], Thigh: [22.5, 22.7] };
   for (const [site, [a, b]] of Object.entries(tape)) {
     await page.getByLabel(`${site} reading 1`).fill(String(a));

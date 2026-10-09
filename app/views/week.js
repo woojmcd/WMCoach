@@ -1,13 +1,18 @@
 // Week tab (spec §4.1): Mon–Sun strip in local time, today highlighted.
-import { h, openSheet } from '../ui.js';
+import { h, icon, openSheet } from '../ui.js';
+import { getAll } from '../db.js';
+import { live } from '../records.js';
+import { focusCheckin } from './body.js';
+import { checkinState } from '../../coach/phase.js';
 import { header, exerciseList, note } from './common.js';
 import { weekDates, isoWeekday, WEEKDAYS, formatDayMonth, formatLong, tzCity } from '../../coach/time.js';
 import { dayForWeekday } from '../../coach/program.js';
 
 const OPEN_DAY = 'Stairs by default, or runs, rides, swims and social sessions, read from Strava.';
 
-export function render(screen, ctx) {
+export async function render(screen, ctx) {
   const today = ctx.today();
+  const ci = checkinState(today, ctx.settings.checkin_day, live(await getAll(ctx.db, 'checkins')));
   const dates = weekDates(today);
   const dayOf = (date) => (ctx.program ? dayForWeekday(ctx.program, isoWeekday(date)) : null);
   const todayDay = dayOf(today);
@@ -49,8 +54,15 @@ export function render(screen, ctx) {
   }));
 
   const s = ctx.settings;
+  const banner = ci.open && !ci.done
+    ? h('div', { class: 'banner', style: 'margin-bottom:16px' },
+      h('span', { class: 'accent' }, icon('body', { size: 20 })),
+      h('span', { class: 'grow' }, h('div', { class: 'strong' }, 'Check-in day'), h('div', { class: 'muted xsmall' }, 'Tape measurements + weekly check-in')),
+      h('button', { type: 'button', class: 'btn small primary', onClick: () => { focusCheckin(); ctx.navigate('#/body'); } }, 'Open'))
+    : null;
   screen.append(
     header({ label: formatLong(today).replace(/ \d{4}$/, ''), title: todayDay ? todayDay.name : 'This week' }),
+    ...(banner ? [banner] : []),
     h('div', { class: 'stack' },
       strip,
       rows,
