@@ -178,10 +178,17 @@ try {
   await toastText(page, 'Staying on Bulk');
   assert.deepEqual((await readStore('mode_changes')).map((c) => c.kind).sort(), ['cancel', 'switch']);
 
-  step('Body: the check-in is easy to find (Week banner → Body card; link on other days)');
-  await tab(page, 'Week');
-  const weekBanner = page.locator('.banner', { hasText: 'Check-in day' });
-  if (await weekBanner.count()) {
+  step('Body: the check-in is easy to find (filled button on check-in day, Week banner)');
+  await tab(page, 'Body');
+  const dueButton = page.locator('.btn.primary', { hasText: 'Log measurements & check-in' });
+  if (await dueButton.count()) {
+    assert.equal(await page.locator('.site-row').count(), 0, 'card stays closed until tapped');
+    await dueButton.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(3000);
+    await shot(page, 'b00-body-checkin-button', S2);
+    await tab(page, 'Week');
+    const weekBanner = page.locator('.banner', { hasText: 'Check-in day' });
+    await weekBanner.waitFor();
     await shot(page, 'b00-week-checkin-banner', S2);
     await weekBanner.getByRole('button', { name: 'Open' }).click();
     await page.locator('#checkin').waitFor();
@@ -189,11 +196,8 @@ try {
     const top = await page.locator('#checkin').evaluate((el) => el.getBoundingClientRect().top);
     assert.ok(top >= 0 && top < 300, `check-in card scrolled into view (top ${top})`);
     await shot(page, 'b00-body-checkin-focused', S2);
-    await page.evaluate(() => window.scrollTo(0, 0));
-    await page.locator('.banner', { hasText: 'Check-in day' }).getByRole('button', { name: 'Start' }).waitFor();
   } else {
-    await tab(page, 'Body');
-    await page.getByRole('button', { name: /Log measurements & check-in/ }).click();
+    await page.locator('.link-btn', { hasText: 'Log measurements & check-in' }).click();
   }
   assert.ok(!(await page.locator('main').innerText()).includes('null'), 'no stray "null" text');
 

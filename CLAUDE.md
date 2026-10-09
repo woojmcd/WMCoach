@@ -21,6 +21,7 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 
 ## Decisions Walter has made (don't re-ask)
 - **The repo stays public** (2026-10-09), so GitHub Pages works on a free account. Synced data under `data/` (`log/`, `health/`, `strava/`, …) is publicly readable; Walter accepted that. Still never commit tokens or secrets.
+- **Check-in prompts** (2026-10-09). On check-in day the Body tab shows a filled "Log measurements & check-in" button under Weight (a gold link on other days), and the Week tab shows a banner. Walter also wants a **push notification on the morning of check-in day**. iOS home-screen web apps can't schedule local notifications, so it is sent by the daily routine via Web Push (spec §8.4). Stage 5: the PWA asks permission (button, after install) and syncs the push subscription. Stage 6: `ops/daily_prompt.md` sends it on the morning run of check-in day. Until then Walter can use a one-line iOS Shortcut reminder.
 
 ## Repo layout (spec §12a)
 | Path | What |

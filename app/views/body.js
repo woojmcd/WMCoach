@@ -30,8 +30,9 @@ const BIO = [
 // View state that survives re-renders while the app is open.
 const ui = { weightDate: null, forceCheckin: false, focusCheckin: false, showTable: false, range: pref('wm.range', '12w'), overlay: pref('wm.overlay', 'none') };
 
-// Called from the Week tab's check-in banner: open Body scrolled to the card.
+// Called from the Week tab's check-in banner: open Body with the card open and in view.
 export function focusCheckin() {
+  ui.forceCheckin = true;
   ui.focusCheckin = true;
 }
 
@@ -83,12 +84,6 @@ export async function render(screen, ctx) {
       h('span', { class: 'grow' }, `${status.reason} ${next ? `Consider switching to ${MODE_LABEL[next]}.` : 'Pick the next phase below.'}`),
       next ? h('button', { type: 'button', class: 'btn small outline', onClick: () => confirmModeChange(ctx, next, { measurements }) }, 'Switch') : null));
   }
-  if (ci.open && !ci.done && !ui.forceCheckin) {
-    banners.append(h('div', { class: 'banner' },
-      h('span', { class: 'accent' }, icon('body', { size: 20 })),
-      h('span', { class: 'grow' }, h('div', { class: 'strong' }, ci.late ? `Check-in due ${dayText(ci.due, today)}` : 'Check-in day'), h('div', { class: 'muted xsmall' }, 'Tape measurements + weekly check-in')),
-      h('button', { type: 'button', class: 'btn small primary', onClick: () => scrollToCheckin() }, 'Start')));
-  }
   const exportAge = lastExport ? daysBetween(lastExport.local_date, today) : Infinity;
   if (ci.done && ci.open && exportAge >= 6) {
     banners.append(h('div', { class: 'banner' },
@@ -103,15 +98,21 @@ export async function render(screen, ctx) {
     sectionLabel('Weight'),
     weightCard(ctx, { weighins, today, tz, lastTrend }));
 
-  const showCheckin = (ci.open && !ci.done) || ui.forceCheckin;
-  if (showCheckin) {
-    screen.append(h('div', { id: 'checkin' }, sectionLabel(ci.late ? `Measurements & check-in · due ${dayText(ci.due, today)}` : 'Measurements & check-in')),
+  // Entry point under Weight: a filled button while the check-in is due (Walter
+  // asked for it to look like the weight Update button), a gold link otherwise.
+  const openCheckin = () => { ui.forceCheckin = true; ui.focusCheckin = true; ctx.refresh(); };
+  if (ui.forceCheckin) {
+    screen.append(h('div', { id: 'checkin' }, sectionLabel(ci.late && !ci.done ? `Measurements & check-in · due ${dayText(ci.due, today)}` : 'Measurements & check-in')),
       checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }));
+  } else if (ci.open && !ci.done) {
+    screen.append(h('div', { class: 'stack-sm', style: 'margin-top:16px' },
+      h('button', { type: 'button', class: 'btn primary block', onClick: openCheckin }, icon('body', { size: 20 }), 'Log measurements & check-in'),
+      h('p', { class: 'muted xsmall center', style: 'margin:0' }, ci.late ? `Was due ${dayText(ci.due, today)} · takes about 5 minutes` : 'Due today · fasted, after the weigh-in')));
   } else if (ci.done && ci.open) {
     screen.append(h('div', { id: 'checkin' }, sectionLabel('Measurements & check-in')), checkinSummary(ctx, ci.done, measurements));
   } else {
     screen.append(h('div', { class: 'center', style: 'margin-top:8px' },
-      h('button', { type: 'button', class: 'link-btn', onClick: () => { ui.forceCheckin = true; ui.focusCheckin = true; ctx.refresh(); } },
+      h('button', { type: 'button', class: 'link-btn', onClick: openCheckin },
         ci.done ? 'Edit this week’s measurements & check-in' : `Log measurements & check-in (due ${WEEKDAYS[s.checkin_day - 1]})`)));
   }
 
@@ -349,7 +350,7 @@ function checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }) {
     h('div', {}, h('span', { class: 'label' }, 'Biofeedback · 1 = poor, 5 = great'), bioRows),
     note,
     save,
-    ui.forceCheckin ? h('button', { type: 'button', class: 'btn ghost block', onClick: () => { ui.forceCheckin = false; ctx.refresh(); } }, 'Cancel') : null);
+    h('button', { type: 'button', class: 'btn ghost block', onClick: () => { ui.forceCheckin = false; ctx.refresh(); } }, 'Cancel'));
 }
 
 function checkinSummary(ctx, done, measurements) {
