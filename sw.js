@@ -6,7 +6,7 @@
 //   when the app posts SKIP_WAITING after Walter taps "Update available, reload".
 
 // Bump together with APP_VERSION in app/version.js on every release (a test checks).
-const CACHE_VERSION = '0.3.0';
+const CACHE_VERSION = '0.3.1';
 const SHELL_CACHE = `wmcoach-shell-${CACHE_VERSION}`;
 const DATA_CACHE = 'wmcoach-data';
 const NETWORK_FIRST = ['data/plan/', 'data/targets/'];

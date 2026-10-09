@@ -536,20 +536,20 @@ textarea.input { min-height: 88px; padding: 12px 14px; resize: vertical; line-he
   display: flex; align-items: center; gap: 6px;
   padding: 6px 6px 6px 16px;
   border-radius: 18px;
-  background: rgba(27, 27, 30, 0.92);
-  -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px);
-  border: 1px solid var(--hairline);
+  /* Solid accent so the timer stands out from everything else (Walter's request). */
+  background: var(--accent);
+  color: var(--bg);
   transform: translateY(16px); opacity: 0; pointer-events: none;
-  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  transition: transform var(--dur) var(--ease), opacity var(--dur) var(--ease);
 }
 .rest.show { transform: none; opacity: 1; pointer-events: auto; }
-.rest.done { border-color: rgba(212, 180, 119, 0.6); }
+.rest.done { animation: pop 200ms var(--ease); }
 .rest-main { flex: 1 1 auto; min-width: 0; display: flex; align-items: baseline; gap: 10px; }
-.rest-time { font-size: 28px; font-weight: 300; min-width: 64px; }
-.rest.done .rest-time { color: var(--accent); }
-.rest-label { font-size: 13px; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.rest-btn { min-width: 44px; height: 44px; border-radius: 12px; border: 0; background: var(--surface-1); color: var(--text); font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
-.rest-btn:active { background: var(--accent-dim); }
+.rest-time { font-size: 28px; font-weight: 400; min-width: 64px; color: var(--bg); }
+.rest.done .rest-time { font-weight: 600; }
+.rest-label { font-size: 13px; font-weight: 500; color: rgba(10, 10, 11, 0.72); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rest-btn { min-width: 44px; height: 44px; border-radius: 12px; border: 0; background: rgba(10, 10, 11, 0.12); color: var(--bg); font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+.rest-btn:active { background: rgba(10, 10, 11, 0.24); }
 
 /* ---- Log tab: exercise cards and fast set logging ---------------------------------- */
 
