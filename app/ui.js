@@ -155,8 +155,8 @@ export function segmented(options, current, onChange, { label = null } = {}) {
   return wrap;
 }
 
-export function chips(options, current, onChange, { label = null } = {}) {
-  const wrap = h('div', { class: 'chips', role: 'group', 'aria-label': label || undefined });
+export function chips(options, current, onChange, { label = null, className = '' } = {}) {
+  const wrap = h('div', { class: `chips ${className}`.trim(), role: 'group', 'aria-label': label || undefined });
   const buttons = options.map((o) => h('button', {
     type: 'button',
     class: 'chip',
@@ -194,9 +194,11 @@ export function stepper({ value = null, step = 1, min = -Infinity, max = Infinit
     set(raw === '' ? null : Number(raw));
   });
   input.addEventListener('focus', () => input.select());
-  const base = () => (current === null ? (Number.isFinite(Number(placeholder)) ? Number(placeholder) : 0) : current);
-  const minus = h('button', { type: 'button', class: 'step', 'aria-label': `Decrease ${label}`, onClick: () => set(base() - step) }, icon('minus'));
-  const plus = h('button', { type: 'button', class: 'step', 'aria-label': `Increase ${label}`, onClick: () => set(base() + step) }, icon('plus'));
+  // From an empty field, the first tap fills in the suggested (placeholder) value.
+  const suggested = placeholder !== '' && Number.isFinite(Number(placeholder)) ? Number(placeholder) : 0;
+  const nudge = (d) => set(current === null ? suggested : current + d);
+  const minus = h('button', { type: 'button', class: 'step', 'aria-label': `Decrease ${label}`, onClick: () => nudge(-step) }, icon('minus'));
+  const plus = h('button', { type: 'button', class: 'step', 'aria-label': `Increase ${label}`, onClick: () => nudge(step) }, icon('plus'));
   const el = h('div', { class: `stepper${compact ? ' compact' : ''}` }, minus, input, unit ? h('span', { class: 'unit' }, unit) : null, plus);
   el.getValue = () => {
     const raw = input.value.replace(',', '.').trim();
