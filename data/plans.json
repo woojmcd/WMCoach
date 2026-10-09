@@ -1,0 +1,331 @@
+{
+ "food_db": {
+  "egg": {"name": "Whole egg, large", "unit": "each", "protein_g": 6.3, "carbs_g": 0.4, "fat_g": 4.8, "basis": "USDA large egg 50 g"},
+  "egg_white": {"name": "Egg white, large", "unit": "each", "protein_g": 3.6, "carbs_g": 0.2, "fat_g": 0.1, "basis": "USDA large egg white 33 g"},
+  "egg_white_oz": {"name": "Liquid egg whites", "unit": "oz", "protein_g": 3.1, "carbs_g": 0.2, "fat_g": 0.0, "basis": "Carton egg whites, 46 g = 5 g P"},
+  "ezekiel": {"name": "Ezekiel 4:9 bread", "unit": "slice", "protein_g": 5.0, "carbs_g": 15.0, "fat_g": 0.5, "basis": "Food for Life label, 34 g slice"},
+  "cappuccino": {"name": "Cappuccino (12 oz, 2% milk)", "unit": "each", "protein_g": 7.0, "carbs_g": 10.0, "fat_g": 4.0, "basis": "ASSUMPTION: 12 oz w/ 2% milk"},
+  "cream_rice": {"name": "Cream of Rice, dry", "unit": "g", "protein_g": 0.044, "carbs_g": 0.844, "fat_g": 0.0, "basis": "Label: 45 g dry = 2P/38C/0F"},
+  "nut_butter": {"name": "Natural peanut/almond butter", "unit": "g", "protein_g": 0.22, "carbs_g": 0.22, "fat_g": 0.5, "basis": "Label: 32 g = 7P/7C/16F"},
+  "whey_iso": {"name": "Whey protein isolate", "unit": "scoop", "protein_g": 25.0, "carbs_g": 1.0, "fat_g": 0.5, "basis": "Typical isolate, ~30 g scoop"},
+  "chicken": {"name": "Chicken breast, cooked", "unit": "oz", "protein_g": 8.79, "carbs_g": 0.0, "fat_g": 1.02, "basis": "USDA roasted skinless 31P/3.6F per 100 g (COOKED weight - calibrated to coach travel target 185P/2400 kcal)"},
+  "lean_beef": {"name": "93/7 ground beef/turkey, cooked", "unit": "oz", "protein_g": 7.51, "carbs_g": 0.0, "fat_g": 2.41, "basis": "USDA 93/7 cooked ~26.5P/8.5F per 100 g (COOKED weight); stands in for steak / 96-4 beef / salmon options"},
+  "rice": {"name": "Jasmine/white rice, cooked", "unit": "g", "protein_g": 0.027, "carbs_g": 0.282, "fat_g": 0.003, "basis": "USDA cooked long-grain white rice (weighed COOKED)"},
+  "sweet_potato": {"name": "Sweet potato", "unit": "g", "protein_g": 0.016, "carbs_g": 0.201, "fat_g": 0.001, "basis": "USDA raw sweet potato"},
+  "green_veg": {"name": "Green beans/broccoli/asparagus", "unit": "g", "protein_g": 0.025, "carbs_g": 0.06, "fat_g": 0.003, "basis": "USDA avg of the three"},
+  "blueberries": {"name": "Blueberries", "unit": "g", "protein_g": 0.007, "carbs_g": 0.145, "fat_g": 0.003, "basis": "USDA raw"},
+  "greek_yogurt": {"name": "0% Greek yogurt, single-serve cup", "unit": "cup", "protein_g": 15.0, "carbs_g": 6.0, "fat_g": 0.0, "basis": "Chobani/Oikos 0% 150 g single-serve"},
+  "pb_cup": {"name": "Dark choc PB cup", "unit": "each", "protein_g": 2.0, "carbs_g": 11.0, "fat_g": 6.0, "basis": "Justin's-style single cup ~20 g"},
+  "fruit": {"name": "Apple or banana, medium", "unit": "each", "protein_g": 0.8, "carbs_g": 26.0, "fat_g": 0.3, "basis": "USDA medium apple/banana avg"},
+  "cheerios": {"name": "Cheerios", "unit": "g", "protein_g": 0.128, "carbs_g": 0.744, "fat_g": 0.064, "basis": "Label: 39 g = 5P/29C/2.5F"},
+  "almond_milk": {"name": "Unsweetened almond milk", "unit": "cup", "protein_g": 1.0, "carbs_g": 1.0, "fat_g": 2.5, "basis": "Label; plan also allows oat milk (more carbs)"},
+  "skim_milk": {"name": "Fat-free milk", "unit": "cup", "protein_g": 8.3, "carbs_g": 12.0, "fat_g": 0.2, "basis": "USDA"},
+  "protein_yogurt": {"name": "Protein yogurt (20 g P)", "unit": "each", "protein_g": 20.0, "carbs_g": 6.0, "fat_g": 0.0, "basis": "Per plan: 20 g P, low fat/carb"},
+  "rice_cake": {"name": "Flavored rice cake", "unit": "each", "protein_g": 0.8, "carbs_g": 11.0, "fat_g": 0.3, "basis": "Quaker flavored cake"},
+  "granola": {"name": "Granola (15 g carbs worth)", "unit": "each", "protein_g": 2.3, "carbs_g": 15.0, "fat_g": 3.5, "basis": "~23 g granola"},
+  "turkey_bacon": {"name": "Uncured turkey bacon", "unit": "slice", "protein_g": 3.0, "carbs_g": 0.0, "fat_g": 2.0, "basis": "Applegate-style slice"}
+ },
+ "plans": [
+  {
+   "id": "CUT25-V1", "phase": "Cut 2025", "start": "2025-02-11", "structure": "carb_cycle",
+   "schedule": {"MP1": "Tue, Thu (higher-carb days)", "MP2": "Mon, Wed, Fri, Sat, Sun (lower-carb days)", "mp1_days": 2, "mp2_days": 5},
+   "days": {
+    "MP1": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 2, "unit": "each"}, {"food": "egg_white_oz", "name": "Liquid egg whites", "qty": 4, "unit": "oz"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 2, "unit": "slice"}, {"food": "cappuccino", "name": "Cappuccino (12 oz, 2% milk)", "qty": 1, "unit": "each"}],
+     "Pre-workout": [{"food": "cream_rice", "name": "Cream of Rice, dry", "qty": 45, "unit": "g"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 16, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1.5, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 300, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 300, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "Snack": [{"food": "blueberries", "name": "Blueberries", "qty": 100, "unit": "g"}, {"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "pb_cup", "name": "Dark choc PB cup", "qty": 1, "unit": "each"}, {"food": "fruit", "name": "Apple or banana, medium", "qty": 1, "unit": "each"}]
+    },
+    "MP2": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 2, "unit": "each"}, {"food": "egg_white_oz", "name": "Liquid egg whites", "qty": 4, "unit": "oz"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 2, "unit": "slice"}, {"food": "cappuccino", "name": "Cappuccino (12 oz, 2% milk)", "qty": 1, "unit": "each"}],
+     "Pre-workout": [{"food": "cream_rice", "name": "Cream of Rice, dry", "qty": 45, "unit": "g"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 16, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1.5, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 180, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 200, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "Snack": [{"food": "blueberries", "name": "Blueberries", "qty": 100, "unit": "g"}, {"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "pb_cup", "name": "Dark choc PB cup", "qty": 1, "unit": "each"}, {"food": "fruit", "name": "Apple or banana, medium", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "Start carb cycle: MP1 Tue/Thu, MP2 every other day. 'Slight carb bump on those 2 days and a little lower on the others... carb cycle to see if we can get your metabolism to keep going without lowering food much more or hyping cardio.'",
+   "macros": {
+    "MP1": {"P": 217.2, "C": 294.2, "F": 52.1, "kcal": 2514, "per_meal": {"M1": {"P": 42.0, "C": 41.6, "F": 14.6, "kcal": 466}, "Pre-workout": {"P": 43.0, "C": 43.0, "F": 8.8, "kcal": 423}, "Post-workout": {"P": 62.3, "C": 88.2, "F": 7.2, "kcal": 667}, "M4": {"P": 51.4, "C": 63.9, "F": 14.9, "kcal": 596}, "Snack": {"P": 18.5, "C": 57.5, "F": 6.6, "kcal": 363}}},
+    "MP2": {"P": 212.4, "C": 240.3, "F": 51.6, "kcal": 2275, "per_meal": {"M1": {"P": 42.0, "C": 41.6, "F": 14.6, "kcal": 466}, "Pre-workout": {"P": 43.0, "C": 43.0, "F": 8.8, "kcal": 423}, "Post-workout": {"P": 59.1, "C": 54.4, "F": 6.8, "kcal": 515}, "M4": {"P": 49.8, "C": 43.8, "F": 14.8, "kcal": 508}, "Snack": {"P": 18.5, "C": 57.5, "F": 6.6, "kcal": 363}}}
+   },
+   "weekly_avg": {"P": 213.8, "C": 255.7, "F": 51.7, "kcal": 2343}
+  },
+  {
+   "id": "CUT25-V2", "phase": "Cut 2025", "start": "2025-03-25", "structure": "carb_cycle",
+   "schedule": {"MP1": "Tue, Thu (higher-carb days)", "MP2": "Mon, Wed, Fri, Sat, Sun (lower-carb days)", "mp1_days": 2, "mp2_days": 5},
+   "days": {
+    "MP1": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 2, "unit": "each"}, {"food": "egg_white_oz", "name": "Liquid egg whites", "qty": 4, "unit": "oz"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 2, "unit": "slice"}, {"food": "cappuccino", "name": "Cappuccino (12 oz, 2% milk)", "qty": 1, "unit": "each"}],
+     "Pre-workout": [{"food": "cream_rice", "name": "Cream of Rice, dry", "qty": 45, "unit": "g"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 16, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1.5, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 300, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 300, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "Snack": [{"food": "blueberries", "name": "Blueberries", "qty": 100, "unit": "g"}, {"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "pb_cup", "name": "Dark choc PB cup", "qty": 1, "unit": "each"}]
+    },
+    "MP2": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 2, "unit": "each"}, {"food": "egg_white_oz", "name": "Liquid egg whites", "qty": 4, "unit": "oz"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 2, "unit": "slice"}, {"food": "cappuccino", "name": "Cappuccino (12 oz, 2% milk)", "qty": 1, "unit": "each"}],
+     "Pre-workout": [{"food": "cream_rice", "name": "Cream of Rice, dry", "qty": 45, "unit": "g"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 16, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1.5, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 150, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 200, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "Snack": [{"food": "blueberries", "name": "Blueberries", "qty": 100, "unit": "g"}, {"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "pb_cup", "name": "Dark choc PB cup", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "Fruit removed from snack; MP2 rice 180->150 g.",
+   "macros": {
+    "MP1": {"P": 216.4, "C": 268.2, "F": 51.8, "kcal": 2405, "per_meal": {"M1": {"P": 42.0, "C": 41.6, "F": 14.6, "kcal": 466}, "Pre-workout": {"P": 43.0, "C": 43.0, "F": 8.8, "kcal": 423}, "Post-workout": {"P": 62.3, "C": 88.2, "F": 7.2, "kcal": 667}, "M4": {"P": 51.4, "C": 63.9, "F": 14.9, "kcal": 596}, "Snack": {"P": 17.7, "C": 31.5, "F": 6.3, "kcal": 254}}},
+    "MP2": {"P": 210.8, "C": 205.8, "F": 51.2, "kcal": 2127, "per_meal": {"M1": {"P": 42.0, "C": 41.6, "F": 14.6, "kcal": 466}, "Pre-workout": {"P": 43.0, "C": 43.0, "F": 8.8, "kcal": 423}, "Post-workout": {"P": 58.3, "C": 45.9, "F": 6.8, "kcal": 478}, "M4": {"P": 49.8, "C": 43.8, "F": 14.8, "kcal": 508}, "Snack": {"P": 17.7, "C": 31.5, "F": 6.3, "kcal": 254}}}
+   },
+   "weekly_avg": {"P": 212.4, "C": 223.6, "F": 51.4, "kcal": 2206}
+  },
+  {
+   "id": "CUT25-V3", "phase": "Cut 2025", "start": "2025-04-06", "structure": "carb_cycle",
+   "schedule": {"MP1": "Tue, Thu (higher-carb days)", "MP2": "Mon, Wed, Fri, Sat, Sun (lower-carb days)", "mp1_days": 2, "mp2_days": 5},
+   "days": {
+    "MP1": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 2, "unit": "each"}, {"food": "egg_white_oz", "name": "Liquid egg whites", "qty": 4, "unit": "oz"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 2, "unit": "slice"}, {"food": "cappuccino", "name": "Cappuccino (12 oz, 2% milk)", "qty": 1, "unit": "each"}],
+     "Pre-workout": [{"food": "cream_rice", "name": "Cream of Rice, dry", "qty": 45, "unit": "g"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 16, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1.5, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 250, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 300, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "Snack": [{"food": "blueberries", "name": "Blueberries", "qty": 100, "unit": "g"}, {"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "pb_cup", "name": "Dark choc PB cup", "qty": 1, "unit": "each"}]
+    },
+    "MP2": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 2, "unit": "each"}, {"food": "egg_white_oz", "name": "Liquid egg whites", "qty": 4, "unit": "oz"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 2, "unit": "slice"}, {"food": "cappuccino", "name": "Cappuccino (12 oz, 2% milk)", "qty": 1, "unit": "each"}],
+     "Pre-workout": [{"food": "cream_rice", "name": "Cream of Rice, dry", "qty": 40, "unit": "g"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 16, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1.5, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 100, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 150, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "Snack": [{"food": "blueberries", "name": "Blueberries", "qty": 100, "unit": "g"}, {"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "pb_cup", "name": "Dark choc PB cup", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "MP1 rice 300->250; MP2 rice 150->100, sweet potato 200->150, cream of rice 45->40.",
+   "macros": {
+    "MP1": {"P": 215.1, "C": 254.1, "F": 51.6, "kcal": 2341, "per_meal": {"M1": {"P": 42.0, "C": 41.6, "F": 14.6, "kcal": 466}, "Pre-workout": {"P": 43.0, "C": 43.0, "F": 8.8, "kcal": 423}, "Post-workout": {"P": 61.0, "C": 74.1, "F": 7.0, "kcal": 604}, "M4": {"P": 51.4, "C": 63.9, "F": 14.9, "kcal": 596}, "Snack": {"P": 17.7, "C": 31.5, "F": 6.3, "kcal": 254}}},
+    "MP2": {"P": 208.4, "C": 177.4, "F": 51.0, "kcal": 2003, "per_meal": {"M1": {"P": 42.0, "C": 41.6, "F": 14.6, "kcal": 466}, "Pre-workout": {"P": 42.8, "C": 38.8, "F": 8.8, "kcal": 405}, "Post-workout": {"P": 56.9, "C": 31.8, "F": 6.6, "kcal": 414}, "M4": {"P": 49.0, "C": 33.8, "F": 14.8, "kcal": 464}, "Snack": {"P": 17.7, "C": 31.5, "F": 6.3, "kcal": 254}}}
+   },
+   "weekly_avg": {"P": 210.3, "C": 199.3, "F": 51.2, "kcal": 2100}
+  },
+  {
+   "id": "CUT25-V4", "phase": "Cut 2025", "start": "2025-04-15", "structure": "carb_cycle",
+   "schedule": {"MP1": "Tue, Thu (higher-carb days)", "MP2": "Mon, Wed, Fri, Sat, Sun (lower-carb days)", "mp1_days": 2, "mp2_days": 5},
+   "days": {
+    "MP1": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 2, "unit": "each"}, {"food": "egg_white_oz", "name": "Liquid egg whites", "qty": 4, "unit": "oz"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 2, "unit": "slice"}, {"food": "cappuccino", "name": "Cappuccino (12 oz, 2% milk)", "qty": 1, "unit": "each"}],
+     "Pre-workout": [{"food": "cream_rice", "name": "Cream of Rice, dry", "qty": 45, "unit": "g"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 16, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1.5, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 200, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 250, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "Snack": [{"food": "blueberries", "name": "Blueberries", "qty": 100, "unit": "g"}, {"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "pb_cup", "name": "Dark choc PB cup", "qty": 1, "unit": "each"}]
+    },
+    "MP2": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 2, "unit": "each"}, {"food": "egg_white_oz", "name": "Liquid egg whites", "qty": 4, "unit": "oz"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 2, "unit": "slice"}, {"food": "cappuccino", "name": "Cappuccino (12 oz, 2% milk)", "qty": 1, "unit": "each"}],
+     "Pre-workout": [{"food": "cream_rice", "name": "Cream of Rice, dry", "qty": 40, "unit": "g"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 16, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1.5, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 140, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 60, "unit": "g"}],
+     "Snack": [{"food": "blueberries", "name": "Blueberries", "qty": 100, "unit": "g"}, {"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "pb_cup", "name": "Dark choc PB cup", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "MP1 rice 250->200, SP 300->250; MP2 rice 100->140 but sweet potato removed from M4. Last 2025 cut plan provided.",
+   "macros": {
+    "MP1": {"P": 212.9, "C": 229.9, "F": 51.4, "kcal": 2234, "per_meal": {"M1": {"P": 42.0, "C": 41.6, "F": 14.6, "kcal": 466}, "Pre-workout": {"P": 43.0, "C": 43.0, "F": 8.8, "kcal": 423}, "Post-workout": {"P": 59.6, "C": 60.0, "F": 6.9, "kcal": 541}, "M4": {"P": 50.6, "C": 53.9, "F": 14.9, "kcal": 552}, "Snack": {"P": 17.7, "C": 31.5, "F": 6.3, "kcal": 254}}},
+    "MP2": {"P": 207.1, "C": 158.6, "F": 51.0, "kcal": 1922, "per_meal": {"M1": {"P": 42.0, "C": 41.6, "F": 14.6, "kcal": 466}, "Pre-workout": {"P": 42.8, "C": 38.8, "F": 8.8, "kcal": 405}, "Post-workout": {"P": 58.0, "C": 43.1, "F": 6.7, "kcal": 465}, "M4": {"P": 46.6, "C": 3.6, "F": 14.6, "kcal": 332}, "Snack": {"P": 17.7, "C": 31.5, "F": 6.3, "kcal": 254}}}
+   },
+   "weekly_avg": {"P": 208.8, "C": 179.0, "F": 51.1, "kcal": 2011}
+  },
+  {
+   "id": "BULK25-V1", "phase": "Bulk 2025", "start": "2025-07-20", "structure": "single",
+   "days": {
+    "MP": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "egg_white", "name": "Egg white, large", "qty": 5, "unit": "each"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 100, "unit": "g"}],
+     "M2": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 150, "unit": "g"}],
+     "M3": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 165, "unit": "g"}],
+     "M4": [{"food": "cheerios", "name": "Cheerios", "qty": 70, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}, {"food": "almond_milk", "name": "Unsweetened almond milk", "qty": 1.5, "unit": "cup"}],
+     "Snack": [{"food": "protein_yogurt", "name": "Protein yogurt (20 g P)", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "First bulk plan. Coach listed per-meal macros: M1 14F/29C/37P, M2 1F/54C/47P, M3 16F/54C/54P, M4 9F/58C/37P, snack ~20P.",
+   "macros": {
+    "MP": {"P": 201.4, "C": 179.8, "F": 45.5, "kcal": 1934, "per_meal": {"M1": {"P": 39.6, "C": 30.4, "F": 15.2, "kcal": 417}, "M2": {"P": 56.8, "C": 42.3, "F": 6.6, "kcal": 455}, "M3": {"P": 49.5, "C": 46.5, "F": 15.0, "kcal": 519}, "M4": {"P": 35.5, "C": 54.6, "F": 8.7, "kcal": 439}, "Snack": {"P": 20.0, "C": 6.0, "F": 0.0, "kcal": 104}}}
+   },
+   "weekly_avg": {"P": 201.4, "C": 179.8, "F": 45.5, "kcal": 1934}
+  },
+  {
+   "id": "BULK25-V2", "phase": "Bulk 2025", "start": "2025-07-30", "structure": "single",
+   "days": {
+    "MP": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "egg_white", "name": "Egg white, large", "qty": 5, "unit": "each"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 100, "unit": "g"}],
+     "M2": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 200, "unit": "g"}],
+     "M3": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 160, "unit": "g"}],
+     "M4": [{"food": "cheerios", "name": "Cheerios", "qty": 70, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}, {"food": "almond_milk", "name": "Unsweetened almond milk", "qty": 1.5, "unit": "cup"}],
+     "Snack": [{"food": "protein_yogurt", "name": "Protein yogurt (20 g P)", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "M2 rice 150->200.",
+   "macros": {
+    "MP": {"P": 202.6, "C": 192.5, "F": 45.6, "kcal": 1991, "per_meal": {"M1": {"P": 39.6, "C": 30.4, "F": 15.2, "kcal": 417}, "M2": {"P": 58.1, "C": 56.4, "F": 6.7, "kcal": 519}, "M3": {"P": 49.4, "C": 45.1, "F": 14.9, "kcal": 512}, "M4": {"P": 35.5, "C": 54.6, "F": 8.7, "kcal": 439}, "Snack": {"P": 20.0, "C": 6.0, "F": 0.0, "kcal": 104}}}
+   },
+   "weekly_avg": {"P": 202.6, "C": 192.5, "F": 45.6, "kcal": 1991}
+  },
+  {
+   "id": "BULK25-V3", "phase": "Bulk 2025", "start": "2025-08-06", "structure": "single",
+   "days": {
+    "MP": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "egg_white", "name": "Egg white, large", "qty": 5, "unit": "each"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 100, "unit": "g"}],
+     "M2": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 230, "unit": "g"}],
+     "M3": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 200, "unit": "g"}],
+     "M4": [{"food": "cheerios", "name": "Cheerios", "qty": 90, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}, {"food": "almond_milk", "name": "Unsweetened almond milk", "qty": 1.5, "unit": "cup"}],
+     "Snack": [{"food": "protein_yogurt", "name": "Protein yogurt (20 g P)", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "M2 rice 200->230, M3 160->200, Cheerios 70->90.",
+   "macros": {
+    "MP": {"P": 207.0, "C": 227.1, "F": 47.1, "kcal": 2160, "per_meal": {"M1": {"P": 39.6, "C": 30.4, "F": 15.2, "kcal": 417}, "M2": {"P": 58.9, "C": 64.9, "F": 6.8, "kcal": 557}, "M3": {"P": 50.5, "C": 56.4, "F": 15.1, "kcal": 563}, "M4": {"P": 38.0, "C": 69.5, "F": 10.0, "kcal": 520}, "Snack": {"P": 20.0, "C": 6.0, "F": 0.0, "kcal": 104}}}
+   },
+   "weekly_avg": {"P": 207.0, "C": 227.1, "F": 47.1, "kcal": 2160}
+  },
+  {
+   "id": "BULK25-V4", "phase": "Bulk 2025", "start": "2025-08-21", "structure": "single",
+   "days": {
+    "MP": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "egg_white", "name": "Egg white, large", "qty": 5, "unit": "each"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 120, "unit": "g"}],
+     "M2": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 270, "unit": "g"}],
+     "M3": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 250, "unit": "g"}],
+     "M4": [{"food": "cheerios", "name": "Cheerios", "qty": 90, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}, {"food": "almond_milk", "name": "Unsweetened almond milk", "qty": 1.5, "unit": "cup"}],
+     "Snack": [{"food": "protein_yogurt", "name": "Protein yogurt (20 g P)", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "M1 rice 100->120, M2 230->270, M3 200->250. Sweet potato swaps introduced (1.6 g SP per 1 g rice).",
+   "macros": {
+    "MP": {"P": 210.0, "C": 258.1, "F": 47.4, "kcal": 2299, "per_meal": {"M1": {"P": 40.1, "C": 36.0, "F": 15.3, "kcal": 442}, "M2": {"P": 60.0, "C": 76.1, "F": 6.9, "kcal": 607}, "M3": {"P": 51.8, "C": 70.5, "F": 15.2, "kcal": 626}, "M4": {"P": 38.0, "C": 69.5, "F": 10.0, "kcal": 520}, "Snack": {"P": 20.0, "C": 6.0, "F": 0.0, "kcal": 104}}}
+   },
+   "weekly_avg": {"P": 210.0, "C": 258.1, "F": 47.4, "kcal": 2299}
+  },
+  {
+   "id": "BULK25-V5", "phase": "Bulk 2025", "start": "2025-09-04", "structure": "single",
+   "days": {
+    "MP": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "egg_white", "name": "Egg white, large", "qty": 5, "unit": "each"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 140, "unit": "g"}],
+     "M2": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 300, "unit": "g"}],
+     "M3": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 270, "unit": "g"}],
+     "M4": [{"food": "cheerios", "name": "Cheerios", "qty": 90, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}, {"food": "almond_milk", "name": "Unsweetened almond milk", "qty": 1.5, "unit": "cup"}],
+     "Snack": [{"food": "protein_yogurt", "name": "Protein yogurt (20 g P)", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "M1 rice 120->140, M2 270->300, M3 250->270.",
+   "macros": {
+    "MP": {"P": 211.9, "C": 277.9, "F": 47.6, "kcal": 2388, "per_meal": {"M1": {"P": 40.7, "C": 41.7, "F": 15.3, "kcal": 467}, "M2": {"P": 60.8, "C": 84.6, "F": 7.0, "kcal": 645}, "M3": {"P": 52.4, "C": 76.1, "F": 15.3, "kcal": 651}, "M4": {"P": 38.0, "C": 69.5, "F": 10.0, "kcal": 520}, "Snack": {"P": 20.0, "C": 6.0, "F": 0.0, "kcal": 104}}}
+   },
+   "weekly_avg": {"P": 211.9, "C": 277.9, "F": 47.6, "kcal": 2388}
+  },
+  {
+   "id": "BULK25-V6", "phase": "Bulk 2025", "start": "2025-10-09", "structure": "single",
+   "days": {
+    "MP": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "egg_white", "name": "Egg white, large", "qty": 5, "unit": "each"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 170, "unit": "g"}],
+     "M2": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 300, "unit": "g"}],
+     "M3": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 300, "unit": "g"}],
+     "M4": [{"food": "cheerios", "name": "Cheerios", "qty": 90, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}, {"food": "skim_milk", "name": "Fat-free milk", "qty": 1, "unit": "cup"}],
+     "Snack": [{"food": "protein_yogurt", "name": "Protein yogurt (20 g P)", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "M1 rice 140->170, M3 270->300; M4 milk switched to 1 cup fat-free milk.",
+   "macros": {
+    "MP": {"P": 220.3, "C": 305.3, "F": 44.2, "kcal": 2501, "per_meal": {"M1": {"P": 41.5, "C": 50.1, "F": 15.4, "kcal": 505}, "M2": {"P": 60.8, "C": 84.6, "F": 7.0, "kcal": 645}, "M3": {"P": 53.2, "C": 84.6, "F": 15.4, "kcal": 689}, "M4": {"P": 44.8, "C": 80.0, "F": 6.5, "kcal": 557}, "Snack": {"P": 20.0, "C": 6.0, "F": 0.0, "kcal": 104}}}
+   },
+   "weekly_avg": {"P": 220.3, "C": 305.3, "F": 44.2, "kcal": 2501}
+  },
+  {
+   "id": "BULK25-V7", "phase": "Bulk 2025", "start": "2025-11-15", "structure": "single",
+   "days": {
+    "MP": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "egg_white", "name": "Egg white, large", "qty": 5, "unit": "each"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 200, "unit": "g"}],
+     "M2": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 300, "unit": "g"}],
+     "M3": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 300, "unit": "g"}],
+     "M4": [{"food": "cheerios", "name": "Cheerios", "qty": 90, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}, {"food": "skim_milk", "name": "Fat-free milk", "qty": 1, "unit": "cup"}],
+     "Snack": [{"food": "protein_yogurt", "name": "Protein yogurt (20 g P)", "qty": 1, "unit": "each"}]
+    }
+   },
+   "coach_note": "M1 rice 170->200. Last bulk plan provided.",
+   "macros": {
+    "MP": {"P": 221.1, "C": 313.8, "F": 44.3, "kcal": 2539, "per_meal": {"M1": {"P": 42.3, "C": 58.6, "F": 15.5, "kcal": 543}, "M2": {"P": 60.8, "C": 84.6, "F": 7.0, "kcal": 645}, "M3": {"P": 53.2, "C": 84.6, "F": 15.4, "kcal": 689}, "M4": {"P": 44.8, "C": 80.0, "F": 6.5, "kcal": 557}, "Snack": {"P": 20.0, "C": 6.0, "F": 0.0, "kcal": 104}}}
+   },
+   "weekly_avg": {"P": 221.1, "C": 313.8, "F": 44.3, "kcal": 2539}
+  },
+  {
+   "id": "CUT26-V1", "phase": "Cut 2026", "start": "2026-02-01", "structure": "single",
+   "days": {
+    "MP": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 3, "unit": "slice"}, {"food": "turkey_bacon", "name": "Uncured turkey bacon", "qty": 2, "unit": "slice"}],
+     "Pre-workout": [{"food": "cream_rice", "name": "Cream of Rice, dry", "qty": 70, "unit": "g"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 19, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 5, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 300, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 65, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 5, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 325, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 65, "unit": "g"}],
+     "Snack": [{"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "granola", "name": "Granola (15 g carbs worth)", "qty": 1, "unit": "each"}, {"food": "blueberries", "name": "Blueberries", "qty": 70, "unit": "g"}]
+    }
+   },
+   "coach_note": "Cut begins. Meals restructured around pre/post workout.",
+   "macros": {
+    "MP": {"P": 188.0, "C": 299.3, "F": 52.4, "kcal": 2421, "per_meal": {"M1": {"P": 39.9, "C": 46.2, "F": 19.9, "kcal": 524}, "Pre-workout": {"P": 32.3, "C": 64.3, "F": 10.0, "kcal": 476}, "Post-workout": {"P": 53.7, "C": 88.5, "F": 6.2, "kcal": 624}, "M4": {"P": 44.4, "C": 69.2, "F": 12.6, "kcal": 568}, "Snack": {"P": 17.8, "C": 31.1, "F": 3.7, "kcal": 229}}}
+   },
+   "weekly_avg": {"P": 188.0, "C": 299.3, "F": 52.4, "kcal": 2421}
+  },
+  {
+   "id": "CUT26-V2", "phase": "Cut 2026", "start": "2026-02-11", "structure": "single",
+   "days": {
+    "MP": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 3, "unit": "slice"}],
+     "Pre-workout": [{"food": "cream_rice", "name": "Cream of Rice, dry", "qty": 70, "unit": "g"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 19, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 5, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 270, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 65, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 300, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 65, "unit": "g"}],
+     "Snack": [{"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "granola", "name": "Granola (15 g carbs worth)", "qty": 1, "unit": "each"}, {"food": "blueberries", "name": "Blueberries", "qty": 70, "unit": "g"}]
+    }
+   },
+   "coach_note": "Turkey bacon removed, rice 300->270, SP 325->300, M4 meat 5->6 oz. TRAVEL override: 'P: 185, Calories: 2400, 20 mins of slow jog when on vacation!'",
+   "travel_override": {"protein_g": 185, "kcal": 2400, "cardio": "20 min slow jog daily while on vacation"},
+   "macros": {
+    "MP": {"P": 188.3, "C": 285.8, "F": 50.7, "kcal": 2353, "per_meal": {"M1": {"P": 33.9, "C": 46.2, "F": 15.9, "kcal": 464}, "Pre-workout": {"P": 32.3, "C": 64.3, "F": 10.0, "kcal": 476}, "Post-workout": {"P": 52.9, "C": 80.0, "F": 6.1, "kcal": 587}, "M4": {"P": 51.5, "C": 64.2, "F": 15.0, "kcal": 597}, "Snack": {"P": 17.8, "C": 31.1, "F": 3.7, "kcal": 229}}}
+   },
+   "weekly_avg": {"P": 188.3, "C": 285.8, "F": 50.7, "kcal": 2353}
+  },
+  {
+   "id": "CUT26-V3", "phase": "Cut 2026", "start": "2026-02-27", "structure": "single",
+   "days": {
+    "MP": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 3, "unit": "slice"}],
+     "Pre-workout": [{"food": "rice_cake", "name": "Flavored rice cake", "qty": 4, "unit": "each"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 19, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 5, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 200, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 65, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 200, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 65, "unit": "g"}],
+     "Snack": [{"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "granola", "name": "Granola (15 g carbs worth)", "qty": 1, "unit": "each"}, {"food": "blueberries", "name": "Blueberries", "qty": 70, "unit": "g"}]
+    }
+   },
+   "coach_note": "Cream of rice swapped to 4 rice cakes; rice 270->200; SP 300->200.",
+   "macros": {
+    "MP": {"P": 184.9, "C": 230.9, "F": 51.6, "kcal": 2127, "per_meal": {"M1": {"P": 33.9, "C": 46.2, "F": 15.9, "kcal": 464}, "Pre-workout": {"P": 32.4, "C": 49.2, "F": 11.2, "kcal": 427}, "Post-workout": {"P": 51.0, "C": 60.3, "F": 5.9, "kcal": 498}, "M4": {"P": 49.9, "C": 44.1, "F": 14.9, "kcal": 510}, "Snack": {"P": 17.8, "C": 31.1, "F": 3.7, "kcal": 229}}}
+   },
+   "weekly_avg": {"P": 184.9, "C": 230.9, "F": 51.6, "kcal": 2127}
+  },
+  {
+   "id": "CUT26-V4", "phase": "Cut 2026", "start": "2026-03-05", "structure": "carb_cycle",
+   "schedule": {"MP1": "lower-carb days (= 27 Feb plan)", "MP2": "higher-carb days (= 11 Feb plan, rice cakes)", "mp1_days": 5, "mp2_days": 2, "ASSUMPTION": "Day split not stated in the PDF; assumed 2 high (MP2) / 5 low (MP1) mirroring the 2025 carb cycle. Confirm with Walter."},
+   "days": {
+    "MP1": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 3, "unit": "slice"}],
+     "Pre-workout": [{"food": "rice_cake", "name": "Flavored rice cake", "qty": 4, "unit": "each"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 19, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 5, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 200, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 65, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 200, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 65, "unit": "g"}],
+     "Snack": [{"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "granola", "name": "Granola (15 g carbs worth)", "qty": 1, "unit": "each"}, {"food": "blueberries", "name": "Blueberries", "qty": 70, "unit": "g"}]
+    },
+    "MP2": {
+     "M1": [{"food": "egg", "name": "Whole egg, large", "qty": 3, "unit": "each"}, {"food": "ezekiel", "name": "Ezekiel 4:9 bread", "qty": 3, "unit": "slice"}],
+     "Pre-workout": [{"food": "rice_cake", "name": "Flavored rice cake", "qty": 5, "unit": "each"}, {"food": "nut_butter", "name": "Natural peanut/almond butter", "qty": 19, "unit": "g"}, {"food": "whey_iso", "name": "Whey protein isolate", "qty": 1, "unit": "scoop"}],
+     "Post-workout": [{"food": "chicken", "name": "Chicken breast, cooked", "qty": 5, "unit": "oz"}, {"food": "rice", "name": "Jasmine/white rice, cooked", "qty": 270, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 65, "unit": "g"}],
+     "M4": [{"food": "lean_beef", "name": "93/7 ground beef/turkey, cooked", "qty": 6, "unit": "oz"}, {"food": "sweet_potato", "name": "Sweet potato", "qty": 300, "unit": "g"}, {"food": "green_veg", "name": "Green beans/broccoli/asparagus", "qty": 65, "unit": "g"}],
+     "Snack": [{"food": "greek_yogurt", "name": "0% Greek yogurt, single-serve cup", "qty": 1, "unit": "cup"}, {"food": "granola", "name": "Granola (15 g carbs worth)", "qty": 1, "unit": "each"}, {"food": "blueberries", "name": "Blueberries", "qty": 70, "unit": "g"}]
+    }
+   },
+   "coach_note": "Carb cycle reintroduced. Last plan provided; presumed in effect through last weigh-in (2026-05-14).",
+   "macros": {
+    "MP1": {"P": 184.9, "C": 230.9, "F": 51.6, "kcal": 2127, "per_meal": {"M1": {"P": 33.9, "C": 46.2, "F": 15.9, "kcal": 464}, "Pre-workout": {"P": 32.4, "C": 49.2, "F": 11.2, "kcal": 427}, "Post-workout": {"P": 51.0, "C": 60.3, "F": 5.9, "kcal": 498}, "M4": {"P": 49.9, "C": 44.1, "F": 14.9, "kcal": 510}, "Snack": {"P": 17.8, "C": 31.1, "F": 3.7, "kcal": 229}}},
+    "MP2": {"P": 189.2, "C": 281.8, "F": 52.2, "kcal": 2353, "per_meal": {"M1": {"P": 33.9, "C": 46.2, "F": 15.9, "kcal": 464}, "Pre-workout": {"P": 33.2, "C": 60.2, "F": 11.5, "kcal": 477}, "Post-workout": {"P": 52.9, "C": 80.0, "F": 6.1, "kcal": 587}, "M4": {"P": 51.5, "C": 64.2, "F": 15.0, "kcal": 597}, "Snack": {"P": 17.8, "C": 31.1, "F": 3.7, "kcal": 229}}}
+   },
+   "weekly_avg": {"P": 186.1, "C": 245.4, "F": 51.8, "kcal": 2192}
+  }
+ ]
+}

@@ -1,0 +1,271 @@
+{
+  "schema_version": 2,
+  "description": "Prescribed lifting programs (exercise selection, sets x reps, rest, supersets, weekly split) from Walter's previous coach (Dakota), transcribed from screen recordings of the coaching app. One entry per program/phase; append as more recordings arrive. Logged loads are deliberately NOT recorded (recordings are short snapshots, not representative of performance).",
+  "conventions": {
+    "reps": "as the coach wrote it; 'a, b, c' = rep target per successive set; 'top/backoff' = first set heavy, remaining sets lighter",
+    "rest_s": "prescribed rest after the set (or after each superset/circuit round); null = none stated / move straight to next exercise in the group",
+    "group": "exercises sharing a group are done as a superset or circuit; _xN = number of rounds",
+    "(double)": "suffix kept verbatim from the coach app; meaning not stated"
+  },
+  "programs": [
+    {
+      "id": "TRAIN-CUT25",
+      "phase_label_stated": "initial 2025 cut (per Walter)",
+      "phase_note": "Snapshot week shown is 2025-06-16..22. The nutrition data classes 2025-04-24..07-19 as an off-plan break, so the cut/break dates may need revisiting.",
+      "coach": "Dakota (previous coach)",
+      "source": "ScreenRecording_05-28-2026_00-41-48_1.mp4",
+      "split_type": "5-day body-part split: pull / push / calves+core / legs / arms+core",
+      "weekly_regime": {
+        "lifting_days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "off_days": ["Sat", "Sun"],
+        "cardio": "stair climbing 40 min on most days (5 sessions in the snapshot week) + 1 swim (1,000 m / 35 min) on Fri"
+      },
+      "program_traits": [
+        "upper and leg days open with a 4-stretch mobility circuit",
+        "90 s rest between sets throughout",
+        "2-3 working sets per exercise (hanging leg raise 4)",
+        "ascending-weight rep pyramids on cable isolation (15/12/10, 20/15/10, 15/12/8)",
+        "top set + backoff sets on main compounds (incline Smith, hack squat, seated leg curl)",
+        "core circuit twice a week (Wed, Fri); calves once (Wed)"
+      ],
+      "days": [
+        {"day": "Mon", "name": "Upper Body Pull", "est_min": 55, "exercises": [
+          {"name": "Lat Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Pec Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Pec/Front Delt Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Shoulder Rotation Warmups", "sets": 1, "reps": "stretch", "rest_s": 90, "group": "warmup_circuit_x1"},
+          {"name": "Cable Lat Pullovers", "sets": 3, "reps": "15, 12, 10 (heavier each set)", "rest_s": 90},
+          {"name": "Hammer Cable Rows", "sets": 2, "reps": "6-8, then 10-12", "rest_s": 90},
+          {"name": "Incline DB Rows (upper back)", "sets": 3, "reps": "10-12", "rest_s": 90},
+          {"name": "Underhand Pulldowns", "sets": 2, "reps": "10-12", "rest_s": 90},
+          {"name": "One Arm Reverse Cable Flyes", "sets": 3, "reps": "12+ each side", "rest_s": 90},
+          {"name": "Dumbbell Shrugs", "sets": 3, "reps": "6-10", "rest_s": 90},
+          {"name": "Hanging Leg Raise", "sets": 4, "reps": "AMRAP", "rest_s": 90}
+        ]},
+        {"day": "Tue", "name": "Upper Push", "est_min": 45, "exercises": [
+          {"name": "Lat Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Pec Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Pec/Front Delt Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Shoulder Rotation Warmups", "sets": 1, "reps": "stretch", "rest_s": 90, "group": "warmup_circuit_x1"},
+          {"name": "Cable Flyes", "sets": 3, "reps": "20, 15, 10 (heavier each set)", "rest_s": 90},
+          {"name": "Incline Smith Machine Bench", "sets": 3, "reps": "1 x 8 (top), 2 lighter x 10+ (backoff)", "rest_s": 90},
+          {"name": "Flat DB Bench", "sets": 2, "reps": "10-12", "rest_s": 90, "note": "flat machine press is an acceptable replacement"},
+          {"name": "Chest Dips", "sets": 2, "reps": "to failure", "rest_s": null, "group": "superset_x2"},
+          {"name": "Pushups", "sets": 2, "reps": "to failure", "rest_s": 90, "group": "superset_x2"},
+          {"name": "Single Cable Lateral Raise", "sets": 3, "reps": "12-15 each side", "rest_s": 90},
+          {"name": "Seated Lateral DB Raises", "sets": 2, "reps": "10+", "rest_s": 90}
+        ]},
+        {"day": "Wed", "name": "Calves and Core", "est_min": 34, "exercises": [
+          {"name": "Ab Crunches", "sets": 3, "reps": "40", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Lying Leg Raises", "sets": 3, "reps": "30", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Russian Twists", "sets": 3, "reps": "30 each side", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Ab Plank", "sets": 3, "reps": "30 s hold", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Ab Vacuum", "sets": 3, "reps": "2 vacuums x 15 s", "rest_s": 90, "group": "core_circuit_x3"},
+          {"name": "Seated Calf Raises", "sets": 3, "reps": "8-10", "rest_s": 90},
+          {"name": "Standing Calf Raises", "sets": 3, "reps": "10+", "rest_s": 90}
+        ]},
+        {"day": "Thu", "name": "Legs", "est_min": 46, "exercises": [
+          {"name": "Adductor Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Hamstring Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Lunge/Hip Flexor Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Quad Stretch", "sets": 1, "reps": "stretch", "rest_s": 90, "group": "warmup_circuit_x1"},
+          {"name": "Hamstring Hyperextensions", "sets": 3, "reps": "15", "rest_s": null, "group": "superset_x3"},
+          {"name": "Machine Adductors", "sets": 3, "reps": "10+", "rest_s": 90, "group": "superset_x3"},
+          {"name": "Seated Hamstring Curls", "sets": 2, "reps": "1 x 8+ (top), 1 x 12+ (backoff)", "rest_s": 90},
+          {"name": "Machine Hack Squats", "sets": 3, "reps": "1 x 6-8 (top), 2 x 10+ (backoff)", "rest_s": 90},
+          {"name": "Bulgarian Split Squats (double)", "sets": 2, "reps": "10+ per side", "rest_s": 90},
+          {"name": "DB RDLs", "sets": 2, "reps": "10-12", "rest_s": 90},
+          {"name": "Leg Extensions (double)", "sets": 3, "reps": "10+", "rest_s": 90}
+        ]},
+        {"day": "Fri", "name": "Arms and Core", "est_min": 34, "exercises": [
+          {"name": "Ab Crunches", "sets": 3, "reps": "40", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Ab Plank", "sets": 3, "reps": "30 s hold", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Russian Twists", "sets": 3, "reps": "30 each side", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Ab Vacuum", "sets": 3, "reps": "2 x 15 s", "rest_s": 90, "group": "core_circuit_x3"},
+          {"name": "Rope Pushdowns", "sets": 3, "reps": "15, 12, 8 (heavier each set)", "rest_s": null},
+          {"name": "Single Arm DB Extensions", "sets": 3, "reps": "10-12 each side", "rest_s": null},
+          {"name": "Single Arm Cable Pushdowns", "sets": 3, "reps": "10+ per side", "rest_s": null},
+          {"name": "Reverse Cable Curls", "sets": 3, "reps": "15, 12, 8 (heavier each set)", "rest_s": null},
+          {"name": "Single Arm DB Preacher Curl", "sets": 3, "reps": "8+ each side", "rest_s": null},
+          {"name": "Preacher Machine Curls", "sets": 3, "reps": "10+ to complete failure", "rest_s": null}
+        ]},
+        {"day": "Sat", "name": "Off", "exercises": []},
+        {"day": "Sun", "name": "Off", "exercises": []}
+      ],
+      "used_during": "2025 cut"
+    },
+    {
+      "id": "TRAIN-BULK25",
+      "phase_label_stated": "2025 bulk through early February 2026, before moving back into a cut (per Walter)",
+      "coach": "Dakota (previous coach)",
+      "source": "ScreenRecording_05-28-2026_00-38-38_1.mp4 (snapshot week of 2026-02-02)",
+      "split_type": "5-day body-part split: pull / push / calves+core / legs / arms+core",
+      "weekly_regime": {
+        "lifting_days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "off_days": ["Sat", "Sun"],
+        "cardio": "none logged in the coach app's calendar in the snapshot week (only lifts and daily weigh-ins)"
+      },
+      "program_traits": [
+        "upper and leg days open with a 4-stretch mobility circuit",
+        "90 s rest between sets throughout",
+        "2-3 working sets per exercise (hanging leg raise 4)",
+        "ascending-weight rep pyramids on cable isolation (15/12/10, 20/15/10, 15/12/8)",
+        "top set + backoff sets on main compounds (incline Smith, hack squat, seated leg curl)",
+        "core circuit twice a week (Wed, Fri) using cable crunches, plus cable crunches to finish Mon; calves once (Wed)"
+      ],
+      "days": [
+        {"day": "Mon", "name": "Upper Body Pull", "est_min": 55, "exercises": [
+          {"name": "Lat Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Pec Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Pec/Front Delt Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Shoulder Rotation Warmups", "sets": 1, "reps": "stretch", "rest_s": 90, "group": "warmup_circuit_x1"},
+          {"name": "Cable Lat Pullovers", "sets": 3, "reps": "15, 12, 10 (heavier each set)", "rest_s": 90},
+          {"name": "Hammer Cable Rows", "sets": 2, "reps": "6-8, then 10-12", "rest_s": 90},
+          {"name": "Incline DB Rows (upper back)", "sets": 3, "reps": "10-12", "rest_s": 90},
+          {"name": "Underhand Pulldowns", "sets": 2, "reps": "10-12", "rest_s": 90},
+          {"name": "One Arm Reverse Cable Flyes", "sets": 3, "reps": "12+ each side", "rest_s": 90},
+          {"name": "Dumbbell Shrugs", "sets": 3, "reps": "6-10", "rest_s": 90},
+          {"name": "Cable Ab Crunches", "sets": 4, "reps": "AMRAP", "rest_s": 90}
+        ]},
+        {"day": "Tue", "name": "Upper Push", "est_min": 45, "exercises": [
+          {"name": "Lat Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Pec Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Pec/Front Delt Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Shoulder Rotation Warmups", "sets": 1, "reps": "stretch", "rest_s": 90, "group": "warmup_circuit_x1"},
+          {"name": "Cable Flyes", "sets": 3, "reps": "20, 15, 10 (heavier each set)", "rest_s": 90},
+          {"name": "Incline Smith Machine Bench", "sets": 3, "reps": "1 x 8 (top), 2 lighter x 10+ (backoff)", "rest_s": 90},
+          {"name": "Flat DB Bench", "sets": 2, "reps": "10-12", "rest_s": 90, "note": "flat machine press is an acceptable replacement"},
+          {"name": "Chest Dips", "sets": 2, "reps": "to failure", "rest_s": null, "group": "superset_x2"},
+          {"name": "Pushups", "sets": 2, "reps": "to failure", "rest_s": 90, "group": "superset_x2"},
+          {"name": "Single Cable Lateral Raise", "sets": 3, "reps": "12-15 each side", "rest_s": 90},
+          {"name": "Seated Lateral DB Raises", "sets": 2, "reps": "10+", "rest_s": 90}
+        ]},
+        {"day": "Wed", "name": "Calves and Core", "est_min": 34, "exercises": [
+          {"name": "Cable Ab Crunches", "sets": 3, "reps": "40", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Lying Leg Raises", "sets": 3, "reps": "30", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Russian Twists", "sets": 3, "reps": "30 each side", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Ab Plank", "sets": 3, "reps": "30 s hold", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Ab Vacuum", "sets": 3, "reps": "2 vacuums x 15 s", "rest_s": 90, "group": "core_circuit_x3"},
+          {"name": "Seated Calf Raises", "sets": 3, "reps": "8-10", "rest_s": 90},
+          {"name": "Standing Calf Raises", "sets": 3, "reps": "10+", "rest_s": 90}
+        ]},
+        {"day": "Thu", "name": "Legs", "est_min": 46, "exercises": [
+          {"name": "Adductor Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Hamstring Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Lunge/Hip Flexor Stretch", "sets": 1, "reps": "stretch", "rest_s": null, "group": "warmup_circuit_x1"},
+          {"name": "Quad Stretch", "sets": 1, "reps": "stretch", "rest_s": 90, "group": "warmup_circuit_x1"},
+          {"name": "Hamstring Hyperextensions", "sets": 3, "reps": "15", "rest_s": null, "group": "superset_x3"},
+          {"name": "Machine Adductors", "sets": 3, "reps": "10+", "rest_s": 90, "group": "superset_x3"},
+          {"name": "Seated Hamstring Curls", "sets": 2, "reps": "1 x 8+ (top), 1 x 12+ (backoff)", "rest_s": 90},
+          {"name": "Machine Hack Squats", "sets": 3, "reps": "1 x 6-8 (top), 2 x 10+ (backoff)", "rest_s": 90},
+          {"name": "Bulgarian Split Squats (double)", "sets": 2, "reps": "10+ per side", "rest_s": 90},
+          {"name": "DB RDLs", "sets": 2, "reps": "10-12", "rest_s": 90},
+          {"name": "Leg Extensions (double)", "sets": 3, "reps": "10+", "rest_s": 90}
+        ]},
+        {"day": "Fri", "name": "Arms and Core", "est_min": 34, "exercises": [
+          {"name": "Cable Ab Crunches", "sets": 3, "reps": "40", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Ab Plank", "sets": 3, "reps": "30 s hold", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Russian Twists", "sets": 3, "reps": "30 each side", "rest_s": null, "group": "core_circuit_x3"},
+          {"name": "Ab Vacuum", "sets": 3, "reps": "2 x 15 s", "rest_s": 90, "group": "core_circuit_x3"},
+          {"name": "Rope Pushdowns", "sets": 3, "reps": "15, 12, 8 (heavier each set)", "rest_s": null},
+          {"name": "Single Arm DB Extensions", "sets": 3, "reps": "10-12 each side", "rest_s": null},
+          {"name": "Single Arm Cable Pushdowns", "sets": 3, "reps": "10+ per side", "rest_s": null},
+          {"name": "Reverse Cable Curls", "sets": 3, "reps": "15, 12, 8 (heavier each set)", "rest_s": null},
+          {"name": "Single Arm DB Preacher Curl", "sets": 3, "reps": "8+ each side", "rest_s": null},
+          {"name": "Preacher Machine Curls", "sets": 3, "reps": "10+ to complete failure", "rest_s": null}
+        ]},
+        {"day": "Sat", "name": "Off", "exercises": []},
+        {"day": "Sun", "name": "Off", "exercises": []}
+      ],
+      "used_during": "2025 bulk -> early Feb 2026",
+      "based_on": "TRAIN-CUT25",
+      "changes_vs_previous": [
+        "Mon: Hanging Leg Raise (4 x AMRAP) replaced by Cable Ab Crunches (4 x AMRAP, 90 s rest)",
+        "Wed + Fri core circuit: bodyweight Ab Crunches (3 x 40) replaced by Cable Ab Crunches (3 x 40)",
+        "everything else identical: split, exercise order, sets x reps, rest, warm-ups, supersets"
+      ]
+    },
+    {
+      "id": "TRAIN-CUT26",
+      "phase_label_stated": "2026 cut into current day; Walter's favorite split, kept for the app build (per Walter)",
+      "used_during": "2026 cut -> current",
+      "status": "CURRENT - the app's program (data/program.json)",
+      "coach": "Dakota (previous coach)",
+      "source": "ScreenRecording_05-28-2026_00-31-13_1.mp4 (coach app Program view: 'Walter's program', Main, Week 1-16, 9 Feb 2026 - 31 May 2026)",
+      "block": {"weeks": 16, "start": "2026-02-09", "end_planned": "2026-05-31"},
+      "split_type": "5-day push/pull x2 + legs: Push #1 / Pull #1 / Legs and abs / Upper Push #2 / Upper Pull #2",
+      "weekly_regime": {
+        "lifting_days": ["Mon", "Tue", "Wed", "Thu", "Fri"],
+        "off_days": ["Sat", "Sun"],
+        "cardio": "not shown in this recording (program view only)"
+      },
+      "changes_vs_previous": [
+        "new split: push and pull each trained twice a week; legs once (Wed); arms folded into push/pull days",
+        "warm-up stretch circuits removed",
+        "mechanical 'same-weight' supersets to failure: rope extensions -> rope pushdowns, reverse cable curls -> cable bar curls, seated -> standing lateral raises",
+        "15 s rest inside supersets and on Thu triceps isolation; 90 s elsewhere",
+        "more top-set + backoff schemes with a ~30% lighter backoff (flat DB bench, incline DB bench) and a lighter squeeze set (seated ham curl)",
+        "technique cues added (slow/deep stretch, elbows back, partials to failure, huge squeeze)",
+        "calves and shrugs dropped; hanging leg raises return on Wed; Russian twists now timed (30 s)"
+      ],
+      "program_traits": [
+        "chest and side delts twice a week; back twice; biceps and triceps twice; legs once",
+        "90 s rest between sets; 15 s between superset partners",
+        "superset finishers to complete failure at the same load",
+        "abs 3x/week as 2-exercise supersets (Mon, Wed, Fri)"
+      ],
+      "days": [
+        {"day": "Mon", "name": "Push #1", "est_min": 61, "exercises": [
+          {"name": "Incline DB Flyes", "sets": 3, "reps": "8-10", "rest_s": 90, "cue": "SLOW, DEEP, focus on stretching as far as possible"},
+          {"name": "Flat DB Bench", "sets": 3, "reps": "2 sets of 8-10, 1 set of 12 with ~30% less weight", "rest_s": 90},
+          {"name": "Chest Dips", "sets": 4, "reps": "AMRAP", "rest_s": 90},
+          {"name": "Single Cable Lateral Raise", "sets": 3, "reps": "12-15 each side", "rest_s": 90},
+          {"name": "Standing Lateral DB Raises", "sets": 3, "reps": "10-12", "rest_s": 90},
+          {"name": "Rope Tricep Extensions", "sets": 3, "reps": "10-12", "rest_s": 15, "group": "Mon-A"},
+          {"name": "Rope Pushdowns", "sets": 3, "reps": "same weight, AMRAP", "rest_s": 90, "group": "Mon-A"},
+          {"name": "Cable Ab Crunches", "sets": 3, "reps": "15 (heavy!)", "rest_s": 0, "group": "Mon-B"},
+          {"name": "Ab Vacuum", "sets": 3, "reps": "15 s", "rest_s": 90, "group": "Mon-B"}
+        ]},
+        {"day": "Tue", "name": "Pull #1", "est_min": 44, "exercises": [
+          {"name": "Assisted Pullups", "sets": 3, "reps": "as little assistance as possible (6+ reps, as many as you can possibly do)", "rest_s": 90},
+          {"name": "Incline DB Rows (upper back)", "sets": 3, "reps": "10", "rest_s": 90, "cue": "pull elbows as far back as you can with moderately heavy weight"},
+          {"name": "Hammer Pulldowns", "sets": 3, "reps": "8-10", "rest_s": 90, "cue": "heavy! Deep stretch"},
+          {"name": "Cable Lat Pullovers", "sets": 3, "reps": "10+", "rest_s": 90, "cue": "go until you're doing 3-4 partials and failing"},
+          {"name": "Reverse DB Flyes", "sets": 3, "reps": "10-12", "rest_s": 90},
+          {"name": "Reverse Cable Curls", "sets": 3, "reps": "8-10", "rest_s": 15, "group": "Tue-A"},
+          {"name": "Cable Bar Curls", "sets": 3, "reps": "same weight, curl till complete failure", "rest_s": null, "group": "Tue-A"}
+        ]},
+        {"day": "Wed", "name": "Legs and abs", "est_min": 45, "exercises": [
+          {"name": "Hamstring Hyperextensions", "sets": 3, "reps": "AMRAP", "rest_s": 90},
+          {"name": "Machine Adductors", "sets": 3, "reps": "12-15", "rest_s": 90},
+          {"name": "Single Leg Press", "sets": 3, "reps": "10-12 each side", "rest_s": 90},
+          {"name": "BB Squats (smith machine)", "sets": 2, "reps": "8-10", "rest_s": 90},
+          {"name": "Seated Hamstring Curls", "sets": 3, "reps": "2 sets of 8-10, 1 lighter set of 12-15", "rest_s": 90, "cue": "focusing on huge squeeze"},
+          {"name": "Hanging Leg Raises", "sets": 3, "reps": "AMRAP", "rest_s": 0, "group": "Wed-A"},
+          {"name": "Russian Twists", "sets": 3, "reps": "30 s", "rest_s": 90, "group": "Wed-A"}
+        ]},
+        {"day": "Thu", "name": "Upper Push #2", "est_min": 45, "exercises": [
+          {"name": "Pec Deck Flyes", "sets": 3, "reps": "12-15", "rest_s": 90, "alternates": ["Cable Flyes", "Flat DB Flyes"]},
+          {"name": "Incline DB Bench", "sets": 3, "reps": "2 sets of 8-10, 1 backoff set of ~30% less weight for AMRAP", "rest_s": 90},
+          {"name": "Flat Smith Machine Bench", "sets": 3, "reps": "10-12", "rest_s": 90},
+          {"name": "Seated Lateral DB Raises", "sets": 4, "reps": "10", "rest_s": 15, "group": "Thu-A", "cue": "pick a weight where 10 starts to get really hard"},
+          {"name": "Standing Lateral DB Raises", "sets": 4, "reps": "stand up with same weight, go until complete failure (partials of 5+ at least)", "rest_s": 90, "group": "Thu-A"},
+          {"name": "Single Arm Cable Pushdowns", "sets": 3, "reps": "10-12 each side", "rest_s": 15},
+          {"name": "Incline DB Skullcrushers", "sets": 3, "reps": "12-15", "rest_s": 15}
+        ]},
+        {"day": "Fri", "name": "Upper Pull #2", "est_min": 55, "exercises": [
+          {"name": "Reverse Pec Deck Flyes", "sets": 3, "reps": "10-12", "rest_s": 90, "alternates": ["Reverse Cable Flyes", "Reverse DB Flyes"]},
+          {"name": "Cable Lat Pullovers", "sets": 3, "reps": "12-15", "rest_s": 90},
+          {"name": "Single Arm DB Rows", "sets": 3, "reps": "8-10", "rest_s": 90},
+          {"name": "Single Arm Cable Pulldowns", "sets": 3, "reps": "10", "rest_s": 90, "cue": "heavy, focus on big stretch and driving your elbow down and into your side at the bottom"},
+          {"name": "Incline DB Curls", "sets": 3, "reps": "8-10", "rest_s": 90, "cue": "go until failure, heavy"},
+          {"name": "Hammer Rope Curls", "sets": 3, "reps": "12-15", "rest_s": 90},
+          {"name": "Cable Ab Crunches", "sets": 3, "reps": "15", "rest_s": 0, "group": "Fri-A"},
+          {"name": "Ab Plank", "sets": 3, "reps": "30 s", "rest_s": 90, "group": "Fri-A"}
+        ]},
+        {"day": "Sat", "name": "Off (cardio / social)", "exercises": []},
+        {"day": "Sun", "name": "Off (cardio / social)", "exercises": []}
+      ]
+    }
+  ]
+}

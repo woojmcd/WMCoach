@@ -1,0 +1,186 @@
+{
+  "subject": "Walter",
+  "data_span": {
+    "first_weigh_in": "2024-12-28",
+    "last_weigh_in": "2026-05-14",
+    "n_weigh_ins": 279,
+    "last_weight_lb": 163.4,
+    "last_weekly_avg_lb": 164.6
+  },
+  "units": {
+    "weight": "lb",
+    "energy": "kcal",
+    "macros": "g"
+  },
+  "intake_basis": "Plan as written, 100% adherence; meats and rice weighed COOKED; oils/sauces/drinks not captured. Maintenance values are plan-calorie equivalents.",
+  "priors": {
+    "maintenance_kcal_per_lb": {
+      "mean": 13.2,
+      "sd_kcal": 250,
+      "on_plan_range": [12.4, 14.1],
+      "definition": "BASE maintenance: lifting 5 d/wk + daily life incl. normal walking, with ALL cardio removed (modelled stairs + Apple Health logged runs/rides/swims/hikes). TDEE = base + cardio kcal. Breaks excluded.",
+      "evidence": [
+        "Cut 2025 V1 2470 @174.9 lb = 14.1/lb",
+        "BULK25-V4 2362 @167.5 = 14.1/lb",
+        "BULK25-V5 2106 @170.4 = 12.4/lb",
+        "BULK25-V7 2266 @176.3 = 12.9/lb",
+        "Cut 2026 Feb 2321 @176.7 = 13.1/lb",
+        "Cut 2026 carb cycle Mar 5-May 14 2272 @170.3 = 13.3/lb"
+      ]
+    },
+    "kcal_per_lb_change": {
+      "loss": 3500,
+      "gain": 2750
+    },
+    "post_cut_absorption_kcal": {
+      "range": [300, 400],
+      "note": "After the 2025 break the bulk restarted at 1934 kcal; +365 kcal over ~6 wks gave only +0.28 lb/wk"
+    },
+    "fast_gain_threshold_kcal_over_maint": 250,
+    "glycogen_washout_days_after_carb_change": [5, 7],
+    "cardio_model": {
+      "stairs_net_met": 5.4,
+      "stairs_kcal_per_min_median_watch": 7.2,
+      "stairs_30min_kcal": 220,
+      "stairs_40min_kcal": 295,
+      "run_kcal_per_km": 70,
+      "kcal_per_min_formula": "5.4*3.5*kg/200",
+      "source": "23 Apple Watch stair sessions; runs from watch",
+      "prefer": "Apple Health workout kcal (deduplicated)"
+    },
+    "anomalies_excluded_from_priors": [
+      "Bulk ramp Jul-Sep 2025 base 1972 (11.8/lb) - post-break restart",
+      "BULK25-V6 Oct-Nov 2025 base 1767 (10.2/lb) - likely off-plan intake/glycogen",
+      "Cut 2025 late Mar 25-Apr 23 15.5/lb - water loss from carb cuts",
+      "Cut 2026 March sub-window 11.2/lb - water retention at start of endurance block (Mar-May combined = 13.3)"
+    ]
+  },
+  "targets": {
+    "cut_rate_pct_bw_per_wk": {
+      "target": [-0.75, -0.5],
+      "min_loss": -0.4,
+      "max_loss": -1.0
+    },
+    "gain_rate_pct_bw_per_wk": {
+      "target": [0.1, 0.2],
+      "max": 0.35
+    },
+    "protein_g_per_lb": {
+      "cut": [1.0, 1.1],
+      "gain": [0.8, 1.0],
+      "historical": [1.05, 1.3]
+    },
+    "fat_floor_g_per_lb": 0.3,
+    "fat_floor_g_abs": 45,
+    "carbs": "remainder; primary adjustment lever; bias to pre/post-workout meals"
+  },
+  "adjustment_rules": {
+    "check_in": "weekly",
+    "trend": {
+      "method": "time-aware EWMA",
+      "half_life_days": 7
+    },
+    "tdee_window_days": [21, 28],
+    "min_weigh_ins_in_window": 8,
+    "step_kcal": [100, 150],
+    "max_weekly_tdee_estimate_change_kcal": 150,
+    "consecutive_off_target_checkins_before_change": 2,
+    "cut_stall_tools": [
+      "reduce carbs 100-150 kcal",
+      "carb cycle: 2 high days (+225-340 kcal) / 5 low",
+      "1-2 wk diet break at maintenance",
+      "cardio last"
+    ],
+    "reverse_after_cut": {
+      "step_kcal_per_week": [100, 150],
+      "until_kcal_per_lb": 13.2
+    },
+    "post_cut": "drop/reduce cardio first (in 2026 that freed ~580 kcal/day), then add 100-150 kcal/wk toward 13.2 kcal/lb",
+    "endurance_days": "add carbs ~50% of logged workout kcal on rides >2 h / long runs; judge response to a new training block over >=4 weeks"
+  },
+  "history_summary_kcal": {
+    "cut_2025": {
+      "plan_kcal": [2343, 2011],
+      "rate_lb_wk": -1.1
+    },
+    "plateau_2025": {
+      "status": "break (off-plan)",
+      "dates": ["2025-04-24", "2025-07-19"]
+    },
+    "bulk_2025": {
+      "plan_kcal": [1934, 2539],
+      "rate_lb_wk": 0.5,
+      "too_fast_window": "2025-10-09..2025-11-14 at 2501 kcal: +1.34 lb/wk",
+      "dates": ["2025-07-20", "2025-12-20"]
+    },
+    "cut_2026": {
+      "plan_kcal": [2421, 2127],
+      "carb_cycle_avg": 2192,
+      "rate_lb_wk": -1.0,
+      "anomaly": "Apr 2026 acceleration explained by endurance block (Apple Health); March water retention"
+    }
+  },
+  "food_conversions": {
+    "rice_to_sweet_potato_g": 1.6,
+    "cooked_rice_30g_kcal": 34,
+    "sweet_potato_50g_kcal": 40,
+    "cream_of_rice_70g_dry_eq_rice_cakes": 5
+  },
+  "unknowns": [
+    "plans 2024-12-28..2025-02-10",
+    "2026 carb-cycle day split",
+    "whether 2026 stairs were on top of or replaced by endurance sessions",
+    "weigh-ins after 2026-05-14 (Health permission)",
+    "body composition (Health permission)"
+  ],
+  "activity_history": [
+    {
+      "period": ["2024-12-28", "2025-04-23"],
+      "lifting_days_wk": 5,
+      "stated_cardio": "stairs 6x40 min/wk",
+      "modelled_stairs_kcal_day": 255,
+      "apple_health": "phone only; steps 5.5k-9.2k/day; snowboarding trips"
+    },
+    {
+      "period": ["2025-07-20", "2025-12-20"],
+      "lifting_days_wk": 5,
+      "stated_cardio": "none; high natural walking",
+      "modelled_stairs_kcal_day": 0,
+      "apple_health": "steps 11.1k-12.8k/day (highest); short rides Oct-Dec"
+    },
+    {
+      "period": ["2026-02-01", "2026-05-14"],
+      "lifting_days_wk": 5,
+      "stated_cardio": "stairs 6x30 min/wk",
+      "modelled_stairs_kcal_day": 190,
+      "apple_health": "watch from ~late Feb; endurance block: runs 6-13 km/wk, rides incl. 152 km on 2026-04-19, swims, sprint triathlon 2026-05-03; logged extra cardio ~370-420 kcal/day Mar-May; steps 7.4k-8.6k/day"
+    },
+    {
+      "period": ["2026-05-15", "2026-10-08"],
+      "stated_cardio": "unknown",
+      "apple_health": "steps ~9.7k/day; ~1 lift/wk, ~1 run/wk (6.5 km) logged; no stairs logged"
+    }
+  ],
+  "breaks": [
+    {
+      "start": "2025-04-24",
+      "end": "2025-07-19",
+      "weight_change_lb": -1.3,
+      "range_lb": [164.0, 172.0]
+    },
+    {
+      "start": "2025-12-21",
+      "end": "2026-01-31",
+      "weight_change_lb": 0.6,
+      "weigh_ins": 2
+    }
+  ],
+  "break_rule": "Walter: any missing data = a break he took. Breaks are off-plan; exclude from TDEE learning; both historical breaks were weight-stable.",
+  "apple_health": {
+    "steps": "complete since 2024-12",
+    "active_energy": "phone-only until ~late Feb 2026, then mostly Apple Watch - not comparable across boundary",
+    "workouts": "duplicated by watch + companion app; dedupe by >=50% time overlap",
+    "not_imported": "Weight (152 samples since 2026-05-10), Body Fat % and Lean Body Mass (23 each) - read permission off",
+    "dietary_energy": "none logged"
+  }
+}
