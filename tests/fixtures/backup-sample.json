@@ -1,0 +1,2803 @@
+{
+ "app": "wmcoach",
+ "schema_version": 1,
+ "app_version": "0.1.0",
+ "exported_at": "2026-10-09T07:30:00.000Z",
+ "exported_tz": "Europe/Berlin",
+ "exported_local_date": "2026-10-09",
+ "stores": {
+  "meta": [
+   {
+    "key": "model",
+    "value": {
+     "schema_version": 1,
+     "generated_utc": "2026-10-09T07:30:00.000Z",
+     "source": "data/metabolic_profile.json",
+     "priors": {
+      "base_kcal_per_lb": 13.2,
+      "base_sd_kcal": 250,
+      "base_kcal_per_lb_range": [
+       12.4,
+       14.1
+      ],
+      "kcal_per_lb": {
+       "loss": 3500,
+       "gain": 2750
+      },
+      "cardio": {
+       "stairs_net_met": 5.4,
+       "stairs_kcal_per_min_median_watch": 7.2,
+       "run_kcal_per_km": 70,
+       "kcal_per_min_formula": "5.4*3.5*kg/200"
+      },
+      "glycogen_washout_days": [
+       5,
+       7
+      ]
+     },
+     "rate_bands_pct_bw_per_wk": {
+      "cut": {
+       "target": [
+        -0.75,
+        -0.5
+       ],
+       "slow_limit": -0.4,
+       "cap": -1
+      },
+      "bulk": {
+       "target": [
+        0.1,
+        0.2
+       ],
+       "cap": 0.35
+      },
+      "maintenance": {
+       "target": [
+        -0.1,
+        0.1
+       ]
+      }
+     },
+     "macro_floors": {
+      "protein_g_per_lb_min": 1,
+      "protein_g_per_lb": {
+       "cut": [
+        1,
+        1.1
+       ],
+       "gain": [
+        0.8,
+        1
+       ],
+       "historical": [
+        1.05,
+        1.3
+       ]
+      },
+      "fat_g_per_lb_min": 0.3,
+      "fat_g_min_abs": 45,
+      "fat_g_target_min": 50
+     },
+     "adjustment": {
+      "step_kcal": [
+       100,
+       150
+      ],
+      "max_weekly_change_kcal": 150,
+      "tdee_window_days": [
+       21,
+       28
+      ],
+      "min_weigh_ins_in_window": 8,
+      "observed_weight": {
+       "weighins_divisor": 30,
+       "cap": 0.85
+      },
+      "consecutive_off_target_checkins": 2
+     },
+     "trend": {
+      "half_life_days": 7,
+      "last_local_date": "2026-10-09",
+      "last_weight_lb": 168.4,
+      "trend_lb": 168.4
+     },
+     "tdee": {
+      "method": "prior",
+      "base_kcal": 2223,
+      "cardio_kcal": 0,
+      "estimate_kcal": 2223,
+      "weight_on_observed": 0,
+      "updated_local_date": "2026-10-09"
+     },
+     "phase_history": [
+      {
+       "id": "cut-2024-12-28",
+       "kind": "cut",
+       "label": "Cut 2025",
+       "start": "2024-12-28",
+       "end": "2025-04-23"
+      },
+      {
+       "id": "break-2025-04-24",
+       "kind": "break",
+       "label": "Break",
+       "start": "2025-04-24",
+       "end": "2025-07-19"
+      },
+      {
+       "id": "bulk-2025-07-20",
+       "kind": "bulk",
+       "label": "Bulk 2025",
+       "start": "2025-07-20",
+       "end": "2025-12-20"
+      },
+      {
+       "id": "break-2025-12-21",
+       "kind": "break",
+       "label": "Holiday break",
+       "start": "2025-12-21",
+       "end": "2026-01-31"
+      },
+      {
+       "id": "cut-2026-02-01",
+       "kind": "cut",
+       "label": "Cut 2026",
+       "start": "2026-02-01",
+       "end": "2026-05-14"
+      },
+      {
+       "id": "break-2026-05-15",
+       "kind": "break",
+       "label": "Unlogged",
+       "start": "2026-05-15",
+       "end": "2026-10-08"
+      },
+      {
+       "id": "bulk-2026-10-09",
+       "kind": "bulk",
+       "label": "Bulk 2026",
+       "start": "2026-10-09",
+       "end": null
+      }
+     ],
+     "progression": {},
+     "last_daily_run_local_date": null,
+     "last_weekly_run_week": null,
+     "observe_only": {
+      "since": "2026-10-09",
+      "min_new_weighins": 10,
+      "min_days": 14
+     }
+    },
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "key": "onboarding",
+    "value": {
+     "completed_utc": "2026-10-09T07:30:00.000Z",
+     "completed_local_date": "2026-10-09",
+     "tz": "Europe/Berlin",
+     "app_version": "0.1.0",
+     "history_weighins": 279
+    },
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "key": "settings",
+    "value": {
+     "tz_mode": "auto",
+     "tz_manual": null,
+     "tz_current": "Europe/Berlin",
+     "tz_history": [
+      {
+       "tz": "Europe/Berlin",
+       "from_utc": "2026-10-09T07:30:00.000Z"
+      }
+     ],
+     "home_tz": "America/Los_Angeles",
+     "height_in": 70,
+     "units": "lb",
+     "prep_day": 7,
+     "checkin_day": 5,
+     "rest_default_s": 90,
+     "rest_superset_s": 15,
+     "step_floor": 8000,
+     "mode": "bulk",
+     "mode_since": "2026-10-09",
+     "carb_cycling": false,
+     "lifted_less_since_may": true,
+     "created_utc": "2026-10-09T07:30:00.000Z",
+     "updated_utc": "2026-10-09T07:30:00.000Z"
+    },
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   }
+  ],
+  "phases": [
+   {
+    "id": "break-2025-04-24",
+    "kind": "break",
+    "label": "Break",
+    "start": "2025-04-24",
+    "end": "2025-07-19",
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "break-2025-12-21",
+    "kind": "break",
+    "label": "Holiday break",
+    "start": "2025-12-21",
+    "end": "2026-01-31",
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "break-2026-05-15",
+    "kind": "break",
+    "label": "Unlogged",
+    "start": "2026-05-15",
+    "end": "2026-10-08",
+    "source": "app",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "bulk-2025-07-20",
+    "kind": "bulk",
+    "label": "Bulk 2025",
+    "start": "2025-07-20",
+    "end": "2025-12-20",
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "bulk-2026-10-09",
+    "kind": "bulk",
+    "label": "Bulk 2026",
+    "start": "2026-10-09",
+    "end": null,
+    "source": "app",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "cut-2024-12-28",
+    "kind": "cut",
+    "label": "Cut 2025",
+    "start": "2024-12-28",
+    "end": "2025-04-23",
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "cut-2026-02-01",
+    "kind": "cut",
+    "label": "Cut 2026",
+    "start": "2026-02-01",
+    "end": "2026-05-14",
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   }
+  ],
+  "weighins": [
+   {
+    "id": "hist-2024-12-28",
+    "local_date": "2024-12-28",
+    "weight_lb": 185,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-01-04",
+    "local_date": "2025-01-04",
+    "weight_lb": 183.3,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-01-07",
+    "local_date": "2025-01-07",
+    "weight_lb": 181.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-01-14",
+    "local_date": "2025-01-14",
+    "weight_lb": 180.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-01-16",
+    "local_date": "2025-01-16",
+    "weight_lb": 180.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-01-21",
+    "local_date": "2025-01-21",
+    "weight_lb": 181.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-01-22",
+    "local_date": "2025-01-22",
+    "weight_lb": 180,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-01-28",
+    "local_date": "2025-01-28",
+    "weight_lb": 180.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-01-29",
+    "local_date": "2025-01-29",
+    "weight_lb": 179.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-01-30",
+    "local_date": "2025-01-30",
+    "weight_lb": 179.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-01-31",
+    "local_date": "2025-01-31",
+    "weight_lb": 179.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-01",
+    "local_date": "2025-02-01",
+    "weight_lb": 178.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-02",
+    "local_date": "2025-02-02",
+    "weight_lb": 180,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-03",
+    "local_date": "2025-02-03",
+    "weight_lb": 179.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-04",
+    "local_date": "2025-02-04",
+    "weight_lb": 179,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-06",
+    "local_date": "2025-02-06",
+    "weight_lb": 178.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-07",
+    "local_date": "2025-02-07",
+    "weight_lb": 178,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-08",
+    "local_date": "2025-02-08",
+    "weight_lb": 178.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-09",
+    "local_date": "2025-02-09",
+    "weight_lb": 178.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-10",
+    "local_date": "2025-02-10",
+    "weight_lb": 179.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-11",
+    "local_date": "2025-02-11",
+    "weight_lb": 178.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-12",
+    "local_date": "2025-02-12",
+    "weight_lb": 178,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-17",
+    "local_date": "2025-02-17",
+    "weight_lb": 177.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-18",
+    "local_date": "2025-02-18",
+    "weight_lb": 176.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-19",
+    "local_date": "2025-02-19",
+    "weight_lb": 176.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-20",
+    "local_date": "2025-02-20",
+    "weight_lb": 176,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-21",
+    "local_date": "2025-02-21",
+    "weight_lb": 176.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-22",
+    "local_date": "2025-02-22",
+    "weight_lb": 177.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-23",
+    "local_date": "2025-02-23",
+    "weight_lb": 176,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-24",
+    "local_date": "2025-02-24",
+    "weight_lb": 175.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-25",
+    "local_date": "2025-02-25",
+    "weight_lb": 175,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-26",
+    "local_date": "2025-02-26",
+    "weight_lb": 175,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-27",
+    "local_date": "2025-02-27",
+    "weight_lb": 174.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-02-28",
+    "local_date": "2025-02-28",
+    "weight_lb": 174,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-01",
+    "local_date": "2025-03-01",
+    "weight_lb": 173.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-02",
+    "local_date": "2025-03-02",
+    "weight_lb": 174.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-03",
+    "local_date": "2025-03-03",
+    "weight_lb": 174.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-14",
+    "local_date": "2025-03-14",
+    "weight_lb": 175.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-15",
+    "local_date": "2025-03-15",
+    "weight_lb": 174.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-16",
+    "local_date": "2025-03-16",
+    "weight_lb": 174,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-17",
+    "local_date": "2025-03-17",
+    "weight_lb": 173.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-18",
+    "local_date": "2025-03-18",
+    "weight_lb": 173,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-19",
+    "local_date": "2025-03-19",
+    "weight_lb": 173,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-21",
+    "local_date": "2025-03-21",
+    "weight_lb": 172,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-22",
+    "local_date": "2025-03-22",
+    "weight_lb": 171.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-23",
+    "local_date": "2025-03-23",
+    "weight_lb": 172.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-24",
+    "local_date": "2025-03-24",
+    "weight_lb": 173,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-25",
+    "local_date": "2025-03-25",
+    "weight_lb": 172.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-26",
+    "local_date": "2025-03-26",
+    "weight_lb": 172.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-27",
+    "local_date": "2025-03-27",
+    "weight_lb": 173,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-28",
+    "local_date": "2025-03-28",
+    "weight_lb": 172.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-29",
+    "local_date": "2025-03-29",
+    "weight_lb": 172.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-30",
+    "local_date": "2025-03-30",
+    "weight_lb": 172,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-03-31",
+    "local_date": "2025-03-31",
+    "weight_lb": 171.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-01",
+    "local_date": "2025-04-01",
+    "weight_lb": 170.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-02",
+    "local_date": "2025-04-02",
+    "weight_lb": 170.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-03",
+    "local_date": "2025-04-03",
+    "weight_lb": 170,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-04",
+    "local_date": "2025-04-04",
+    "weight_lb": 170.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-05",
+    "local_date": "2025-04-05",
+    "weight_lb": 173.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-06",
+    "local_date": "2025-04-06",
+    "weight_lb": 171.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-07",
+    "local_date": "2025-04-07",
+    "weight_lb": 171.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-08",
+    "local_date": "2025-04-08",
+    "weight_lb": 169.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-09",
+    "local_date": "2025-04-09",
+    "weight_lb": 170,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-10",
+    "local_date": "2025-04-10",
+    "weight_lb": 169.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-11",
+    "local_date": "2025-04-11",
+    "weight_lb": 168.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-12",
+    "local_date": "2025-04-12",
+    "weight_lb": 170.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-13",
+    "local_date": "2025-04-13",
+    "weight_lb": 169.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-14",
+    "local_date": "2025-04-14",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-15",
+    "local_date": "2025-04-15",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-16",
+    "local_date": "2025-04-16",
+    "weight_lb": 166.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-17",
+    "local_date": "2025-04-17",
+    "weight_lb": 169,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-18",
+    "local_date": "2025-04-18",
+    "weight_lb": 168.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-20",
+    "local_date": "2025-04-20",
+    "weight_lb": 168.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-21",
+    "local_date": "2025-04-21",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-22",
+    "local_date": "2025-04-22",
+    "weight_lb": 166.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-04-23",
+    "local_date": "2025-04-23",
+    "weight_lb": 166.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-02",
+    "local_date": "2025-05-02",
+    "weight_lb": 168.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-03",
+    "local_date": "2025-05-03",
+    "weight_lb": 169.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-05",
+    "local_date": "2025-05-05",
+    "weight_lb": 169.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-06",
+    "local_date": "2025-05-06",
+    "weight_lb": 172,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-07",
+    "local_date": "2025-05-07",
+    "weight_lb": 171.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-08",
+    "local_date": "2025-05-08",
+    "weight_lb": 170.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-09",
+    "local_date": "2025-05-09",
+    "weight_lb": 170.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-10",
+    "local_date": "2025-05-10",
+    "weight_lb": 169.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-11",
+    "local_date": "2025-05-11",
+    "weight_lb": 167.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-12",
+    "local_date": "2025-05-12",
+    "weight_lb": 167.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-13",
+    "local_date": "2025-05-13",
+    "weight_lb": 166.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-15",
+    "local_date": "2025-05-15",
+    "weight_lb": 167.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-16",
+    "local_date": "2025-05-16",
+    "weight_lb": 167,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-17",
+    "local_date": "2025-05-17",
+    "weight_lb": 168.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-18",
+    "local_date": "2025-05-18",
+    "weight_lb": 168.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-19",
+    "local_date": "2025-05-19",
+    "weight_lb": 167.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-05-31",
+    "local_date": "2025-05-31",
+    "weight_lb": 167.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-01",
+    "local_date": "2025-06-01",
+    "weight_lb": 167.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-02",
+    "local_date": "2025-06-02",
+    "weight_lb": 169.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-03",
+    "local_date": "2025-06-03",
+    "weight_lb": 170,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-04",
+    "local_date": "2025-06-04",
+    "weight_lb": 169.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-05",
+    "local_date": "2025-06-05",
+    "weight_lb": 168,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-06",
+    "local_date": "2025-06-06",
+    "weight_lb": 169.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-07",
+    "local_date": "2025-06-07",
+    "weight_lb": 167.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-09",
+    "local_date": "2025-06-09",
+    "weight_lb": 169,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-10",
+    "local_date": "2025-06-10",
+    "weight_lb": 168.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-11",
+    "local_date": "2025-06-11",
+    "weight_lb": 167.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-12",
+    "local_date": "2025-06-12",
+    "weight_lb": 166.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-13",
+    "local_date": "2025-06-13",
+    "weight_lb": 166.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-16",
+    "local_date": "2025-06-16",
+    "weight_lb": 169.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-17",
+    "local_date": "2025-06-17",
+    "weight_lb": 166.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-18",
+    "local_date": "2025-06-18",
+    "weight_lb": 165.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-19",
+    "local_date": "2025-06-19",
+    "weight_lb": 164.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-20",
+    "local_date": "2025-06-20",
+    "weight_lb": 165.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-21",
+    "local_date": "2025-06-21",
+    "weight_lb": 165.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-22",
+    "local_date": "2025-06-22",
+    "weight_lb": 164.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-23",
+    "local_date": "2025-06-23",
+    "weight_lb": 164.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-24",
+    "local_date": "2025-06-24",
+    "weight_lb": 164,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-25",
+    "local_date": "2025-06-25",
+    "weight_lb": 164,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-26",
+    "local_date": "2025-06-26",
+    "weight_lb": 165,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-28",
+    "local_date": "2025-06-28",
+    "weight_lb": 166.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-06-30",
+    "local_date": "2025-06-30",
+    "weight_lb": 167.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-01",
+    "local_date": "2025-07-01",
+    "weight_lb": 165,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-03",
+    "local_date": "2025-07-03",
+    "weight_lb": 164.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-08",
+    "local_date": "2025-07-08",
+    "weight_lb": 167.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-10",
+    "local_date": "2025-07-10",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-12",
+    "local_date": "2025-07-12",
+    "weight_lb": 165.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-13",
+    "local_date": "2025-07-13",
+    "weight_lb": 166.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-18",
+    "local_date": "2025-07-18",
+    "weight_lb": 167.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-20",
+    "local_date": "2025-07-20",
+    "weight_lb": 165.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-21",
+    "local_date": "2025-07-21",
+    "weight_lb": 166,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-23",
+    "local_date": "2025-07-23",
+    "weight_lb": 164.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-24",
+    "local_date": "2025-07-24",
+    "weight_lb": 164.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-27",
+    "local_date": "2025-07-27",
+    "weight_lb": 168.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-28",
+    "local_date": "2025-07-28",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-07-29",
+    "local_date": "2025-07-29",
+    "weight_lb": 166,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-03",
+    "local_date": "2025-08-03",
+    "weight_lb": 169,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-04",
+    "local_date": "2025-08-04",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-05",
+    "local_date": "2025-08-05",
+    "weight_lb": 166.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-07",
+    "local_date": "2025-08-07",
+    "weight_lb": 168.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-08",
+    "local_date": "2025-08-08",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-09",
+    "local_date": "2025-08-09",
+    "weight_lb": 164.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-10",
+    "local_date": "2025-08-10",
+    "weight_lb": 164.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-11",
+    "local_date": "2025-08-11",
+    "weight_lb": 164.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-15",
+    "local_date": "2025-08-15",
+    "weight_lb": 169.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-16",
+    "local_date": "2025-08-16",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-17",
+    "local_date": "2025-08-17",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-21",
+    "local_date": "2025-08-21",
+    "weight_lb": 169,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-22",
+    "local_date": "2025-08-22",
+    "weight_lb": 166.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-23",
+    "local_date": "2025-08-23",
+    "weight_lb": 167.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-27",
+    "local_date": "2025-08-27",
+    "weight_lb": 167.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-28",
+    "local_date": "2025-08-28",
+    "weight_lb": 167,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-29",
+    "local_date": "2025-08-29",
+    "weight_lb": 167.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-30",
+    "local_date": "2025-08-30",
+    "weight_lb": 167.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-08-31",
+    "local_date": "2025-08-31",
+    "weight_lb": 168.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-02",
+    "local_date": "2025-09-02",
+    "weight_lb": 167.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-03",
+    "local_date": "2025-09-03",
+    "weight_lb": 167.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-04",
+    "local_date": "2025-09-04",
+    "weight_lb": 167.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-13",
+    "local_date": "2025-09-13",
+    "weight_lb": 170,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-16",
+    "local_date": "2025-09-16",
+    "weight_lb": 171.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-17",
+    "local_date": "2025-09-17",
+    "weight_lb": 170.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-18",
+    "local_date": "2025-09-18",
+    "weight_lb": 168.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-19",
+    "local_date": "2025-09-19",
+    "weight_lb": 169.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-22",
+    "local_date": "2025-09-22",
+    "weight_lb": 172,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-23",
+    "local_date": "2025-09-23",
+    "weight_lb": 170.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-24",
+    "local_date": "2025-09-24",
+    "weight_lb": 169.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-25",
+    "local_date": "2025-09-25",
+    "weight_lb": 169.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-26",
+    "local_date": "2025-09-26",
+    "weight_lb": 170.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-27",
+    "local_date": "2025-09-27",
+    "weight_lb": 170.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-28",
+    "local_date": "2025-09-28",
+    "weight_lb": 171.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-29",
+    "local_date": "2025-09-29",
+    "weight_lb": 171,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-09-30",
+    "local_date": "2025-09-30",
+    "weight_lb": 170,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-06",
+    "local_date": "2025-10-06",
+    "weight_lb": 172.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-07",
+    "local_date": "2025-10-07",
+    "weight_lb": 170.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-08",
+    "local_date": "2025-10-08",
+    "weight_lb": 170.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-09",
+    "local_date": "2025-10-09",
+    "weight_lb": 169.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-10",
+    "local_date": "2025-10-10",
+    "weight_lb": 169.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-15",
+    "local_date": "2025-10-15",
+    "weight_lb": 171.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-16",
+    "local_date": "2025-10-16",
+    "weight_lb": 169,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-17",
+    "local_date": "2025-10-17",
+    "weight_lb": 169.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-18",
+    "local_date": "2025-10-18",
+    "weight_lb": 171,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-20",
+    "local_date": "2025-10-20",
+    "weight_lb": 173.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-21",
+    "local_date": "2025-10-21",
+    "weight_lb": 172.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-22",
+    "local_date": "2025-10-22",
+    "weight_lb": 171.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-24",
+    "local_date": "2025-10-24",
+    "weight_lb": 171.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-27",
+    "local_date": "2025-10-27",
+    "weight_lb": 176.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-28",
+    "local_date": "2025-10-28",
+    "weight_lb": 174,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-29",
+    "local_date": "2025-10-29",
+    "weight_lb": 174,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-10-31",
+    "local_date": "2025-10-31",
+    "weight_lb": 172.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-03",
+    "local_date": "2025-11-03",
+    "weight_lb": 176.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-04",
+    "local_date": "2025-11-04",
+    "weight_lb": 175.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-05",
+    "local_date": "2025-11-05",
+    "weight_lb": 173.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-06",
+    "local_date": "2025-11-06",
+    "weight_lb": 173.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-12",
+    "local_date": "2025-11-12",
+    "weight_lb": 178,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-13",
+    "local_date": "2025-11-13",
+    "weight_lb": 175,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-14",
+    "local_date": "2025-11-14",
+    "weight_lb": 175,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-15",
+    "local_date": "2025-11-15",
+    "weight_lb": 176.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-17",
+    "local_date": "2025-11-17",
+    "weight_lb": 176.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-18",
+    "local_date": "2025-11-18",
+    "weight_lb": 174.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-19",
+    "local_date": "2025-11-19",
+    "weight_lb": 174.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-20",
+    "local_date": "2025-11-20",
+    "weight_lb": 175.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-11-21",
+    "local_date": "2025-11-21",
+    "weight_lb": 175,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-02",
+    "local_date": "2025-12-02",
+    "weight_lb": 176.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-05",
+    "local_date": "2025-12-05",
+    "weight_lb": 176.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-09",
+    "local_date": "2025-12-09",
+    "weight_lb": 177.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-10",
+    "local_date": "2025-12-10",
+    "weight_lb": 175.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-11",
+    "local_date": "2025-12-11",
+    "weight_lb": 175.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-12",
+    "local_date": "2025-12-12",
+    "weight_lb": 176.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-15",
+    "local_date": "2025-12-15",
+    "weight_lb": 178,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-16",
+    "local_date": "2025-12-16",
+    "weight_lb": 177.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-17",
+    "local_date": "2025-12-17",
+    "weight_lb": 178.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-18",
+    "local_date": "2025-12-18",
+    "weight_lb": 177,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-19",
+    "local_date": "2025-12-19",
+    "weight_lb": 176.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2025-12-20",
+    "local_date": "2025-12-20",
+    "weight_lb": 176.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-01-16",
+    "local_date": "2026-01-16",
+    "weight_lb": 176.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-01-30",
+    "local_date": "2026-01-30",
+    "weight_lb": 179.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-02",
+    "local_date": "2026-02-02",
+    "weight_lb": 178.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-03",
+    "local_date": "2026-02-03",
+    "weight_lb": 178.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-04",
+    "local_date": "2026-02-04",
+    "weight_lb": 177.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-05",
+    "local_date": "2026-02-05",
+    "weight_lb": 176.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-06",
+    "local_date": "2026-02-06",
+    "weight_lb": 177.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-07",
+    "local_date": "2026-02-07",
+    "weight_lb": 176.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-08",
+    "local_date": "2026-02-08",
+    "weight_lb": 177,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-09",
+    "local_date": "2026-02-09",
+    "weight_lb": 179.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-10",
+    "local_date": "2026-02-10",
+    "weight_lb": 178,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-11",
+    "local_date": "2026-02-11",
+    "weight_lb": 177,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-12",
+    "local_date": "2026-02-12",
+    "weight_lb": 176.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-23",
+    "local_date": "2026-02-23",
+    "weight_lb": 176.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-24",
+    "local_date": "2026-02-24",
+    "weight_lb": 175.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-25",
+    "local_date": "2026-02-25",
+    "weight_lb": 176.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-26",
+    "local_date": "2026-02-26",
+    "weight_lb": 175.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-02-27",
+    "local_date": "2026-02-27",
+    "weight_lb": 176,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-01",
+    "local_date": "2026-03-01",
+    "weight_lb": 175.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-02",
+    "local_date": "2026-03-02",
+    "weight_lb": 175.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-03",
+    "local_date": "2026-03-03",
+    "weight_lb": 175.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-04",
+    "local_date": "2026-03-04",
+    "weight_lb": 175.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-05",
+    "local_date": "2026-03-05",
+    "weight_lb": 174.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-06",
+    "local_date": "2026-03-06",
+    "weight_lb": 175.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-09",
+    "local_date": "2026-03-09",
+    "weight_lb": 176,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-10",
+    "local_date": "2026-03-10",
+    "weight_lb": 175.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-11",
+    "local_date": "2026-03-11",
+    "weight_lb": 175,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-17",
+    "local_date": "2026-03-17",
+    "weight_lb": 174.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-18",
+    "local_date": "2026-03-18",
+    "weight_lb": 174.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-19",
+    "local_date": "2026-03-19",
+    "weight_lb": 174.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-22",
+    "local_date": "2026-03-22",
+    "weight_lb": 174.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-23",
+    "local_date": "2026-03-23",
+    "weight_lb": 173.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-24",
+    "local_date": "2026-03-24",
+    "weight_lb": 173,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-25",
+    "local_date": "2026-03-25",
+    "weight_lb": 172.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-26",
+    "local_date": "2026-03-26",
+    "weight_lb": 173.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-27",
+    "local_date": "2026-03-27",
+    "weight_lb": 173.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-28",
+    "local_date": "2026-03-28",
+    "weight_lb": 172.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-29",
+    "local_date": "2026-03-29",
+    "weight_lb": 174,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-30",
+    "local_date": "2026-03-30",
+    "weight_lb": 172.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-03-31",
+    "local_date": "2026-03-31",
+    "weight_lb": 174,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-01",
+    "local_date": "2026-04-01",
+    "weight_lb": 172.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-02",
+    "local_date": "2026-04-02",
+    "weight_lb": 171.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-03",
+    "local_date": "2026-04-03",
+    "weight_lb": 171.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-05",
+    "local_date": "2026-04-05",
+    "weight_lb": 172.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-06",
+    "local_date": "2026-04-06",
+    "weight_lb": 172.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-07",
+    "local_date": "2026-04-07",
+    "weight_lb": 170,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-08",
+    "local_date": "2026-04-08",
+    "weight_lb": 169.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-09",
+    "local_date": "2026-04-09",
+    "weight_lb": 169,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-10",
+    "local_date": "2026-04-10",
+    "weight_lb": 170,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-13",
+    "local_date": "2026-04-13",
+    "weight_lb": 169.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-14",
+    "local_date": "2026-04-14",
+    "weight_lb": 169,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-15",
+    "local_date": "2026-04-15",
+    "weight_lb": 168.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-16",
+    "local_date": "2026-04-16",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-17",
+    "local_date": "2026-04-17",
+    "weight_lb": 167.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-18",
+    "local_date": "2026-04-18",
+    "weight_lb": 167.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-21",
+    "local_date": "2026-04-21",
+    "weight_lb": 169.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-22",
+    "local_date": "2026-04-22",
+    "weight_lb": 166,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-23",
+    "local_date": "2026-04-23",
+    "weight_lb": 165.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-28",
+    "local_date": "2026-04-28",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-29",
+    "local_date": "2026-04-29",
+    "weight_lb": 167.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-04-30",
+    "local_date": "2026-04-30",
+    "weight_lb": 164.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-05-01",
+    "local_date": "2026-05-01",
+    "weight_lb": 165,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-05-04",
+    "local_date": "2026-05-04",
+    "weight_lb": 166.8,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-05-05",
+    "local_date": "2026-05-05",
+    "weight_lb": 165.6,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-05-06",
+    "local_date": "2026-05-06",
+    "weight_lb": 165.2,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-05-07",
+    "local_date": "2026-05-07",
+    "weight_lb": 164.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-05-12",
+    "local_date": "2026-05-12",
+    "weight_lb": 165,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-05-13",
+    "local_date": "2026-05-13",
+    "weight_lb": 165.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "hist-2026-05-14",
+    "local_date": "2026-05-14",
+    "weight_lb": 163.4,
+    "utc": null,
+    "tz": null,
+    "source": "history",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   },
+   {
+    "id": "w-fixture-1",
+    "utc": "2026-10-09T07:30:00.000Z",
+    "local_date": "2026-10-09",
+    "tz": "Europe/Berlin",
+    "weight_lb": 168.4,
+    "source": "app",
+    "updated_utc": "2026-10-09T07:30:00.000Z"
+   }
+  ]
+ }
+}
