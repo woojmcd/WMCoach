@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20460941096",
+  "name": "Lunch Ride",
+  "type": "Ride",
+  "start_local": "2026-10-05T11:17:33",
+  "local_date": "2026-10-05",
+  "duration_s": 10811,
+  "elapsed_s": 19524,
+  "distance_km": 61.11,
+  "elevation_m": 135,
+  "avg_hr": 108,
+  "max_hr": 141,
+  "hr_zones_s": null,
+  "relative_effort": 31,
+  "kcal": 990,
+  "location": "Koblenz, Germany",
+  "source": "strava"
+}

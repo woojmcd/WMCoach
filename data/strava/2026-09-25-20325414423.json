@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20325414423",
+  "name": "Afternoon Trail Run",
+  "type": "TrailRun",
+  "start_local": "2026-09-25T17:11:29",
+  "local_date": "2026-09-25",
+  "duration_s": 1619,
+  "elapsed_s": 1847,
+  "distance_km": 4.84,
+  "elevation_m": 179,
+  "avg_hr": 159,
+  "max_hr": 176,
+  "hr_zones_s": null,
+  "relative_effort": 46,
+  "kcal": 549,
+  "location": "Orvieto, Italy",
+  "source": "strava"
+}

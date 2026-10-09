@@ -86,9 +86,10 @@
   },
   "trend": {
     "half_life_days": 7,
-    "last_local_date": "2026-05-14",
-    "last_weight_lb": 163.4,
-    "trend_lb": 165.8
+    "last_local_date": "2026-10-09",
+    "last_weight_lb": 175.2,
+    "trend_lb": 175.2,
+    "rate_14d_pct_bw_wk": null
   },
   "tdee": {
     "method": "prior",
@@ -133,9 +134,32 @@
       "label": "Cut 2026",
       "start": "2026-02-01",
       "end": "2026-05-14"
+    },
+    {
+      "id": "break-2026-05-15",
+      "kind": "break",
+      "label": "Unlogged",
+      "start": "2026-05-15",
+      "end": "2026-10-08"
+    },
+    {
+      "id": "bulk-2026-10-09",
+      "kind": "bulk",
+      "label": "Bulk 2026",
+      "start": "2026-10-09",
+      "end": null
     }
   ],
   "progression": {},
-  "last_daily_run_local_date": null,
-  "last_weekly_run_week": null
+  "last_daily_run_local_date": "2026-10-09",
+  "last_weekly_run_week": null,
+  "readiness_history": [
+    {
+      "local_date": "2026-10-09",
+      "status": "green"
+    }
+  ],
+  "health_missing_on": "2026-10-09",
+  "last_daily_run_utc": "2026-10-09T19:50:15.792Z",
+  "last_daily_run_tz": "America/Los_Angeles"
 }

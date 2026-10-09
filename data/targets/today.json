@@ -1,0 +1,393 @@
+{
+  "schema_version": 1,
+  "local_date": "2026-10-09",
+  "tz": "America/Los_Angeles",
+  "generated_utc": "2026-10-09T19:50:15.792Z",
+  "readiness": {
+    "status": "green",
+    "flags": [],
+    "reason": "no recovery data",
+    "missing": true,
+    "travel": null
+  },
+  "day": {
+    "dow": 5,
+    "name": "Upper Pull #2",
+    "rest_day": false
+  },
+  "program_week": 0,
+  "deload": {
+    "active": false,
+    "reason": null
+  },
+  "exercises": [
+    {
+      "slot_id": "fri-reverse-pec-deck-flyes",
+      "movement": "reverse-pec-deck-flyes",
+      "name": "Reverse Pec Deck Flyes",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 10–12 reps at RIR 2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            2,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            2,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            2,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "fri-cable-lat-pullovers",
+      "movement": "cable-lat-pullovers",
+      "name": "Cable Lat Pullovers",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 12–15 reps at RIR 1–2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "fri-single-arm-db-rows",
+      "movement": "single-arm-db-rows",
+      "name": "Single Arm DB Rows",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 8–10 reps at RIR 1–2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "fri-single-arm-cable-pulldowns",
+      "movement": "single-arm-cable-pulldowns",
+      "name": "Single Arm Cable Pulldowns",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 10 reps at RIR 1–2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "fri-incline-db-curls",
+      "movement": "incline-db-curls",
+      "name": "Incline DB Curls",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 8–10 reps at RIR 1",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "fri-hammer-rope-curls",
+      "movement": "hammer-rope-curls",
+      "name": "Hammer Rope Curls",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 12–15 reps at RIR 1–2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "fri-cable-ab-crunches",
+      "movement": "cable-ab-crunches",
+      "name": "Cable Ab Crunches",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 15 reps at RIR 1–2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 15,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 15,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 15,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "fri-ab-plank",
+      "movement": "ab-plank",
+      "name": "Ab Plank",
+      "load": null,
+      "change": null,
+      "calibration": false,
+      "reason": null,
+      "sets": [
+        {
+          "kind": "timed",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": null,
+          "seconds": 30
+        },
+        {
+          "kind": "timed",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": null,
+          "seconds": 30
+        },
+        {
+          "kind": "timed",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": null,
+          "seconds": 30
+        }
+      ]
+    }
+  ],
+  "addons": []
+}
