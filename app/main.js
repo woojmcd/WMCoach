@@ -63,10 +63,14 @@ const ctx = {
     render({ keepScroll: true });
   },
   async checkUpdate() {
-    toast('Checking for updates…', 1500);
+    toast('Checking for updates…', 30000);
     const ready = await checkForUpdate();
-    if (ready) showUpdateReady();
-    else toast(`You’re on the latest version (${APP_VERSION})`);
+    if (ready) {
+      showUpdateReady();
+      toast('Update ready: tap Reload at the top');
+    } else {
+      toast(`You’re on the latest version (${APP_VERSION})`);
+    }
   },
 };
 

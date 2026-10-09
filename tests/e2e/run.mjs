@@ -223,7 +223,12 @@ try {
   await page.getByRole('button', { name: '+ Waist', exact: true }).click();
   await page.locator('.chart svg.chart-svg.overlay').waitFor();
   assert.equal(await page.locator('.chart svg.chart-svg').count(), 2, 'waist panel under the weight plot');
-  const box = await page.locator('.chart svg.chart-svg').first().boundingBox();
+  // The chart redraws once at its real width after mounting; wait until it has settled.
+  let box = null;
+  for (let i = 0; i < 30 && !box; i += 1) {
+    box = await page.locator('.chart svg.chart-svg').first().boundingBox();
+    if (!box) await page.waitForTimeout(100);
+  }
   await page.mouse.click(box.x + box.width - 30, box.y + box.height / 2);
   await page.locator('.chart-tip.show').waitFor();
   await trendCardLoc.screenshot({ path: STAGE === 'stage-2' ? `${OUT}b08-trend-waist.png` : `${tmp}/x.png` });
@@ -337,9 +342,17 @@ try {
   await page.locator('.tabbar').waitFor();
   await context.setOffline(false);
 
+  step('Check for update with nothing new says so');
+  await page.goto(`${url}#/settings`);
+  await page.locator('.item', { hasText: 'Check for update' }).click();
+  await toastText(page, 'latest version');
+
   step('Update flow: new version waits for the banner, snapshot saved, then reload');
   state.versionOverride = '9.9.9-e2e';
-  await page.evaluate(() => navigator.serviceWorker.getRegistration().then((r) => r.update()));
+  // Use the Settings button itself: it must wait for the download, not report "latest" early.
+  await page.goto(`${url}#/settings`);
+  await page.locator('.item', { hasText: 'Check for update' }).click();
+  await toastText(page, 'Update ready');
   await page.getByText('Update available').waitFor({ timeout: 15000 });
   await shot(page, '13-update-banner', { stage: 'all' });
   assert.equal(await page.evaluate(() => document.querySelector('.banner') !== null), true);
