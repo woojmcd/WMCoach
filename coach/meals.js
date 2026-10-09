@@ -88,6 +88,23 @@ function bump(meals, meal, food, delta) {
   return true;
 }
 
+// The carb step between positions j and j+1 (position 0 = the template).
+const stepBetween = (j) => (j >= 0 ? STEPS[j % 2] : STEPS[(-j - 1) % 2]);
+
+// One carb step up (+1) or down (−1) from the plan's current position (plan.carb_steps),
+// keeping every other food as it is (swaps, flags). Spec §8.0 order: rice, then sweet potato.
+export function nextCarbStep(plan, dir) {
+  const out = clone(plan);
+  const k = out.carb_steps || 0;
+  const step = dir > 0 ? stepBetween(k) : stepBetween(k - 1);
+  let moved = false;
+  for (const meals of Object.values(out.days)) {
+    for (const [meal, food, d] of step) if (bump(meals, meal, food, dir > 0 ? d : -d)) moved = true;
+  }
+  out.carb_steps = moved ? k + (dir > 0 ? 1 : -1) : k;
+  return { plan: out, moved };
+}
+
 export function applyCarbSteps(plan, n) {
   const out = clone(plan);
   for (const meals of Object.values(out.days)) {

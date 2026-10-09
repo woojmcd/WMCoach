@@ -60,8 +60,8 @@ export const DB_VERSION = MIGRATIONS[MIGRATIONS.length - 1].version;
 // Local safety copies are never part of an export (they *are* exports).
 export const EXPORT_EXCLUDE = new Set(['snapshots']);
 // Meta records that stay on this phone: never exported, imported over, or synced
-// (the GitHub token and the sync bookkeeping).
-export const PRIVATE_META = new Set(['github', 'sync']);
+// (the GitHub token, the sync bookkeeping, and the cache of what the routine published).
+export const PRIVATE_META = new Set(['github', 'sync', 'remote']);
 
 // Write listeners (the sync queue): told which records changed after each commit.
 const writeListeners = new Set();

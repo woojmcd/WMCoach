@@ -33,6 +33,28 @@ function bestE1rm(entry) {
   return best;
 }
 
+// Main lifts (spec §6.4): the latest session in the window vs the one before it,
+// by best-set e1RM. dir: up | down | flat (±1 %) | baseline (first time).
+export function mainLiftChanges(sessions, program, period) {
+  const lifts = [];
+  if (!program) return lifts;
+  for (const day of program.days) {
+    for (const ex of day.exercises) {
+      if (!ex.main_lift) continue;
+      const hist = historyFor(sessions, ex.id, ex.movement).filter((e) => !e.deload);
+      const latestIdx = hist.map((e) => e.local_date >= period.from && e.local_date <= period.to).lastIndexOf(true);
+      if (latestIdx < 0) continue;
+      const cur = bestE1rm(hist[latestIdx]);
+      const prev = latestIdx > 0 ? bestE1rm(hist[latestIdx - 1]) : null;
+      if (!cur) continue;
+      if (!prev) { lifts.push({ name: ex.name, dir: 'baseline', cur }); continue; }
+      const change = (cur.e1rm - prev.e1rm) / prev.e1rm;
+      lifts.push({ name: ex.name, dir: change > 0.01 ? 'up' : change < -0.01 ? 'down' : 'flat', cur, prev });
+    }
+  }
+  return lifts;
+}
+
 // The window a check-in reviews: the 7 days ending on its date.
 export function summaryPeriod(checkinDate) {
   return { from: addDays(checkinDate, -6), to: checkinDate };
@@ -131,22 +153,7 @@ function trainingPoint({ sessions, program, period, today }) {
   }
   const missed = planned.filter((p) => !p.done);
   const doneCount = inWeek.length;
-  // main lifts: the latest session in the window vs the one before it
-  const lifts = [];
-  for (const day of program.days) {
-    for (const ex of day.exercises) {
-      if (!ex.main_lift) continue;
-      const hist = historyFor(sessions, ex.id, ex.movement).filter((e) => !e.deload);
-      const latestIdx = hist.map((e) => e.local_date >= period.from && e.local_date <= period.to).lastIndexOf(true);
-      if (latestIdx < 0) continue;
-      const cur = bestE1rm(hist[latestIdx]);
-      const prev = latestIdx > 0 ? bestE1rm(hist[latestIdx - 1]) : null;
-      if (!cur) continue;
-      if (!prev) { lifts.push({ name: ex.name, dir: 'baseline', cur }); continue; }
-      const change = (cur.e1rm - prev.e1rm) / prev.e1rm;
-      lifts.push({ name: ex.name, dir: change > 0.01 ? 'up' : change < -0.01 ? 'down' : 'flat', cur, prev });
-    }
-  }
+  const lifts = mainLiftChanges(sessions, program, period);
   const up = lifts.filter((l) => l.dir === 'up');
   const down = lifts.filter((l) => l.dir === 'down');
   const flat = lifts.filter((l) => l.dir === 'flat');
@@ -235,7 +242,13 @@ function planPoint({ plans, adherenceOk, dataOk, checkinDate, today }) {
   if (upcoming && upcoming.changes && upcoming.changes.changed && upcoming.source !== 'carry') {
     const k = upcoming.changes.kcal;
     const when = `${WEEKDAYS[isoWeekday(upcoming.week_start) - 1]} ${formatDayMonth(upcoming.week_start)}`;
-    return { key: 'plan', tone: 'info', title: 'Plan', text: `${started ? 'Changed' : 'Changes'} ${when}: ${k.delta > 0 ? '+' : ''}${k.delta} kcal a day (${k.from.toLocaleString('en-US')} → ${k.to.toLocaleString('en-US')}). See Meals for the food changes.` };
+    const why = upcoming.decision && upcoming.decision.reason ? ` Reason: ${upcoming.decision.reason}.` : '';
+    return { key: 'plan', tone: 'info', title: 'Plan', text: `${started ? 'Changed' : 'Changes'} ${when}: ${k.delta > 0 ? '+' : ''}${k.delta} kcal a day (${k.from.toLocaleString('en-US')} → ${k.to.toLocaleString('en-US')}).${why} See Meals for the food changes.` };
+  }
+  // the weekly run decided to hold: say why, in its words
+  if (upcoming && upcoming.source === 'routine' && upcoming.decision) {
+    const kcal0 = upcoming.plan && upcoming.plan.weekly_avg ? Math.round(upcoming.plan.weekly_avg.kcal) : null;
+    return { key: 'plan', tone: 'info', title: 'Plan', text: `Same plan ${started ? 'this' : 'next'} week${kcal0 ? ` (${kcal0.toLocaleString('en-US')} kcal a day)` : ''}: prep as usual. No macro change: ${upcoming.decision.reason}.` };
   }
   const kcal = shown && shown.plan && shown.plan.weekly_avg ? Math.round(shown.plan.weekly_avg.kcal) : null;
   const same = `Same plan ${started ? 'this' : 'next'} week${kcal ? ` (${kcal.toLocaleString('en-US')} kcal a day)` : ''}: prep as usual.`;

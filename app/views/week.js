@@ -5,7 +5,7 @@ import { live } from '../records.js';
 import { focusCheckin } from './body.js';
 import { checkinState, currentPhase, realPhases } from '../../coach/phase.js';
 import { weeklySummary, activeSummaryCheckin } from '../../coach/summary.js';
-import { header, note, sessionList } from './common.js';
+import { header, note, sessionList, addonCard } from './common.js';
 import { loadTraining, planFor, progressCount } from '../training.js';
 import { planItem } from './log.js';
 import { ensurePlans, planNotice } from '../meal-plans.js';
@@ -104,6 +104,7 @@ export async function render(screen, ctx) {
       h('span', { class: 'grow' }, h('div', { class: 'strong' }, `New plan ${WEEKDAYS[isoWeekday(notice.week_start) - 1]}`), h('div', { class: 'muted xsmall' }, notice.delta ? `${notice.delta > 0 ? '+' : ''}${notice.delta} kcal a day: see the changes` : 'See the changes')),
       h('button', { type: 'button', class: 'btn small primary', onClick: () => ctx.navigate('#/meals') }, 'View')));
   }
+  for (const a of training.addons || []) banners.push(addonCard(a));
   if (ci.open && !ci.done) {
     banners.push(h('div', { class: 'banner' },
       h('span', { class: 'accent' }, icon('body', { size: 20 })),

@@ -3,28 +3,23 @@
 import { getAll, put } from './db.js';
 import { live } from './records.js';
 import { newId } from './seed.js';
-import { planDay, historyFor, deloadStatus, programWeek, roundToIncrement } from '../coach/progression.js';
+import { planDay, trainingCalendar, roundToIncrement } from '../coach/progression.js';
 import { dayForWeekday } from '../coach/program.js';
 import { isoWeekday, stamp } from '../coach/time.js';
-
-const byStart = (a, b) => (a.local_date === b.local_date ? ((a.started_utc || '') < (b.started_utc || '') ? -1 : 1) : a.local_date < b.local_date ? -1 : 1);
+import { remoteState, todaysTargets, healthMissing } from './remote.js';
 
 export async function loadTraining(ctx) {
   const [sAll, prefsAll, stairsAll] = await Promise.all([getAll(ctx.db, 'sessions'), getAll(ctx.db, 'exercise_prefs'), getAll(ctx.db, 'stairs')]);
-  const sessions = live(sAll).sort(byStart);
   const prefs = Object.fromEntries(prefsAll.map((p) => [p.id, p]));
   const today = ctx.today();
-  const programStart = sessions.length ? sessions[0].local_date : null;
-  const week = programWeek(today, programStart || today);
-  const deloadWeeks = [...new Set(sessions.filter((s) => s.deload).map((s) => s.week))];
-  const mainHistories = {};
-  if (ctx.program) {
-    for (const d of ctx.program.days) {
-      for (const ex of d.exercises) if (ex.main_lift) mainHistories[ex.id] = historyFor(sessions, ex.id, ex.movement).filter((e) => !e.deload);
-    }
-  }
-  const deload = deloadStatus({ today, programStart: programStart || today, deloadWeeks, mainHistories });
-  return { sessions, prefs, stairs: live(stairsAll), today, programStart, week, deload };
+  const { sessions, programStart, week, deload } = trainingCalendar(live(sAll), ctx.program, today);
+  // today's readiness from the daily run (spec §6.3), if it has run today
+  const remote = await remoteState(ctx.db);
+  const targets = todaysTargets(remote, today);
+  return {
+    sessions, prefs, stairs: live(stairsAll), today, programStart, week, deload,
+    readiness: targets ? targets.readiness : null, addons: targets ? targets.addons || [] : [], healthMissing: healthMissing(remote, today),
+  };
 }
 
 export function planOptions(ctx, training) {
@@ -33,6 +28,7 @@ export function planOptions(ctx, training) {
     week: training.week,
     deload: training.deload.isDeload,
     liftedLess: Boolean(ctx.settings.lifted_less_since_may),
+    readiness: training.readiness,
     prefs: training.prefs,
   };
 }

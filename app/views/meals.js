@@ -1,7 +1,8 @@
 // Meals tab (spec §4.4): this week's plan in Walter's format (meals → foods →
 // cooked weights), "What changed", prep list, grocery list, travel mode, GI flags.
 import { h, icon, openSheet, segmented, toast, fmtInt } from '../ui.js';
-import { header, sectionLabel, note } from './common.js';
+import { header, sectionLabel, note, addonCard } from './common.js';
+import { remoteState, todaysTargets } from '../remote.js';
 import { put } from '../db.js';
 import { ensurePlans } from '../meal-plans.js';
 import {
@@ -73,6 +74,10 @@ export async function render(screen, ctx) {
     ctx.refresh();
   }, { label: 'Meal plan or travel targets' })));
 
+  // endurance add-ons (spec §8.5): today only, never part of the prep
+  const targets = todaysTargets(await remoteState(ctx.db), ctx.today());
+  for (const a of (targets && targets.addons) || []) screen.append(h('div', { style: 'margin-bottom:16px' }, addonCard(a)));
+
   if (travel) {
     screen.append(travelCard(plan));
     return;
@@ -90,9 +95,10 @@ export async function render(screen, ctx) {
     screen.append(h('div', { class: 'card changed' },
       h('div', { class: 'row between' }, h('p', { class: 'label', style: 'color:var(--accent)' }, 'What changed'), h('span', { class: 'muted xsmall' }, vs)),
       h('div', { class: 'list' }, lines),
-      current.reason ? h('p', { class: 'muted xsmall', style: 'margin:8px 0 0' }, current.reason) : null));
+      current.reason ? h('p', { class: 'muted xsmall', style: 'margin:8px 0 0' }, current.source === 'routine' ? `Why: ${current.reason}` : current.reason) : null,
+      ...(current.notes || []).map((n) => h('p', { class: 'muted xsmall', style: 'margin:4px 0 0' }, n))));
   } else if (previous) {
-    screen.append(h('p', { class: 'muted small', style: 'margin:0 0 16px' }, 'Same plan as last week: prep as usual.'));
+    screen.append(h('p', { class: 'muted small', style: 'margin:0 0 16px' }, current.source === 'routine' && current.reason ? `Same plan as last week: prep as usual. ${current.reason}` : 'Same plan as last week: prep as usual.'));
   }
   if (current.mode && s.mode !== current.mode) {
     screen.append(h('div', { class: 'banner', style: 'margin:16px 0' }, h('span', { class: 'grow' }, `You’re in ${s.mode} now; this week’s food is the ${current.mode} plan, locked until ${formatDayMonth(current.week_end)}. The weekly run builds the first ${s.mode} plan.`)));

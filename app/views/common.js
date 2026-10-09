@@ -2,6 +2,7 @@ import { h, icon } from '../ui.js';
 import { daysBetween, formatDayMonth, formatMonthYear } from '../../coach/time.js';
 import { describeEntry } from '../../coach/progression.js';
 import { syncBadge } from '../sync-ui.js';
+import { SHORTCUT_URL } from '../remote.js';
 
 export function header({ label, title, right = null }) {
   return h('header', { class: 'header' },
@@ -44,4 +45,18 @@ export function sessionList(session, program) {
       h('span', { class: 'grow' }, e.label ? `${e.label} ${e.name}` : e.name),
       h('span', { class: 'value xsmall', style: 'max-width:55%' }, text));
   }));
+}
+
+// Today's Health file isn't in the repo yet (spec §12): run the Shortcut by hand.
+export function healthChip() {
+  return h('a', { class: 'health-chip', href: SHORTCUT_URL }, icon('refresh', { size: 16 }), 'Sync Health');
+}
+
+// Endurance add-on (spec §8.5): grab-and-go carbs, separate from the prepped meals.
+export function addonCard(a) {
+  return h('div', { class: 'banner addon' },
+    h('span', { class: 'accent' }, icon('meals', { size: 20 })),
+    h('span', { class: 'grow' },
+      h('div', { class: 'strong' }, `Refuel today: +${a.kcal} kcal of carbs (~${a.carbs_g} g)`),
+      h('div', { class: 'muted xsmall' }, `${a.ideas.join(' + ')}. Not from the prep. ${a.reason}.`)));
 }
