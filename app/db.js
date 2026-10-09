@@ -24,6 +24,16 @@ export const MIGRATIONS = [
       s.createIndex('created_utc', 'created_utc');
     },
   },
+  {
+    version: 2,
+    description: 'Body tab: mode changes, weekly measurements, weekly check-ins, daily on-plan taps',
+    up(db) {
+      for (const name of ['mode_changes', 'measurements', 'checkins', 'adherence']) {
+        const store = db.createObjectStore(name, { keyPath: 'id' });
+        store.createIndex('local_date', 'local_date');
+      }
+    },
+  },
 ];
 
 export const DB_VERSION = MIGRATIONS[MIGRATIONS.length - 1].version;

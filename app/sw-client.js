@@ -30,12 +30,26 @@ export function updateWaiting() {
   return Boolean(registration && registration.waiting && navigator.serviceWorker.controller);
 }
 
-export async function checkForUpdate() {
+// Resolves true when a new version is installed and waiting for Reload.
+// update() returns before a found update finishes downloading, so wait for
+// the installing worker to settle instead of reporting "latest" too early.
+export async function checkForUpdate({ timeoutMs = 30000 } = {}) {
   if (!registration) return false;
   try {
     await registration.update();
   } catch {
     return false;
+  }
+  const worker = registration.installing;
+  if (worker) {
+    await new Promise((resolve) => {
+      const settle = () => {
+        if (worker.state !== 'installing') resolve();
+      };
+      worker.addEventListener('statechange', settle);
+      setTimeout(resolve, timeoutMs);
+      settle();
+    });
   }
   return updateWaiting();
 }

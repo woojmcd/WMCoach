@@ -1,93 +1,11 @@
 {
  "app": "wmcoach",
- "schema_version": 2,
- "app_version": "0.2.0",
+ "schema_version": 1,
+ "app_version": "0.1.0",
  "exported_at": "2026-10-09T07:30:00.000Z",
  "exported_tz": "Europe/Berlin",
  "exported_local_date": "2026-10-09",
  "stores": {
-  "adherence": [
-   {
-    "id": "plan-fixture-1",
-    "utc": "2026-10-09T07:30:00.000Z",
-    "tz": "Europe/Berlin",
-    "updated_utc": "2026-10-09T07:30:00.000Z",
-    "local_date": "2026-10-08",
-    "status": "yes",
-    "kcal": null
-   },
-   {
-    "id": "plan-fixture-2",
-    "utc": "2026-10-09T07:30:00.000Z",
-    "tz": "Europe/Berlin",
-    "updated_utc": "2026-10-09T07:30:00.000Z",
-    "local_date": "2026-10-09",
-    "status": "partial",
-    "kcal": 2600
-   }
-  ],
-  "checkins": [
-   {
-    "id": "ci-fixture-1",
-    "utc": "2026-10-09T07:30:00.000Z",
-    "tz": "Europe/Berlin",
-    "updated_utc": "2026-10-09T07:30:00.000Z",
-    "local_date": "2026-10-09",
-    "week": "2026-W41",
-    "due_date": "2026-10-09",
-    "adherence_pct": 95,
-    "adherence_auto_pct": 93,
-    "adherence_taps": 6,
-    "biofeedback": {
-     "hunger": 4,
-     "energy": 4,
-     "sleep": 3,
-     "stress": 4,
-     "digestion": 5
-    },
-    "note": "fixture",
-    "measurement_id": "meas-fixture-1"
-   }
-  ],
-  "measurements": [
-   {
-    "id": "meas-fixture-1",
-    "utc": "2026-10-09T07:30:00.000Z",
-    "tz": "Europe/Berlin",
-    "updated_utc": "2026-10-09T07:30:00.000Z",
-    "local_date": "2026-10-09",
-    "unit": "in",
-    "readings": {
-     "waist": [
-      32.1,
-      32.3
-     ],
-     "neck": [
-      15.2,
-      15.2
-     ],
-     "chest": [
-      40,
-      40.2
-     ],
-     "arm": [
-      14.1,
-      14.1
-     ],
-     "thigh": [
-      22.5,
-      22.7
-     ]
-    },
-    "avg": {
-     "waist": 32.2,
-     "neck": 15.2,
-     "chest": 40.1,
-     "arm": 14.1,
-     "thigh": 22.6
-    }
-   }
-  ],
   "meta": [
    {
     "key": "model",
@@ -259,7 +177,7 @@
      "completed_utc": "2026-10-09T07:30:00.000Z",
      "completed_local_date": "2026-10-09",
      "tz": "Europe/Berlin",
-     "app_version": "0.2.0",
+     "app_version": "0.1.0",
      "history_weighins": 279
     },
     "updated_utc": "2026-10-09T07:30:00.000Z"
@@ -292,20 +210,6 @@
      "updated_utc": "2026-10-09T07:30:00.000Z"
     },
     "updated_utc": "2026-10-09T07:30:00.000Z"
-   }
-  ],
-  "mode_changes": [
-   {
-    "id": "mode-fixture-1",
-    "utc": "2026-10-09T07:30:00.000Z",
-    "tz": "Europe/Berlin",
-    "updated_utc": "2026-10-09T07:30:00.000Z",
-    "local_date": "2026-10-09",
-    "from": "bulk",
-    "to": "maintenance",
-    "kind": "switch",
-    "effective_date": "2026-10-11",
-    "targets": null
    }
   ],
   "phases": [
