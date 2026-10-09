@@ -1,0 +1,15 @@
+{
+  "schema_version": 4,
+  "key": "push_subscription",
+  "updated_utc": "2026-10-09T19:01:04.618Z",
+  "value": {
+    "endpoint": "https://web.push.apple.com/QKR3Snf_ReN-g3GxSYkJtEhu_vITRlc-NvNkraTtbdFbRo-dwKxh615MIGy8QwNS4cEz3qp8Md-tLQsMrL20dkSJk434DO4lqlHIcSjIw5wRcDVDtX2kU38CVnq3xmW4YFLh27A-AisJsjgBX181_OAl-gPIh8vSGHF6XSgfofY",
+    "keys": {
+      "p256dh": "BE8H8VxqiCRWSw-OfBi38InD_LAobTjIZtUVrdM6izkj4dM7ACQGzP5RQjLsgrgPbbYFW67tRy0L3p_nStM31mI",
+      "auth": "mq8pRUHmZmKPkNlQjMXSpA"
+    },
+    "vapid_public_key": "BHBc4NePrJ9Od52993rpCwPv7jrJfGhHp-oSr8lZ5hsIF4FD9MxbVbCIIk3pjMDvQjxLfhvbHuyT-ZwpWkQvSq0",
+    "created_utc": "2026-10-09T19:01:03.454Z",
+    "updated_utc": "2026-10-09T19:01:03.454Z"
+  }
+}

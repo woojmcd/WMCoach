@@ -1,7 +1,7 @@
 {
   "schema_version": 4,
   "key": "settings",
-  "updated_utc": "2026-10-09T18:14:15.992Z",
+  "updated_utc": "2026-10-09T19:02:47.257Z",
   "value": {
     "tz_mode": "auto",
     "tz_manual": null,
@@ -16,7 +16,7 @@
     "height_in": 67,
     "units": "lb",
     "prep_day": 7,
-    "checkin_day": 1,
+    "checkin_day": 2,
     "rest_default_s": 90,
     "rest_superset_s": 15,
     "step_floor": 8000,
@@ -25,7 +25,7 @@
     "carb_cycling": false,
     "lifted_less_since_may": true,
     "created_utc": "2026-10-09T16:19:36.712Z",
-    "updated_utc": "2026-10-09T18:14:15.992Z",
+    "updated_utc": "2026-10-09T19:02:47.257Z",
     "travel_mode": false
   }
 }
