@@ -1,7 +1,7 @@
 // Log tab (spec §4.2): today's session, fast set logging, rest timer,
 // "Finish session" → next targets computed on-device (spec §6.2).
 import { h, icon, toast, openSheet, confirmSheet, stepper, chips, segmented } from '../ui.js';
-import { header, note } from './common.js';
+import { header, note, healthChip, addonCard } from './common.js';
 import { put } from '../db.js';
 import { saveDaily } from '../records.js';
 import {
@@ -109,8 +109,16 @@ export async function render(screen, ctx) {
   const change = h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Change workout', onClick: () => chooseDay(ctx, today) }, icon('week'));
   screen.append(header({ label, title: day.name, right: change }));
 
+  if (training.healthMissing) screen.append(h('div', { class: 'chip-row' }, healthChip(), h('span', { class: 'muted xsmall' }, 'Today’s recovery data isn’t in yet.')));
+  for (const a of training.addons) screen.append(addonCard(a));
+
   // notices
   const notices = [];
+  const rd = training.readiness;
+  if (rd && !session.deload && session.status === 'draft') {
+    if (rd.status === 'amber') notices.push(['Readiness: amber', `${cap(rd.reason)}. Loads held today; beating a held target still counts as progress.`]);
+    if (rd.status === 'red') notices.push(['Readiness: red', `${cap(rd.reason)}. Same loads, one set fewer per exercise.`]);
+  }
   if (session.deload) notices.push(['Deload week', 'Half the sets, same loads, RIR 3+; finishers stop 2 short of failure.']);
   if (ctx.settings.lifted_less_since_may && training.week <= 2 && !session.deload) notices.push(['Easing back in', training.week <= 1 ? 'One rep further from failure (RIR +1), no load increases this week.' : 'One rep further from failure (RIR +1) this week.']);
   const calibrating = session.exercises.filter((e) => e.calibration && !e.skipped).length;
@@ -192,7 +200,7 @@ function exerciseCard(ctx, { session, idxs, pidx, training, save }) {
         badge, more),
       h('div', { class: 'ex-target' }, e.skipped ? 'Skipped' : targetLine(e, pex)),
       e.last && !e.skipped ? h('div', { class: 'ex-last' }, `Last: ${e.last}`) : null,
-      e.reason && !e.skipped && (e.change === 'down' || /hold|twice|Deload|easing|once more|Unassisted|Every set/i.test(e.reason)) ? h('div', { class: 'reason-chip' }, e.reason) : null,
+      e.reason && !e.skipped && (e.change === 'down' || /hold|held|set fewer|twice|Deload|easing|once more|Unassisted|Every set/i.test(e.reason)) ? h('div', { class: 'reason-chip' }, e.reason) : null,
       e.note ? h('div', { class: 'ex-cue' }, `Note: ${e.note}`) : null));
   }
   const rows = rowsForCard(session, idxs);
@@ -478,4 +486,8 @@ async function showNextTargets(ctx, session, day) {
     body: h('div', { class: 'list' }, lines),
     actions: [{ label: 'Done', kind: 'primary' }],
   });
+}
+
+function cap(x) {
+  return x ? x.charAt(0).toUpperCase() + x.slice(1) : x;
 }

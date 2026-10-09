@@ -643,3 +643,8 @@ body.resting .screen { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom)
 .sync-badge.paused { background: rgba(212, 106, 95, 0.14); color: var(--bad); }
 .sync-error { color: var(--warn); }
 .row-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+/* Stage 6: routine outputs on the phone */
+.chip-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 12px; }
+.health-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 14px; border-radius: 18px; border: 1px solid rgba(212, 180, 119, 0.45); color: var(--accent); background: var(--accent-dim); font-size: 14px; font-weight: 600; text-decoration: none; }
+.banner.addon { margin-bottom: 12px; }

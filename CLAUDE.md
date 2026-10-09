@@ -21,7 +21,7 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 
 ## Decisions Walter has made (don't re-ask)
 - **The repo stays public** (2026-10-09), so GitHub Pages works on a free account. Synced data under `data/` (`log/`, `health/`, `strava/`, …) is publicly readable; Walter accepted that. Still never commit tokens or secrets.
-- **Check-in prompts** (2026-10-09). On check-in day the Body tab shows a filled "Log measurements & check-in" button under Weight (a gold link on other days), and the Week tab shows a banner. Walter also wants a **push notification on the morning of check-in day**. iOS home-screen web apps can't schedule local notifications, so it is sent by the daily routine via Web Push (spec §8.4). Stage 5 (done): Settings → Notifications asks permission from a button in the installed app and syncs the subscription to `data/log/push_subscription.json`. Stage 6: `ops/daily_prompt.md` sends it on the morning run of check-in day. Until then Walter can use a one-line iOS Shortcut reminder.
+- **Check-in prompts** (2026-10-09). On check-in day the Body tab shows a filled "Log measurements & check-in" button under Weight (a gold link on other days), and the Week tab shows a banner. Walter also wants a **push notification on the morning of check-in day**. iOS home-screen web apps can't schedule local notifications, so it is sent by the daily routine via Web Push (spec §8.4). Stage 5 (done): Settings → Notifications asks permission from a button in the installed app and syncs the subscription to `data/log/push_subscription.json`. Stage 6 (done): the daily run queues it on the morning of `settings.checkin_day` and `scripts/send_push.mjs` sends it.
 - **Week in review** (2026-10-09). After each weekly check-in the Week tab shows an executive summary of the past 7 days and the plan change: blunt, but encouraging, never downplaying the numbers. It stays up through the plan week that follows (until the next check-in replaces it).
 
 ## Repo layout (spec §12a)
@@ -29,10 +29,11 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 |---|---|
 | `index.html`, `manifest.webmanifest`, `sw.js`, `icons/` | PWA shell at the repo root, so the app lives at `https://woojmcd.github.io/WMCoach/`. Never move it: the URL is where the phone keeps its data. |
 | `app/` | Browser code (plain ES modules, no build step). `app/views/` = one module per screen. |
-| `coach/` | Pure coaching functions (time/timezone, trend, seeding, model, program; later progression, readiness, TDEE, plan generator). No DOM or storage APIs (a test enforces this). Shared by the app and the Node scripts. |
-| `scripts/` | Node scripts (generators, the dev server, later the daily routine's scripts). |
+| `coach/` | Pure coaching functions: time/timezone, trend, seeding, model, program, progression, phase, meals, summary, readiness, Strava, TDEE, the weekly step and the daily run (`routine.js`). No DOM or storage APIs (a test enforces this). Shared by the app and the Node scripts. |
+| `scripts/` | Node scripts: generators, the dev server, and the daily routine's `daily.mjs` / `send_push.mjs` (`scripts/lib/`: disk repo adapter, Web Push). |
+| `ops/` | `daily_prompt.md`: the routine's instructions (its saved prompt is just "Follow ops/daily_prompt.md."). |
 | `tests/unit/`, `tests/migration/`, `tests/e2e/`, `tests/fixtures/` | Tests. |
-| `data/` | Seed history (read-only), generated `program.json`, routine-owned `model/`, and later `log/`, `health/`, `strava/`, `targets/`, `plan/` (one writer per path, spec §2). |
+| `data/` | Seed history (read-only), generated `program.json`, and one writer per path (spec §2): `log/` (phone), `health/` (Shortcut), `strava/`, `targets/`, `plan/`, `model/` (routine). |
 | `docs/` | Guides for Walter, plus PR screenshots in `docs/screenshots/<stage>/`. |
 
 ## Commands
@@ -41,6 +42,8 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 - `npm run e2e`: headless Chromium at 375 × 812 covering every stage so far (install, onboarding, tabs, Body flows, timezone, export/import, offline, update flow, upgrade from an older database). Each screenshot is tagged with the stage it documents; a run writes only `$E2E_STAGE`'s (default: the newest stage) to `docs/screenshots/<stage>/`. When you add a stage, bump the default and tag its new shots. In Claude Code cloud sessions Chromium is preinstalled; don't run `playwright install`.
 - `npm run serve`: the app at `http://localhost:8080/WMCoach/`, the same path as GitHub Pages.
 - `npm run build:program`: regenerate `data/program.json` from `training_history.json` (a test fails if it's stale).
+- `node scripts/daily.mjs --preflight` / `--dry-run [--now <ISO>] [--strava file]`: what the daily run would do, without writing. Never run it without `--dry-run` in a dev session: it writes routine-owned files.
+- `node scripts/vapid_keys.mjs <file outside the repo>`: a new Web Push key pair (public key → `app/push-config.js`; private key → the routine environment's `VAPID_PRIVATE_KEY` only).
 - `npm run fixture`: regenerate `tests/fixtures/backup-sample.json` (current schema, with records in every store). Prefer a real export from Walter when he provides one. Older fixtures (`backup-v1.json`, …) are **frozen**: they prove an old phone's data still upgrades. Never regenerate or delete them.
 
 ## Releasing (every PR that changes the app)
@@ -85,7 +88,16 @@ The new service worker installs in the background and waits. Walter sees "Update
 - The token and sync state are meta keys `github` and `sync` (`PRIVATE_META`): never exported, synced, or overwritten by an import.
 - Restore from GitHub: onboarding rebuilds an empty phone (`seedFromRemote`); Settings merges (never Replace: the repo doesn't hold the seeded history).
 - Push: `app/push.js`, public key in `app/push-config.js`. The service worker shows `{ title, body, url, tag }` payloads and opens only URLs inside the app's scope. Walter's guide: `docs/github-sync.md`.
-- Pulling routine outputs (`data/plan/`, `data/targets/`) into the phone comes with stage 6, together with their formats.
+- `app/remote.js` pulls what the routine publishes (needs GitHub sync connected): `data/targets/today.json` → readiness on the Log tab and add-on cards, `data/plan/current.json` / `next.json` → the plans store (`source: 'routine'`, replacing a seeded or carried plan for that week), and whether `data/health/<today>.json` exists → the **Sync Health** chip (Log, Body) that opens `shortcuts://run-shortcut?name=WMCoach%20Health`. The cache is meta `remote` (private).
+
+## Daily routine (stage 6)
+- The routine `coach-daily` follows `ops/daily_prompt.md`: preflight, Strava via the connector into `.coach/strava.json`, `node scripts/daily.mjs`, commit to `main`, `node scripts/send_push.mjs`. Setup: `docs/routine.md` (environment with `VAPID_PRIVATE_KEY` as an environment variable and `web.push.apple.com` allowed; schedules 10:07 and 18:07 Los Angeles as backups; API trigger for the Shortcut). Shortcut: `docs/shortcut.md` (first morning unlock, spec §12).
+- `dailyRun()` in `coach/routine.js` is the whole run as a pure function (repo in, files out), tested end to end in `tests/unit/routine.test.js`. It is idempotent per local date (`last_daily_run_local_date`), with one exception: a Health file that arrives after the run triggers a readiness-and-targets-only rerun, once (spec §2b).
+- Writes only `data/strava/` (new files only, one per activity), `data/targets/today.json`, `data/plan/` (changelog append-only) and `data/model/state.json`. `checkWrites()` and `scripts/daily.mjs` refuse anything else (exit 2).
+- Readiness (`coach/readiness.js`, spec §6.3): amber holds every load (`planDay({ readiness })`, reason chip "Held: …"); red also drops one set; no Health data → green; ≥ 3 h zone shift caps at amber for 2 nights.
+- Weekly step (`coach/weekly.js`): `weeklyDecision()` in §10 order (adherence ≥ 90 %, ≥ 5 weigh-ins and the observe-only start, rate vs band over 2 weekly steps, washout week after a change, cut recovery, steps before food in a cut), then one carb step (`nextCarbStep`, ≤ 150 kcal) and GI swaps (`avoidFlagged`). Mode switches build the first plan per §8.3 (`firstPlanForMode`). The notification goes out every Saturday, changed or not.
+- Expenditure (`coach/tdee.js`, brief §5): prior 13.2 kcal/lb × trend + cardio, blended with observed (intake − slope × K), weight min(0.85, n/30), ±150/week clamp against a recent estimate. `blockMaintenance()` reproduces every brief §1b block (back-test).
+- Web Push (`scripts/lib/webpush.mjs`): RFC 8291 aes128gcm (test vector) + VAPID ES256, `node:crypto` only. Payload `{ title, body, url, tag }`. Notifications: a one-time hello on the first run, check-in morning on `settings.checkin_day`, the weekly plan message.
 
 ## Timezone
 Walter travels. "Today" always means his current local date in the zone from `settings.tz_current`. It follows the iPhone by default (Settings → Timezone); `coach/time.js` has the helpers. Every stored entry carries `utc`, `local_date` and `tz`. Daily records are keyed by `local_date` and never auto-merged when a date repeats after a date-line crossing.

@@ -1,7 +1,8 @@
 // Body tab (spec §4.3), top to bottom: mode switch, daily weight, Friday
 // measurements + check-in, trend graph, "On plan today?".
 import { h, icon, toast, openSheet, segmented, chips, stepper } from '../ui.js';
-import { header, sectionLabel } from './common.js';
+import { header, sectionLabel, healthChip } from './common.js';
+import { remoteState, healthMissing } from '../remote.js';
 import { getAll, getMeta, put } from '../db.js';
 import { saveDaily, removeRecord, live } from '../records.js';
 import { newId } from '../seed.js';
@@ -57,9 +58,9 @@ export async function render(screen, ctx) {
   const tz = ctx.tz();
   if (!ui.weightDate || ui.weightDate > today) ui.weightDate = today;
 
-  const [wAll, phasesAll, mAll, cAll, tAll, model, lastExport] = await Promise.all([
+  const [wAll, phasesAll, mAll, cAll, tAll, model, lastExport, remote] = await Promise.all([
     getAll(db, 'weighins'), getAll(db, 'phases'), getAll(db, 'measurements'), getAll(db, 'checkins'), getAll(db, 'adherence'),
-    getMeta(db, 'model'), getMeta(db, 'last_export'),
+    getMeta(db, 'model'), getMeta(db, 'last_export'), remoteState(db),
   ]);
   const weighins = live(wAll);
   const phases = realPhases(phasesAll);
@@ -96,6 +97,7 @@ export async function render(screen, ctx) {
   screen.append(
     modeCard(ctx, { phase, status, model, measurements }),
     sectionLabel('Weight'),
+    ...(healthMissing(remote, today) ? [h('div', { class: 'chip-row' }, healthChip(), h('span', { class: 'muted xsmall' }, 'Today’s Health data isn’t in yet.'))] : []),
     weightCard(ctx, { weighins, today, tz, lastTrend }));
 
   // Entry point under Weight: a filled button while the check-in is due (Walter

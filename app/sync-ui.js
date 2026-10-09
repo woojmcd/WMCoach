@@ -11,6 +11,7 @@ import {
   DEFAULT_REPO, SYNC_META, SYNC_STORES, NEEDS_USER, retryDelayS, GitHub, LOG_DIR,
 } from './sync.js';
 import { localDate, formatDayMonth, localParts } from '../coach/time.js';
+import { pullRemote, remoteState, healthMissing } from './remote.js';
 
 export const TOKEN_GUIDE = 'https://github.com/woojmcd/WMCoach/blob/main/docs/github-sync.md';
 
@@ -60,11 +61,25 @@ export function startSync(ctx) {
     badgeSoon();
     schedule(SETTLE_MS); // a weigh-in and an on-plan tap a few seconds apart → one commit
   });
-  window.addEventListener('online', () => schedule(500));
+  window.addEventListener('online', () => { schedule(500); refreshRemote(); });
   // back in the app: catch up; leaving it: push now, before iOS suspends the app
-  document.addEventListener('visibilitychange', () => schedule(document.visibilityState === 'visible' ? 1000 : 0));
+  document.addEventListener('visibilitychange', async () => {
+    schedule(document.visibilityState === 'visible' ? 1000 : 0);
+    if (document.visibilityState !== 'visible') return;
+    // back from the Health Shortcut: look again right away
+    refreshRemote(healthMissing(await remoteState(ctx.db), ctx.today()));
+  });
   refreshBadge();
   schedule(1500);
+  setTimeout(() => refreshRemote(), 2000);
+}
+
+// Pull what the routine published (plans, today's targets, Health present?) and redraw if it changed.
+export async function refreshRemote(force = false) {
+  if (!loop.ctx || navigator.onLine === false) return null;
+  const r = await pullRemote(loop.ctx, { force });
+  if (r.changed) loop.ctx.refresh();
+  return r;
 }
 
 // manual: Settings → Sync now (ignores backoff and a paused state).
@@ -133,6 +148,7 @@ export async function syncSection(ctx) {
     syncBtn.disabled = true;
     syncBtn.textContent = 'Syncing…';
     const r = await runSync({ manual: true });
+    await refreshRemote(true);
     if (r.status === 'ok') toast(r.pushed ? `Synced ${fmtInt(r.pushed)} change${r.pushed === 1 ? '' : 's'}` : 'Already up to date');
     else if (r.status === 'error') toast(r.message, 5000);
     ctx.refresh();

@@ -271,7 +271,7 @@ export function targetFor(ex, history, ctx = {}) {
 
   let reason;
   if (ctx.deload) reason = 'Deload: same load, half the sets, easy reps';
-  else if (ready && ctx.noIncrease) reason = 'Week 1 back: hold the load';
+  else if (ready && ctx.noIncrease) reason = ctx.holdReason || 'Week 1 back: hold the load';
   else if (below === 2) reason = `Below ${min} twice at ${load}: hold`;
   else if (ctx.mode === 'cut' && hitTop(last)) reason = `Top of the range once at ${load}: once more to add load (cut)`;
   else reason = max > min ? `Aim +1 rep where below ${max}` : `Aim for ${max} on every set`;
@@ -292,25 +292,60 @@ export function historyFor(sessions, slotId, movement) {
   return out;
 }
 
+// Readiness (spec §6.3): Amber holds every load; Red also drops one set per exercise.
+function dropOneSet(t) {
+  const main = t.sets.filter((x) => x.kind !== 'backoff');
+  if (main.length <= 1) return t;
+  const kind = main[main.length - 1].kind;
+  const idx = t.sets.map((x) => x.kind).lastIndexOf(kind);
+  return { ...t, sets: t.sets.filter((_, i) => i !== idx) };
+}
+
 // Planned exercises for a program day: targets per slot with superset partners following their lead.
-// opts: { mode, week, deload, liftedLess, prefs: { slotId: { increment_lb, swap: {name, movement} } } }
+// opts: { mode, week, deload, liftedLess, prefs: { slotId: { increment_lb, swap: {name, movement} } },
+//         readiness: { status: 'green'|'amber'|'red', reason } }
 export function planDay(day, sessions, opts = {}) {
   // "Lifted less since May" (spec §2a): weeks 1–2 at target RIR + 1, no load increases in week 1.
   const rirBump = opts.liftedLess && opts.week <= 2 && !opts.deload ? 1 : 0;
-  const noIncrease = Boolean(opts.liftedLess && opts.week <= 1);
+  const r = opts.readiness && !opts.deload && (opts.readiness.status === 'amber' || opts.readiness.status === 'red') ? opts.readiness : null;
+  const noIncrease = Boolean((opts.liftedLess && opts.week <= 1) || r);
+  const holdReason = r ? `Held: ${r.reason}` : null;
   const leadLoads = {};
   return day.exercises.map((ex) => {
     const pref = (opts.prefs && opts.prefs[ex.id]) || {};
     const movement = pref.swap ? pref.swap.movement : ex.movement;
     const hist = historyFor(sessions, ex.id, movement);
-    const t = targetFor(ex, hist, {
-      mode: opts.mode, deload: Boolean(opts.deload), rirBump, noIncrease,
+    let t = targetFor(ex, hist, {
+      mode: opts.mode, deload: Boolean(opts.deload), rirBump, noIncrease, holdReason,
       increment: pref.increment_lb, leadLoad: ex.same_load_as ? leadLoads[ex.same_load_as] : undefined,
     });
     if (ex.type === 'superset_lead') leadLoads[ex.id] = t.load;
+    if (r && r.status === 'red' && !t.calibration) {
+      const before = t.sets.length;
+      t = dropOneSet(t);
+      if (t.sets.length < before) t = { ...t, reason: `${t.reason ? `${t.reason} · ` : ''}one set fewer today (readiness red)` };
+    }
     let reason = t.reason;
     // timed holds have no RIR, so "easing back" doesn't apply to them
     if (rirBump && !t.calibration && ex.type !== 'timed') reason = reason ? `${reason} · easing back: RIR +1` : 'Easing back: RIR +1';
     return { ex, movement, name: pref.swap ? pref.swap.name : ex.name, swapped_from: pref.swap ? ex.name : null, target: { ...t, reason } };
   });
+}
+
+// The training calendar from the logged sessions (shared by the phone and the daily run):
+// program start, program week, and this week's deload status (§6.4).
+const byStart = (a, b) => (a.local_date === b.local_date ? ((a.started_utc || '') < (b.started_utc || '') ? -1 : 1) : a.local_date < b.local_date ? -1 : 1);
+export function trainingCalendar(sessions, program, today) {
+  const live = sessions.filter((s) => !s.deleted).sort(byStart);
+  const programStart = live.length ? live[0].local_date : null;
+  const week = programWeek(today, programStart || today);
+  const deloadWeeks = [...new Set(live.filter((s) => s.deload).map((s) => s.week))];
+  const mainHistories = {};
+  if (program) {
+    for (const d of program.days) {
+      for (const ex of d.exercises) if (ex.main_lift) mainHistories[ex.id] = historyFor(live, ex.id, ex.movement).filter((e) => !e.deload);
+    }
+  }
+  const deload = deloadStatus({ today, programStart: programStart || today, deloadWeeks, mainHistories });
+  return { sessions: live, programStart, week, deload };
 }

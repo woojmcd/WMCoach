@@ -8,8 +8,10 @@ import assert from 'node:assert/strict';
 import { startServer } from '../../scripts/serve.mjs';
 import { DB_VERSION } from '../../app/db.js';
 import { FakeGitHub } from '../fixtures/fake-github.mjs';
+import { startingPlan, nextCarbStep, withMacros } from '../../coach/meals.js';
+import { planRecord } from '../../coach/weekly.js';
 
-const STAGE = process.env.E2E_STAGE || 'stage-5';
+const STAGE = process.env.E2E_STAGE || 'stage-6';
 const OUT = new URL(`../../docs/screenshots/${STAGE}/`, import.meta.url).pathname;
 const PORT = Number(process.env.E2E_PORT || 4173);
 await mkdir(OUT, { recursive: true });
@@ -573,6 +575,7 @@ try {
   const afterReview = await context.storageState({ indexedDB: true });
 
   const gh = new FakeGitHub();
+  let synced = null;
   step('GitHub sync: connect, first push (one commit, never the token)');
   {
     const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: afterReview });
@@ -678,6 +681,7 @@ try {
     await p.evaluate(() => window.scrollBy(0, -60));
     await p.waitForTimeout(3000);
     await shot(p, 'e05-notifications', S5);
+    synced = await c.storageState({ indexedDB: true });
     await c.close();
   }
 
@@ -710,6 +714,69 @@ try {
     assert.equal(gh.commitMessages().length, before, 'a restore doesn’t push anything back');
     await c.close();
   }
+
+  const S6 = { stage: 'stage-6' };
+  step('Routine outputs on the phone: readiness, Sync Health chip, add-on, the published plan');
+  {
+    const mon = '2026-10-19';
+    gh.externalCommit('data/targets/today.json', JSON.stringify({
+      schema_version: 1, local_date: mon, tz: 'America/Los_Angeles', generated_utc: '2026-10-19T15:00:00Z',
+      readiness: { status: 'amber', reason: '5.2 h sleep', flags: [{ key: 'sleep', text: '5.2 h sleep' }], missing: false },
+      day: { dow: 1, name: 'Push #1' }, program_week: 2, deload: { active: false }, exercises: [],
+      addons: [{ local_date: mon, activity_id: '777', kcal: 500, carbs_g: 125, reason: 'Long Ride: 190 min, 1,000 kcal, finished late yesterday', ideas: ['banana', 'plain bagel', '500 ml sports drink'] }],
+    }), 'daily 2026-10-19 (America/Los_Angeles)');
+    const plansJson = JSON.parse(await readFile(new URL('../../data/plans.json', import.meta.url), 'utf8'));
+    const before = startingPlan(plansJson, { weekStart: '2026-10-11' });
+    const after = withMacros(plansJson.food_db, nextCarbStep(before, 1).plan);
+    const published = planRecord({
+      weekStart: '2026-10-18', mode: 'maintenance', plan: after, previous: { id: '2026-10-11', plan: before },
+      decision: { change: 1, reason: 'rate −0.14 %BW/wk for 2 wks, drifting down, adherence 96 %' },
+      reason: 'Rate −0.14 %BW/wk for 2 wks, drifting down, adherence 96 %.', nowUtc: '2026-10-17T15:00:00Z', localDate: '2026-10-17',
+    });
+    gh.externalCommit('data/plan/current.json', JSON.stringify(published), 'daily 2026-10-18 (America/Los_Angeles)');
+    const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: synced });
+    await routeGitHub(c, gh);
+    const p = await c.newPage();
+    watch(p);
+    await p.clock.install({ time: new Date('2026-10-19T15:00:00Z') }); // Mon 08:00 in LA
+    await p.goto(`${url}#/log`);
+    await p.getByText('Continue in Safari (testing only)').click();
+    await p.locator('.banner', { hasText: 'Readiness: amber' }).waitFor({ timeout: 15000 });
+    assert.match(await p.locator('.banner', { hasText: 'Readiness: amber' }).textContent(), /5\.2 h sleep\. Loads held today/);
+    assert.equal(await p.locator('.health-chip').getAttribute('href'), 'shortcuts://run-shortcut?name=WMCoach%20Health');
+    await p.locator('.banner.addon', { hasText: 'Refuel today: +500 kcal' }).waitFor();
+    await p.waitForTimeout(2500);
+    await shot(p, 'f01-log-readiness', { ...S6, full: true });
+    await tab(p, 'Body');
+    await p.locator('.health-chip').waitFor();
+    await p.waitForTimeout(300);
+    await shot(p, 'f02-body-health-chip', S6);
+
+    // the Shortcut commits today's Health file; back in the app, the chip goes
+    gh.externalCommit(`data/health/${mon}.json`, JSON.stringify({ date: mon, tz: 'America/Los_Angeles', hrv_ms: 58, resting_hr: 53, sleep_h: 5.2, steps: 9100 }), 'health');
+    await p.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
+    await p.locator('.health-chip').waitFor({ state: 'detached', timeout: 15000 });
+
+    await tab(p, 'Meals');
+    const changed = p.locator('.card.changed');
+    await changed.waitFor();
+    assert.match(await changed.textContent(), /Why: Rate −0\.14 %BW\/wk for 2 wks/);
+    assert.match(await changed.textContent(), /Post-workout rice 270 → 340 g/);
+    await p.locator('.banner.addon').first().waitFor();
+    await p.evaluate(() => window.scrollTo(0, 0));
+    await p.waitForTimeout(300);
+    await shot(p, 'f03-meals-published-plan', { ...S6, full: true });
+    await tab(p, 'Week');
+    await p.locator('.banner.addon').waitFor();
+    await shot(p, 'f04-week-addon', S6);
+    const plans = await p.evaluate(() => new Promise((resolve) => {
+      indexedDB.open('wmcoach').onsuccess = (e) => { e.target.result.transaction('plans').objectStore('plans').get('2026-10-18').onsuccess = (r) => resolve(r.target.result); };
+    }));
+    assert.equal(plans.source, 'routine');
+    assert.equal(plans.plan.weekly_avg.kcal, after.weekly_avg.kcal);
+    await c.close();
+  }
+
   await tab(page, 'History');
 
   step('Settings: manual timezone → toast + history; back to auto');
