@@ -3,14 +3,18 @@
 // rollback to older code reading a newer database.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { IDBFactory } from 'fake-indexeddb';
 import { openDB, MIGRATIONS, DB_VERSION, getAll, keyPathOf, writeAtomic, storeNames } from '../../app/db.js';
 import {
   applyImport, buildBackup, migrateBackup, previewImport, validateBackup, saveSnapshot, listSnapshots, SNAPSHOTS_KEPT,
 } from '../../app/backup.js';
 
-const fixture = JSON.parse(readFileSync(new URL('../fixtures/backup-sample.json', import.meta.url), 'utf8'));
+const fixtureDir = new URL('../fixtures/', import.meta.url);
+const load = (name) => JSON.parse(readFileSync(new URL(name, fixtureDir), 'utf8'));
+const fixture = load('backup-sample.json'); // current schema
+// Every fixture, including frozen older ones (backup-v1.json = a stage-1 phone).
+const allFixtures = readdirSync(fixtureDir).filter((f) => f.endsWith('.json')).map((f) => [f, load(f)]);
 
 async function assertAllRecordsSurvive(db, backup) {
   for (const [name, records] of Object.entries(backup.stores)) {
@@ -25,21 +29,42 @@ async function assertAllRecordsSurvive(db, backup) {
   }
 }
 
-test('fixture is a valid backup with seeded data', () => {
-  const v = validateBackup(fixture);
-  assert.equal(v.ok, true, v.errors.join('; '));
-  assert.equal(fixture.stores.weighins.length, 280);
-  assert.ok(fixture.stores.meta.find((m) => m.key === 'settings'));
+test('fixtures are valid backups with seeded data; the sample is at the current schema', () => {
+  assert.ok(allFixtures.length >= 2, 'keep the frozen older fixtures');
+  for (const [name, f] of allFixtures) {
+    const v = validateBackup(f);
+    assert.equal(v.ok, true, `${name}: ${v.errors.join('; ')}`);
+    assert.equal(f.stores.weighins.length, 280, name);
+    assert.ok(f.stores.meta.find((m) => m.key === 'settings'), name);
+  }
+  assert.equal(fixture.schema_version, DB_VERSION, 'run npm run fixture after adding a migration');
+  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence']) assert.ok(fixture.stores[store].length > 0, store);
 });
 
-test('fresh DB: all migrations run, fixture imports and every record survives', async () => {
-  const db = await openDB({ idb: new IDBFactory() });
+test('fresh DB: all migrations run, every fixture imports and every record survives', async () => {
+  for (const [name, f] of allFixtures) {
+    const db = await openDB({ idb: new IDBFactory() });
+    assert.equal(db.version, DB_VERSION);
+    const migrated = migrateBackup(f);
+    assert.equal(migrated.schema_version, DB_VERSION, name);
+    await applyImport(db, migrated, 'replace');
+    await assertAllRecordsSurvive(db, migrated);
+    const roundTrip = await buildBackup(db, { appVersion: 'test' });
+    for (const [store, records] of Object.entries(migrated.stores)) assert.deepEqual(roundTrip.stores[store], records, `${name}/${store}`);
+    db.close();
+  }
+});
+
+test('a stage-1 phone (v1 database) upgrades in place and keeps everything', async () => {
+  const v1 = load('backup-v1.json');
+  const idb = new IDBFactory();
+  const old = await openDB({ idb, migrations: MIGRATIONS.slice(0, 1) });
+  await writeAtomic(old, { writes: v1.stores });
+  old.close();
+  const db = await openDB({ idb });
   assert.equal(db.version, DB_VERSION);
-  const migrated = migrateBackup(fixture);
-  await applyImport(db, migrated, 'replace');
-  await assertAllRecordsSurvive(db, migrated);
-  const roundTrip = await buildBackup(db, { appVersion: 'test' });
-  assert.deepEqual(roundTrip.stores, migrated.stores);
+  await assertAllRecordsSurvive(db, v1);
+  for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence']) assert.ok(storeNames(db).includes(store), store);
   db.close();
 });
 

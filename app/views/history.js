@@ -2,12 +2,13 @@
 import { h, icon, fmtInt } from '../ui.js';
 import { header, sectionLabel, note, phaseRange } from './common.js';
 import { getAll, count, getMeta } from '../db.js';
+import { live } from '../records.js';
 import { formatDayMonth } from '../../coach/time.js';
 
 export async function render(screen, ctx) {
-  const phases = (await getAll(ctx.db, 'phases')).sort((a, b) => (a.start < b.start ? 1 : -1));
+  const phases = (await getAll(ctx.db, 'phases')).filter((p) => !p.superseded).sort((a, b) => (a.start < b.start ? 1 : -1));
   const [weighins, snapshots, lastExport] = await Promise.all([
-    count(ctx.db, 'weighins'), count(ctx.db, 'snapshots'), getMeta(ctx.db, 'last_export'),
+    getAll(ctx.db, 'weighins').then((all) => live(all).length), count(ctx.db, 'snapshots'), getMeta(ctx.db, 'last_export'),
   ]);
   const today = ctx.today();
   const gear = h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Settings', onClick: () => ctx.navigate('#/settings') }, icon('gear'));

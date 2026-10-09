@@ -48,7 +48,7 @@ test('index.html has the iOS PWA head tags (spec §3)', () => {
 
 test('coach/ stays pure: no DOM or storage APIs', () => {
   for (const f of walk('coach/')) {
-    const src = read(f);
-    assert.ok(!/\b(document|window|localStorage|indexedDB|navigator)\b/.test(src), `${f} touches a browser API`);
+    const code = read(f).replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
+    assert.ok(!/\b(document|window|localStorage|sessionStorage|indexedDB|navigator|fetch)\s*[.(]/.test(code), `${f} touches a browser API`);
   }
 });

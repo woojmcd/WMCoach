@@ -36,20 +36,25 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 ## Commands
 - `npm install`: dev dependencies only (`fake-indexeddb`, `playwright`). The app itself has no dependencies.
 - `npm test`: unit + migration tests. `npm run test:migration`: migration test only.
-- `npm run e2e`: headless Chromium at 375 × 812 (install, onboarding, tabs, timezone, export/import, offline, update flow). Writes screenshots to `docs/screenshots/$E2E_STAGE/` (default `stage-1`). In Claude Code cloud sessions Chromium is preinstalled; don't run `playwright install`.
+- `npm run e2e`: headless Chromium at 375 × 812 covering every stage so far (install, onboarding, tabs, Body flows, timezone, export/import, offline, update flow, upgrade from an older database). Each screenshot is tagged with the stage it documents; a run writes only `$E2E_STAGE`'s (default: the newest stage) to `docs/screenshots/<stage>/`. When you add a stage, bump the default and tag its new shots. In Claude Code cloud sessions Chromium is preinstalled; don't run `playwright install`.
 - `npm run serve`: the app at `http://localhost:8080/WMCoach/`, the same path as GitHub Pages.
 - `npm run build:program`: regenerate `data/program.json` from `training_history.json` (a test fails if it's stale).
-- `npm run fixture`: regenerate `tests/fixtures/backup-sample.json` from seeded data. Prefer a real export from Walter when he provides one.
+- `npm run fixture`: regenerate `tests/fixtures/backup-sample.json` (current schema, with records in every store). Prefer a real export from Walter when he provides one. Older fixtures (`backup-v1.json`, …) are **frozen**: they prove an old phone's data still upgrades. Never regenerate or delete them.
 
 ## Releasing (every PR that changes the app)
 1. Bump the version in **three** places: `app/version.js` (`APP_VERSION`), `sw.js` (`CACHE_VERSION`), `package.json` (`version`). A test checks they match.
 2. A new file under `app/`, `coach/` or `icons/` must be added to `SHELL_FILES` in `sw.js`, or it won't work offline (a test checks this).
-3. Schema change: append a migration to `MIGRATIONS` in `app/db.js`. Add stores or fields only. If records need defaults, add `migrateRecord` (it runs on stored data and on imported older backups). Run `npm run test:migration`.
+3. Schema change: append a migration to `MIGRATIONS` in `app/db.js`. Add stores or fields only. If records need defaults, add `migrateRecord` (it runs on stored data and on imported older backups). Then freeze the old sample (`cp tests/fixtures/backup-sample.json tests/fixtures/backup-v<old>.json`), run `npm run fixture` (add sample records for the new stores in `scripts/make_fixture.mjs`) and `npm run test:migration`.
 4. `npm test` and `npm run e2e` pass. Attach the e2e screenshots to the PR.
 5. Rollback = `git revert` the release commit. Pages redeploys the previous version; the data is untouched.
 
 ## How updates reach the phone
 The new service worker installs in the background and waits. Walter sees "Update available" and taps Reload. The app first saves a local snapshot (last 3 kept, Settings → Local snapshots), then the new version takes over. Never call `skipWaiting()` automatically and never auto-reload. The banner stays hidden while a workout session is in progress (`ctx.sessionInProgress()`).
+
+## Records
+- Daily records (weigh-ins, measurements, check-ins, on-plan taps) are written with `saveDaily()` in `app/records.js`: saving again for a date edits that day's entry made in the same zone.
+- Nothing is hard-deleted in the app. `removeRecord()` leaves a tombstone (`deleted: true`, `deleted_utc`) so sync and a newer-wins merge can't resurrect it. Read with `live()`.
+- Mode switches never change the current week: they're saved to `mode_changes` and `settings.pending_mode`, and `applyPendingMode()` (`coach/phase.js`) makes them take effect on-device on the next prep day.
 
 ## Timezone
 Walter travels. "Today" always means his current local date in the zone from `settings.tz_current`. It follows the iPhone by default (Settings → Timezone); `coach/time.js` has the helpers. Every stored entry carries `utc`, `local_date` and `tz`. Daily records are keyed by `local_date` and never auto-merged when a date repeats after a date-line crossing.

@@ -1,11 +1,13 @@
 // App shell: boot, routing, timezone watch, update banner.
 import { APP_VERSION } from './version.js';
-import { openDB, getMeta, setMeta } from './db.js';
+import { openDB, getMeta, setMeta, getAll, writeAtomic } from './db.js';
 import { saveSnapshot } from './backup.js';
 import { registerServiceWorker, activateWaitingUpdate, checkForUpdate, updateWaiting } from './sw-client.js';
 import { applyDeviceZone } from './tz.js';
 import { h, clear, icon, toast } from './ui.js';
 import { deviceTimeZone, localDate, tzCity } from '../coach/time.js';
+import { IN_TO_CM } from '../coach/body.js';
+import { applyPendingMode, MODE_LABEL } from '../coach/phase.js';
 import { renderInstall } from './views/install.js';
 import { renderOnboarding } from './views/onboarding.js';
 import * as week from './views/week.js';
@@ -38,6 +40,11 @@ const ctx = {
   today() { return localDate(new Date(), this.tz()); },
   fmtWeight(lb) { return (this.settings && this.settings.units === 'kg' ? lb * LB_TO_KG : lb).toFixed(1); },
   unitLabel() { return this.settings && this.settings.units === 'kg' ? 'kg' : 'lb'; },
+  toLb(v) { return this.settings && this.settings.units === 'kg' ? v / LB_TO_KG : v; },
+  // Lengths are stored in inches; shown in cm when units are kg.
+  lengthUnit() { return this.settings && this.settings.units === 'kg' ? 'cm' : 'in'; },
+  fmtLength(inches) { return this.lengthUnit() === 'cm' ? (inches * IN_TO_CM).toFixed(1) : inches.toFixed(2).replace(/0$/, ''); },
+  toIn(v) { return this.lengthUnit() === 'cm' ? v / IN_TO_CM : v; },
   async saveSettings(next) {
     this.settings = next;
     await setMeta(this.db, 'settings', next);
@@ -52,6 +59,7 @@ const ctx = {
   async reload() {
     this.settings = await getMeta(this.db, 'settings');
     await checkZone();
+    await housekeeping();
     render({ keepScroll: true });
   },
   async checkUpdate() {
@@ -122,6 +130,20 @@ async function checkZone() {
   return true;
 }
 
+// ---- on-device daily housekeeping (works offline) ---------------------------------------
+
+// A mode switch takes effect at local midnight of the next prep day (spec §8.3),
+// even if the daily routine never runs.
+async function housekeeping() {
+  if (!ctx.settings || !ctx.settings.pending_mode) return false;
+  const r = applyPendingMode(ctx.settings, await getAll(ctx.db, 'phases'), ctx.today(), new Date());
+  if (!r) return false;
+  await writeAtomic(ctx.db, { writes: { phases: r.phases, meta: [{ key: 'settings', value: r.settings, updated_utc: r.settings.updated_utc }] } });
+  ctx.settings = r.settings;
+  toast(`${MODE_LABEL[r.settings.mode]} starts today`);
+  return true;
+}
+
 // ---- routing ----------------------------------------------------------------------------
 
 let tabbar = null;
@@ -182,17 +204,23 @@ async function startApp() {
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
   ctx.settings = await getMeta(ctx.db, 'settings');
   await checkZone();
+  await housekeeping();
   ctx.program = await loadProgram();
   buildShell();
   window.addEventListener('hashchange', () => render());
   document.addEventListener('visibilitychange', async () => {
     if (document.visibilityState !== 'visible') return;
     const zoneChanged = await checkZone();
-    if (zoneChanged || ctx.today() !== renderedDate) render({ keepScroll: true });
+    const modeChanged = await housekeeping();
+    if (zoneChanged || modeChanged || ctx.today() !== renderedDate) render({ keepScroll: true });
     checkForUpdate();
   });
   // Roll over to the new local day at midnight while the app stays open.
-  setInterval(() => { if (ctx.today() !== renderedDate) render({ keepScroll: true }); }, 60000);
+  setInterval(async () => {
+    if (ctx.today() === renderedDate) return;
+    await housekeeping();
+    render({ keepScroll: true });
+  }, 60000);
   await render();
 }
 
