@@ -1,0 +1,12 @@
+{
+  "schema_version": 4,
+  "key": "onboarding",
+  "updated_utc": "2026-10-09T16:19:36.712Z",
+  "value": {
+    "completed_utc": "2026-10-09T16:19:36.712Z",
+    "completed_local_date": "2026-10-09",
+    "tz": "America/Los_Angeles",
+    "app_version": "0.1.0",
+    "history_weighins": 279
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "schema_version": 4,
+  "store": "phases",
+  "records": [
+    {
+      "id": "break-2026-05-15",
+      "kind": "break",
+      "label": "Unlogged",
+      "start": "2026-05-15",
+      "end": "2026-10-08",
+      "source": "app",
+      "updated_utc": "2026-10-09T16:19:36.712Z"
+    },
+    {
+      "id": "bulk-2026-10-09",
+      "kind": "bulk",
+      "label": "Bulk 2026",
+      "start": "2026-10-09",
+      "end": null,
+      "source": "app",
+      "updated_utc": "2026-10-09T16:19:36.712Z"
+    }
+  ]
+}

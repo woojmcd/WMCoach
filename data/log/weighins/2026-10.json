@@ -1,0 +1,16 @@
+{
+  "schema_version": 4,
+  "store": "weighins",
+  "partition": "2026-10",
+  "records": [
+    {
+      "id": "w-88c1a748-9db9-422f-b455-d50764928cb8",
+      "utc": "2026-10-09T16:19:36.712Z",
+      "local_date": "2026-10-09",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 175.2,
+      "source": "app",
+      "updated_utc": "2026-10-09T16:19:36.712Z"
+    }
+  ]
+}

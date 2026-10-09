@@ -1,0 +1,31 @@
+{
+  "schema_version": 4,
+  "key": "settings",
+  "updated_utc": "2026-10-09T18:14:15.992Z",
+  "value": {
+    "tz_mode": "auto",
+    "tz_manual": null,
+    "tz_current": "America/Los_Angeles",
+    "tz_history": [
+      {
+        "tz": "America/Los_Angeles",
+        "from_utc": "2026-10-09T16:19:36.712Z"
+      }
+    ],
+    "home_tz": "America/Los_Angeles",
+    "height_in": 67,
+    "units": "lb",
+    "prep_day": 7,
+    "checkin_day": 1,
+    "rest_default_s": 90,
+    "rest_superset_s": 15,
+    "step_floor": 8000,
+    "mode": "bulk",
+    "mode_since": "2026-10-09",
+    "carb_cycling": false,
+    "lifted_less_since_may": true,
+    "created_utc": "2026-10-09T16:19:36.712Z",
+    "updated_utc": "2026-10-09T18:14:15.992Z",
+    "travel_mode": false
+  }
+}
