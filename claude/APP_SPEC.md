@@ -26,9 +26,11 @@ iPhone PWA (offline-first, IndexedDB)
    ▼
 GitHub repo ──► GitHub Pages (serves app + data)
    ▲        ▲
-   │        └── iOS Shortcut, daily 04:30 LOCAL (phone time, so it travels with him):
+   │        └── iOS Shortcut, once a day on the first morning unlock (phone time, so it travels with him):
    │              1. reads Apple Health → commits data/health/YYYY-MM-DD.json
    │              2. POSTs the routine's API trigger to start the daily run
+   │              (Health can't be read while the iPhone is locked, so it can't run at a fixed
+   │               pre-dawn time; see §12)
    │
 Claude Code routine "coach-daily" (cloud; fresh session that clones the repo each run)
    • Triggers: API fire from the Shortcut (primary) + two backup schedules (§2b)
@@ -78,9 +80,10 @@ Everything that means "today", "this morning" or "Saturday" is in **Walter's cur
 - **Records:** store every entry as UTC timestamp + `local_date` + `tz` at the time of entry. Daily records (weigh-ins, sessions, on-plan taps) are keyed by `local_date`, so a flight never creates a missing or duplicated day. If a timezone jump makes a calendar day repeat or vanish, keep the entries as logged and never auto-merge them.
 - **On-device clock (works offline):** today's workout, the week strip, rest timers, check-in/measurement prompts and the prep-day plan swap all use the phone's current local time. The Sunday `next.json → current.json` swap happens on-device at local midnight of prep day if the routine hasn't done it.
 - **Daily routine timing:**
-  - Primary: the iOS Shortcut fires the routine's API trigger right after its 04:30 local Health commit. iOS time-of-day automations follow the phone's clock, so the run lands at ~04:30 wherever he is.
-  - Backup: two schedule triggers 12 h apart (e.g. 05:07 and 17:07 in his home zone, America/Los_Angeles). These cover a missed Shortcut.
+  - Primary: the iOS Shortcut fires the routine's API trigger right after its Health commit, on Walter's first unlocked use of the phone each morning (§12). Automations follow the phone's clock, so this happens in his morning wherever he is.
+  - Backup: two schedule triggers (e.g. 10:07 and 18:07 in his home zone, America/Los_Angeles). These cover a day the Shortcut didn't run. They must not be earlier than his usual wake time, or they would claim the day before the Health data arrives.
   - Every run is **idempotent**: it reads the current zone from `settings.json`, computes Walter's local date, and exits early if `last_daily_run_local_date` already equals it. Backup runs do nothing on normal days.
+  - Exception: if the day's run happened without `data/health/<local date>.json` and that file appears later, the next fire recomputes **readiness and today's targets only** (no plan or model changes), once.
 - **Weekly step:** runs inside the daily run when the local weekday is the day before prep day (default Saturday) and `last_weekly_run_week` isn't this week. Missing Saturday entirely (e.g. no signal) → the first run on prep day does it, before the swap.
 - **Readiness baselines** use nightly values regardless of zone. On the first 2 nights after a shift of ≥ 3 h, flag "travel" and cap readiness at Amber instead of Red: jet lag skews HRV and sleep, and the data isn't telling us about training fatigue.
 - **Travel mode** (§4.4) is separate from the timezone and is still a manual toggle.
@@ -282,7 +285,7 @@ Every 6th week, or earlier when ≥ 3 main lifts (Flat DB Bench, Incline DB Benc
 
 ---
 
-## 7. Daily routine (`coach-daily`, ~04:30 local via the Shortcut; see §2b)
+## 7. Daily routine (`coach-daily`, each morning via the Shortcut; see §2b)
 
 1. Pull the repo. Read `data/log/settings.json` for the current timezone and compute Walter's local date. If `last_daily_run_local_date` equals it, exit without committing.
 2. Read `data/log/`, `data/health/<local date>.json`, and Strava activities since the last run via the Strava connector (summary, HR zones, relative effort). Normalize the Strava data into `data/strava/`.
@@ -396,11 +399,19 @@ When an end condition is met, the Body tab shows a banner suggesting the switch.
 
 ## 12. iOS Shortcut (Health → repo → routine), set up once on the phone
 
-Personal Automation, Time of Day **04:30** (phone's local time), Run Immediately:
+**Constraint:** iOS blocks Health reads while the iPhone is locked (Shortcuts fails with "Protected health data is inaccessible"). A fixed pre-dawn time automation would fail every night. The Shortcut must run while the phone is unlocked, so it runs once per morning on first use.
+
+**One Shortcut, "WMCoach Health":**
+0. Compute today's local date. `GET .../contents/data/health/<date>.json`; if it already exists, stop (makes every trigger below safe to fire many times a day).
 1. Find Health Samples: HRV (SDNN) from last night, resting heart rate today, sleep analysis (asleep) last night, steps yesterday, body mass today (if logged).
 2. Build JSON `{date (local), tz, hrv_ms, resting_hr, sleep_h, steps, weight_lb?}`.
 3. Get Contents of URL: `PUT https://api.github.com/repos/<owner>/<repo>/contents/data/health/<date>.json` with the GitHub token header and a base64 body.
 4. Get Contents of URL: `POST` the routine's `/fire` URL with `Authorization: Bearer <routine token>`, the `anthropic-beta` and `anthropic-version` headers from the routine's API-trigger modal, and body `{"text": "daily run"}`.
+
+**Triggers** (Personal Automations, all set to Run Immediately, all calling the same Shortcut; step 0 makes repeats harmless):
+- **App is opened**, for 1–3 apps Walter opens every morning (he picks them; e.g. Messages, Strava, Mail). The phone is unlocked by definition, so this is the reliable one.
+- **Time of Day** in his usual post-wake window (e.g. 07:15), as a second chance. It works only if the phone happens to be unlocked; failures are harmless.
+- **Manual:** the PWA's Log and Body tabs show a "Sync Health" chip when today's health file is missing. It opens `shortcuts://run-shortcut?name=WMCoach%20Health`.
 
 The build agent ships a step-by-step guide in `docs/shortcut.md`, since a cloud task can't reach Health data on the phone directly. Both tokens live only in the Shortcut and the PWA's settings, never in the repo.
 
