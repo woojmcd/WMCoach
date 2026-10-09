@@ -156,10 +156,11 @@
   "readiness_history": [
     {
       "local_date": "2026-10-09",
-      "status": "green"
+      "status": "amber"
     }
   ],
   "health_missing_on": "2026-10-09",
   "last_daily_run_utc": "2026-10-09T19:50:15.792Z",
-  "last_daily_run_tz": "America/Los_Angeles"
+  "last_daily_run_tz": "America/Los_Angeles",
+  "health_rerun_on": "2026-10-09"
 }

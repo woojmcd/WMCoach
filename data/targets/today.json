@@ -2,13 +2,25 @@
   "schema_version": 1,
   "local_date": "2026-10-09",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-09T19:50:15.792Z",
+  "generated_utc": "2026-10-09T23:08:56.109Z",
   "readiness": {
-    "status": "green",
-    "flags": [],
-    "reason": "no recovery data",
-    "missing": true,
-    "travel": null
+    "status": "amber",
+    "flags": [
+      {
+        "key": "sleep",
+        "text": "5.0 h sleep"
+      }
+    ],
+    "reason": "5.0 h sleep",
+    "missing": false,
+    "travel": null,
+    "hrv_ms": null,
+    "resting_hr": null,
+    "sleep_h": 5.01666666666667,
+    "baseline": {
+      "hrv_ms": null,
+      "resting_hr": null
+    }
   },
   "day": {
     "dow": 5,
