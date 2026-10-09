@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-10-09T05:16:02.507Z",
+  "source": "data/metabolic_profile.json",
+  "priors": {
+    "base_kcal_per_lb": 13.2,
+    "base_sd_kcal": 250,
+    "base_kcal_per_lb_range": [
+      12.4,
+      14.1
+    ],
+    "kcal_per_lb": {
+      "loss": 3500,
+      "gain": 2750
+    },
+    "cardio": {
+      "stairs_net_met": 5.4,
+      "stairs_kcal_per_min_median_watch": 7.2,
+      "run_kcal_per_km": 70,
+      "kcal_per_min_formula": "5.4*3.5*kg/200"
+    },
+    "glycogen_washout_days": [
+      5,
+      7
+    ]
+  },
+  "rate_bands_pct_bw_per_wk": {
+    "cut": {
+      "target": [
+        -0.75,
+        -0.5
+      ],
+      "slow_limit": -0.4,
+      "cap": -1
+    },
+    "bulk": {
+      "target": [
+        0.1,
+        0.2
+      ],
+      "cap": 0.35
+    },
+    "maintenance": {
+      "target": [
+        -0.1,
+        0.1
+      ]
+    }
+  },
+  "macro_floors": {
+    "protein_g_per_lb_min": 1,
+    "protein_g_per_lb": {
+      "cut": [
+        1,
+        1.1
+      ],
+      "gain": [
+        0.8,
+        1
+      ],
+      "historical": [
+        1.05,
+        1.3
+      ]
+    },
+    "fat_g_per_lb_min": 0.3,
+    "fat_g_min_abs": 45,
+    "fat_g_target_min": 50
+  },
+  "adjustment": {
+    "step_kcal": [
+      100,
+      150
+    ],
+    "max_weekly_change_kcal": 150,
+    "tdee_window_days": [
+      21,
+      28
+    ],
+    "min_weigh_ins_in_window": 8,
+    "observed_weight": {
+      "weighins_divisor": 30,
+      "cap": 0.85
+    },
+    "consecutive_off_target_checkins": 2
+  },
+  "trend": {
+    "half_life_days": 7,
+    "last_local_date": "2026-05-14",
+    "last_weight_lb": 163.4,
+    "trend_lb": 165.8
+  },
+  "tdee": {
+    "method": "prior",
+    "base_kcal": 2188,
+    "cardio_kcal": 0,
+    "estimate_kcal": 2188,
+    "weight_on_observed": 0,
+    "updated_local_date": "2026-05-14"
+  },
+  "phase_history": [
+    {
+      "id": "cut-2024-12-28",
+      "kind": "cut",
+      "label": "Cut 2025",
+      "start": "2024-12-28",
+      "end": "2025-04-23"
+    },
+    {
+      "id": "break-2025-04-24",
+      "kind": "break",
+      "label": "Break",
+      "start": "2025-04-24",
+      "end": "2025-07-19"
+    },
+    {
+      "id": "bulk-2025-07-20",
+      "kind": "bulk",
+      "label": "Bulk 2025",
+      "start": "2025-07-20",
+      "end": "2025-12-20"
+    },
+    {
+      "id": "break-2025-12-21",
+      "kind": "break",
+      "label": "Holiday break",
+      "start": "2025-12-21",
+      "end": "2026-01-31"
+    },
+    {
+      "id": "cut-2026-02-01",
+      "kind": "cut",
+      "label": "Cut 2026",
+      "start": "2026-02-01",
+      "end": "2026-05-14"
+    }
+  ],
+  "progression": {},
+  "last_daily_run_local_date": null,
+  "last_weekly_run_week": null
+}
