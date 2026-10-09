@@ -110,7 +110,7 @@ function previewTable(rows) {
 
 // Backup: preview counts, then Merge (by record id) or Replace (confirmed).
 // `onDone` runs after a successful import.
-export async function importBackupSheet(ctx, parsed, { onDone, replaceOnly = false } = {}) {
+export async function importBackupSheet(ctx, parsed, { onDone, replaceOnly = false, mergeOnly = false, title = null } = {}) {
   const rows = await previewImport(ctx.db, parsed.backup);
   const when = parsed.backup.exported_at ? new Date(parsed.backup.exported_at).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' }) : 'unknown date';
   const body = h('div', {},
@@ -126,7 +126,7 @@ export async function importBackupSheet(ctx, parsed, { onDone, replaceOnly = fal
   };
   const actions = [];
   if (!replaceOnly) actions.push({ label: 'Merge', kind: 'primary', onClick: () => doImport('merge') });
-  actions.push({
+  if (!mergeOnly) actions.push({
     label: replaceOnly ? 'Restore' : 'Replace everything',
     kind: replaceOnly ? 'primary' : 'danger',
     onClick: async () => {
@@ -142,7 +142,7 @@ export async function importBackupSheet(ctx, parsed, { onDone, replaceOnly = fal
     },
   });
   actions.push({ label: 'Cancel', kind: 'outline' });
-  openSheet({ title: replaceOnly ? 'Restore backup' : 'Import backup', body, actions });
+  openSheet({ title: title || (replaceOnly ? 'Restore backup' : 'Import backup'), body, actions });
 }
 
 // Health weigh-ins CSV (one-time export via a Shortcut). Adds entries; never overwrites app entries.

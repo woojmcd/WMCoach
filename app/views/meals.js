@@ -14,7 +14,7 @@ const ui = { dayType: null };
 // Food names as Walter's coach wrote them: [singular, plural] for counted units.
 const NAMES = {
   egg: ['egg', 'eggs'], egg_white: ['egg white', 'egg whites'], ezekiel: ['slice Ezekiel bread', 'slices Ezekiel bread'],
-  rice_cake: ['rice cake', 'rice cakes'], whey_iso: ['scoop whey isolate', 'scoops whey isolate'], greek_yogurt: ['0 % Greek yogurt', '0 % Greek yogurts'],
+  rice_cake: ['rice cake', 'rice cakes'], whey_iso: ['scoop whey isolate', 'scoops whey isolate'], greek_yogurt: ['Greek yogurt cup', 'Greek yogurt cups'],
   granola: ['granola portion', 'granola portions'], fruit: ['apple or banana', 'apples or bananas'], pb_cup: ['PB cup', 'PB cups'],
   turkey_bacon: ['slice turkey bacon', 'slices turkey bacon'], cappuccino: ['cappuccino', 'cappuccinos'], protein_yogurt: ['protein yogurt', 'protein yogurts'],
   almond_milk: ['cup almond milk', 'cups almond milk'], skim_milk: ['cup skim milk', 'cups skim milk'],
@@ -23,7 +23,7 @@ const NAMES = {
 };
 // Prep list: what you cook and the unit you count it in.
 const PREP = {
-  ezekiel: ['Ezekiel bread', 'slice', 'slices'], whey_iso: ['Whey isolate', 'scoop', 'scoops'], greek_yogurt: ['0 % Greek yogurt', 'cup', 'cups'],
+  ezekiel: ['Ezekiel bread', 'slice', 'slices'], whey_iso: ['Whey isolate', 'scoop', 'scoops'], greek_yogurt: ['Greek yogurt', 'cup', 'cups'],
   granola: ['Granola', 'portion', 'portions'], turkey_bacon: ['Turkey bacon', 'slice', 'slices'], almond_milk: ['Almond milk', 'cup', 'cups'],
   skim_milk: ['Skim milk', 'cup', 'cups'],
 };

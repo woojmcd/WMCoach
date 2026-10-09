@@ -1,10 +1,11 @@
 import { h, icon } from '../ui.js';
 import { daysBetween, formatDayMonth, formatMonthYear } from '../../coach/time.js';
 import { describeEntry } from '../../coach/progression.js';
+import { syncBadge } from '../sync-ui.js';
 
 export function header({ label, title, right = null }) {
   return h('header', { class: 'header' },
-    h('div', { class: 'grow' }, h('p', { class: 'label' }, label), h('h1', { class: 'title' }, title)),
+    h('div', { class: 'grow' }, h('p', { class: 'label head-label' }, h('span', {}, label), syncBadge()), h('h1', { class: 'title' }, title)),
     right);
 }
 

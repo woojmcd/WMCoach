@@ -615,3 +615,31 @@ body.resting .screen { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom)
 .grocery.got .grow, .grocery.got .value { color: var(--text-3); text-decoration: line-through; }
 .grocery .value, .prep .value { white-space: nowrap; padding-left: 12px; }
 .travel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 8px; }
+
+/* Week in review (weekly executive summary) */
+.card.summary { border-left: 3px solid var(--good); }
+.card.summary.warn { border-left-color: var(--warn); }
+.card.summary.bad { border-left-color: var(--bad); }
+.card.summary .label { margin: 0; }
+.card.summary .headline { margin: 8px 0 0; font-size: 17px; line-height: 1.45; color: var(--text); }
+.card.summary .focus { display: flex; flex-direction: column; gap: 2px; margin-top: 14px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--surface-2); font-size: 15px; line-height: 1.4; }
+.card.summary .focus .label { color: var(--accent); }
+.summary-points { margin-top: 14px; border-top: 1px solid var(--hairline); }
+.summary-points[hidden] { display: none; }
+.summary-point { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--hairline); }
+.summary-point:last-child { border-bottom: 0; }
+.summary-point .dot { flex: 0 0 auto; width: 8px; height: 8px; margin-top: 7px; border-radius: 50%; background: var(--text-3); }
+.summary-point .dot.good { background: var(--good); }
+.summary-point .dot.warn { background: var(--warn); }
+.summary-point .dot.bad { background: var(--bad); }
+.summary-point .pt-title { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: var(--text-2); }
+.summary-point p { margin: 2px 0 0; font-size: 15px; line-height: 1.45; color: var(--text); }
+.card.summary .link-btn { margin-top: 10px; padding: 0; }
+
+/* GitHub sync: a small, never-blocking badge in the header's label line */
+.head-label { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sync-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 10px; background: var(--accent-dim); color: var(--accent); font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-decoration: none; text-transform: none; }
+.sync-badge[hidden] { display: none; }
+.sync-badge.paused { background: rgba(212, 106, 95, 0.14); color: var(--bad); }
+.sync-error { color: var(--warn); }
+.row-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }

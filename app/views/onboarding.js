@@ -5,6 +5,7 @@ import { pickFile, readImportFile, importBackupSheet } from '../import-flow.js';
 import { putMany, getMeta } from '../db.js';
 import { deviceTimeZone, tzCity, localDate, formatDayMonth, formatMonthYear } from '../../coach/time.js';
 import { parseWeightCsv } from '../../coach/seed.js';
+import { onboardingRestoreSheet } from '../sync-ui.js';
 
 export async function renderOnboarding(root, ctx, { onDone }) {
   clear(root);
@@ -47,7 +48,7 @@ export async function renderOnboarding(root, ctx, { onDone }) {
     if (!file) return;
     const parsed = await readImportFile(file);
     if (parsed.kind !== 'health-csv') {
-      toast(parsed.kind === 'backup' ? 'That’s a backup: use “Restore from a backup” below' : parsed.message);
+      toast(parsed.kind === 'backup' ? 'That’s a backup: use “Restore from a backup file” below' : parsed.message);
       return;
     }
     healthRecords = parsed.records;
@@ -124,5 +125,6 @@ export async function renderOnboarding(root, ctx, { onDone }) {
       h('div', { class: 'item' }, h('span', { class: 'grow' }, 'Prep day · check-in'), h('span', { class: 'value' }, 'Sunday · Friday'))),
     h('div', { class: 'stack-sm' },
       start,
-      h('button', { type: 'button', class: 'btn ghost block', onClick: restore }, 'Restore from a backup instead')));
+      h('button', { type: 'button', class: 'btn ghost block', onClick: () => onboardingRestoreSheet(ctx, { onDone }) }, 'Restore from GitHub'),
+      h('button', { type: 'button', class: 'btn ghost block', onClick: restore }, 'Restore from a backup file')));
 }

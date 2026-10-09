@@ -1,9 +1,10 @@
 // Week tab (spec §4.1): Mon–Sun strip in local time, today highlighted.
 import { h, icon, openSheet } from '../ui.js';
-import { getAll } from '../db.js';
+import { getAll, getMeta } from '../db.js';
 import { live } from '../records.js';
 import { focusCheckin } from './body.js';
-import { checkinState } from '../../coach/phase.js';
+import { checkinState, currentPhase, realPhases } from '../../coach/phase.js';
+import { weeklySummary, activeSummaryCheckin } from '../../coach/summary.js';
 import { header, note, sessionList } from './common.js';
 import { loadTraining, planFor, progressCount } from '../training.js';
 import { planItem } from './log.js';
@@ -12,12 +13,16 @@ import { weekDates, isoWeekday, WEEKDAYS, formatDayMonth, formatLong, tzCity } f
 import { dayForWeekday } from '../../coach/program.js';
 
 const OPEN_DAY = 'Stairs by default, or runs, rides, swims and social sessions, read from Strava.';
+// Same values as the seeded model (brief §5); used only if the model record is missing.
+const DEFAULT_BANDS = { cut: { target: [-0.75, -0.5], slow_limit: -0.4, cap: -1.0 }, bulk: { target: [0.1, 0.2], cap: 0.35 }, maintenance: { target: [-0.1, 0.1] } };
+const ui = { summaryOpen: {} };
 
 export async function render(screen, ctx) {
   const today = ctx.today();
   const [checkins, training, plans] = await Promise.all([getAll(ctx.db, 'checkins'), loadTraining(ctx), ensurePlans(ctx).catch(() => null)]);
   const notice = plans ? planNotice(plans) : null;
   const ci = checkinState(today, ctx.settings.checkin_day, live(checkins));
+  const summary = await buildSummary(ctx, { today, checkins: live(checkins), training, plans });
   const dates = weekDates(today);
   const dayOf = (date) => (ctx.program ? dayForWeekday(ctx.program, isoWeekday(date)) : null);
   const todayDay = dayOf(today);
@@ -108,9 +113,53 @@ export async function render(screen, ctx) {
   screen.append(
     header({ label: formatLong(today).replace(/ \d{4}$/, ''), title: todayDay ? todayDay.name : 'This week' }),
     ...(banners.length ? [h('div', { class: 'stack-sm', style: 'margin-bottom:16px' }, banners)] : []),
+    ...(summary ? [summaryCard(summary)] : []),
     h('div', { class: 'stack' },
       strip,
       rows,
       ctx.program ? null : note('Program not loaded yet: connect once to fetch it.'),
       h('p', { class: 'faint xsmall center' }, `${tzCity(s.tz_current)} time · ${s.tz_mode === 'auto' ? 'follows iPhone' : 'set manually'}`)));
+}
+
+// ---- weekly executive summary ----------------------------------------------------------------
+
+async function buildSummary(ctx, { today, checkins, training, plans }) {
+  const s = ctx.settings;
+  const checkin = activeSummaryCheckin(checkins, today, s.prep_day);
+  if (!checkin) return null;
+  const [wAll, mAll, phasesAll, model] = await Promise.all([getAll(ctx.db, 'weighins'), getAll(ctx.db, 'measurements'), getAll(ctx.db, 'phases'), getMeta(ctx.db, 'model')]);
+  const previousCheckin = checkins.filter((c) => c.local_date < checkin.local_date).sort((a, b) => (a.local_date < b.local_date ? 1 : -1))[0] || null;
+  return weeklySummary({
+    checkin, previousCheckin,
+    weighins: live(wAll), measurements: live(mAll), sessions: training.sessions, program: ctx.program,
+    mode: s.mode, phase: currentPhase(realPhases(phasesAll)),
+    bands: (model && model.rate_bands_pct_bw_per_wk) || DEFAULT_BANDS,
+    plans, today, prepDow: s.prep_day, units: s.units,
+  });
+}
+
+function summaryCard(sum) {
+  // open on check-in day and the day after; later it folds to the headline (tap to read)
+  const open = ui.summaryOpen[sum.week_of] ?? sum.days_since <= 1;
+  const range = sum.period.from.slice(5, 7) === sum.period.to.slice(5, 7)
+    ? `${Number(sum.period.from.slice(8))}–${formatDayMonth(sum.period.to)}`
+    : `${formatDayMonth(sum.period.from)} – ${formatDayMonth(sum.period.to)}`;
+  const details = h('div', { class: 'summary-points', hidden: !open },
+    sum.points.map((p) => h('div', { class: 'summary-point' },
+      h('span', { class: `dot ${p.tone}`, 'aria-hidden': 'true' }),
+      h('div', { class: 'grow' }, h('div', { class: 'pt-title' }, p.title), h('p', {}, p.text)))));
+  const toggle = h('button', { type: 'button', class: 'link-btn', 'aria-expanded': String(open) }, open ? 'Hide details' : 'Read the full review');
+  toggle.addEventListener('click', () => {
+    const now = details.hidden;
+    details.hidden = !now;
+    ui.summaryOpen[sum.week_of] = now;
+    toggle.textContent = now ? 'Hide details' : 'Read the full review';
+    toggle.setAttribute('aria-expanded', String(now));
+  });
+  return h('section', { class: `card summary ${sum.tone}`, 'aria-label': 'Week in review', style: 'margin-bottom:16px' },
+    h('p', { class: 'label' }, `Week in review · ${range}`),
+    h('p', { class: 'headline' }, sum.headline),
+    h('div', { class: 'focus' }, h('span', { class: 'label' }, 'Focus'), h('span', {}, sum.focus)),
+    details,
+    toggle);
 }

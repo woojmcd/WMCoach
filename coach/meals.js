@@ -201,7 +201,7 @@ export const GROCERY = {
   egg: { group: 'Protein', label: 'Eggs', raw: (n) => `${n}`, note: (n) => `${Math.ceil(n / 12)} dozen` },
   egg_white: { group: 'Protein', label: 'Egg whites', raw: (n) => `${n}`, note: () => '' },
   whey_iso: { group: 'Protein', label: 'Whey isolate', raw: (n) => `${n} scoops`, note: () => '' },
-  greek_yogurt: { group: 'Dairy', label: '0 % Greek yogurt, single-serve', raw: (n) => `${n} cups`, note: () => '' },
+  greek_yogurt: { group: 'Dairy', label: 'Greek yogurt, single-serve cups', raw: (n) => `${n}`, note: () => 'nonfat, ~150 g each' },
   rice: { group: 'Carbs', label: 'Jasmine rice, dry', raw: (cookedG) => `${Math.round(cookedG / 3 / 10) * 10} g`, note: (q) => `≈ ${(q / 3 / 185).toFixed(1)} cups dry · ${Math.round(q).toLocaleString('en-US')} g cooked` },
   sweet_potato: { group: 'Carbs', label: 'Sweet potatoes', raw: (g) => `${(g / 1000).toFixed(1)} kg`, note: (g) => `${(g * G_TO_LB).toFixed(1)} lb` },
   rice_cake: { group: 'Carbs', label: 'Flavored rice cakes', raw: (n) => `${n}`, note: (n) => `≈ ${Math.ceil(n / 14)} bags of ~14` },

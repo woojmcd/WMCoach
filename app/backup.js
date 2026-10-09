@@ -1,7 +1,7 @@
 // Export / Import (spec §11) and local update snapshots (spec §12a).
 // Works in the browser and in Node tests (with fake-indexeddb).
 import {
-  DB_VERSION, EXPORT_EXCLUDE, MIGRATIONS, getAll, keyPathOf, put, del, storeNames, writeAtomic,
+  DB_VERSION, EXPORT_EXCLUDE, PRIVATE_META, MIGRATIONS, getAll, keyPathOf, put, del, storeNames, writeAtomic,
 } from './db.js';
 
 export const BACKUP_APP = 'wmcoach';
@@ -10,7 +10,9 @@ export const SNAPSHOTS_KEPT = 3;
 export async function buildBackup(db, { appVersion, now = new Date(), tz = null, localDate = null } = {}) {
   const stores = {};
   for (const name of storeNames(db)) {
-    if (!EXPORT_EXCLUDE.has(name)) stores[name] = await getAll(db, name);
+    if (EXPORT_EXCLUDE.has(name)) continue;
+    const records = await getAll(db, name);
+    stores[name] = name === 'meta' ? records.filter((r) => !PRIVATE_META.has(r.key)) : records;
   }
   return {
     app: BACKUP_APP,
@@ -103,10 +105,12 @@ export async function applyImport(db, backup, mode) {
   for (const [name, records] of Object.entries(backup.stores)) {
     if (!known.has(name) || EXPORT_EXCLUDE.has(name)) continue;
     const keyPath = keyPathOf(db, name);
-    const valid = records.filter((r) => r && r[keyPath] !== undefined && r[keyPath] !== null);
+    let valid = records.filter((r) => r && r[keyPath] !== undefined && r[keyPath] !== null);
+    // the GitHub token and sync state belong to this phone, not to a backup
+    if (name === 'meta') valid = valid.filter((r) => !PRIVATE_META.has(r.key));
     if (mode === 'replace') {
       clear.push(name);
-      writes[name] = valid;
+      writes[name] = name === 'meta' ? [...valid, ...(await getAll(db, 'meta')).filter((r) => PRIVATE_META.has(r.key))] : valid;
     } else {
       const existing = new Map((await getAll(db, name)).map((r) => [r[keyPath], r]));
       writes[name] = valid.filter((r) => {

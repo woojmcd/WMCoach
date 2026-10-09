@@ -59,6 +59,21 @@ export const DB_VERSION = MIGRATIONS[MIGRATIONS.length - 1].version;
 
 // Local safety copies are never part of an export (they *are* exports).
 export const EXPORT_EXCLUDE = new Set(['snapshots']);
+// Meta records that stay on this phone: never exported, imported over, or synced
+// (the GitHub token and the sync bookkeeping).
+export const PRIVATE_META = new Set(['github', 'sync']);
+
+// Write listeners (the sync queue): told which records changed after each commit.
+const writeListeners = new Set();
+export function onWrite(fn) {
+  writeListeners.add(fn);
+  return () => writeListeners.delete(fn);
+}
+function notify(changes) {
+  for (const fn of writeListeners) {
+    try { fn(changes); } catch (err) { console.error(err); }
+  }
+}
 
 export function openDB({ name = DB_NAME, migrations = MIGRATIONS, idb = globalThis.indexedDB } = {}) {
   const version = migrations[migrations.length - 1].version;
@@ -159,6 +174,7 @@ export async function put(db, store, value) {
   const tx = db.transaction(store, 'readwrite');
   tx.objectStore(store).put(value);
   await done(tx);
+  notify([{ store, record: value }]);
   return value;
 }
 
@@ -167,6 +183,7 @@ export async function putMany(db, store, values) {
   const os = tx.objectStore(store);
   for (const v of values) os.put(v);
   await done(tx);
+  notify(values.map((record) => ({ store, record })));
   return values.length;
 }
 
@@ -174,6 +191,7 @@ export async function del(db, store, key) {
   const tx = db.transaction(store, 'readwrite');
   tx.objectStore(store).delete(key);
   await done(tx);
+  notify([{ store, key }]);
 }
 
 // Several stores in one atomic transaction: writes = { store: [records] }, clear = [stores].
@@ -187,6 +205,7 @@ export async function writeAtomic(db, { clear = [], writes = {} }) {
     for (const v of values) os.put(v);
   }
   await done(tx);
+  notify([...clear.map((store) => ({ store, cleared: true })), ...Object.entries(writes).flatMap(([store, values]) => values.map((record) => ({ store, record })))]);
 }
 
 export async function getMeta(db, key) {

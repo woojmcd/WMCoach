@@ -10,6 +10,7 @@ import { IN_TO_CM } from '../coach/body.js';
 import { applyPendingMode, MODE_LABEL } from '../coach/phase.js';
 import { finishStaleSessions } from './training.js';
 import { ensurePlans } from './meal-plans.js';
+import { startSync } from './sync-ui.js';
 import { renderInstall } from './views/install.js';
 import { renderOnboarding } from './views/onboarding.js';
 import * as week from './views/week.js';
@@ -224,6 +225,7 @@ async function startApp() {
   await housekeeping();
   ctx.program = await loadProgram();
   buildShell();
+  startSync(ctx);
   window.addEventListener('hashchange', () => render());
   document.addEventListener('visibilitychange', async () => {
     if (document.visibilityState !== 'visible') return;
