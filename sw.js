@@ -6,7 +6,7 @@
 //   when the app posts SKIP_WAITING after Walter taps "Update available, reload".
 
 // Bump together with APP_VERSION in app/version.js on every release (a test checks).
-const CACHE_VERSION = '0.4.0';
+const CACHE_VERSION = '0.5.0';
 const SHELL_CACHE = `wmcoach-shell-${CACHE_VERSION}`;
 const DATA_CACHE = 'wmcoach-data';
 const NETWORK_FIRST = ['data/plan/', 'data/targets/'];
@@ -31,6 +31,10 @@ const SHELL_FILES = [
   "app/training.js",
   "app/timer.js",
   "app/meal-plans.js",
+  "app/sync.js",
+  "app/sync-ui.js",
+  "app/push.js",
+  "app/push-config.js",
   "app/views/common.js",
   "app/views/install.js",
   "app/views/onboarding.js",
@@ -49,6 +53,7 @@ const SHELL_FILES = [
   "coach/phase.js",
   "coach/progression.js",
   "coach/meals.js",
+  "coach/summary.js",
   "icons/icon.svg",
   "icons/icon-192.png",
   "icons/icon-512.png",
@@ -139,3 +144,39 @@ async function staleWhileRevalidate(req, event) {
   }
   return (await network) || new Response('', { status: 504, statusText: 'Offline' });
 }
+
+// ---- Web Push (spec §8.4): the daily routine sends { title, body, url, tag } -----------------
+
+self.addEventListener('push', (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch {
+    data = { body: event.data ? event.data.text() : '' };
+  }
+  event.waitUntil(self.registration.showNotification(data.title || 'WMCoach', {
+    body: data.body || '',
+    tag: data.tag || 'wmcoach',
+    icon: 'icons/icon-192.png',
+    data: { url: data.url || './#/week' },
+  }));
+});
+
+self.addEventListener('notificationclick', (event) => {
+  event.notification.close();
+  // only ever open a page of this app
+  const scope = self.registration.scope;
+  let url = new URL((event.notification.data && event.notification.data.url) || './#/week', scope).href;
+  if (!url.startsWith(scope)) url = scope;
+  event.waitUntil((async () => {
+    const wins = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+    for (const win of wins) {
+      if (win.url.startsWith(scope) && 'focus' in win) {
+        await win.focus();
+        if ('navigate' in win) await win.navigate(url).catch(() => {});
+        return;
+      }
+    }
+    if (self.clients.openWindow) await self.clients.openWindow(url);
+  })());
+});

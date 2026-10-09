@@ -6,6 +6,8 @@ import { getMeta, getAll, put } from '../db.js';
 import { listSnapshots } from '../backup.js';
 import { exportFlow, importFlow, backupFile, shareFile } from '../import-flow.js';
 import { setManualZone, setAutoZone, offsetLabel } from '../tz.js';
+import { syncSection } from '../sync-ui.js';
+import { pushState, enablePush, disablePush, testNotification } from '../push.js';
 import {
   deviceTimeZone, supportedTimeZones, tzCity, tzOffsetMinutes, WEEKDAYS, WEEKDAYS_LONG, formatDayMonth, localDate,
 } from '../../coach/time.js';
@@ -70,6 +72,9 @@ export async function render(screen, ctx) {
     });
   });
 
+  // ---- GitHub sync, notifications ----
+  const [sync, notifications] = await Promise.all([syncSection(ctx), notificationSection(ctx)]);
+
   // ---- app ----
   let persisted = null;
   try { persisted = navigator.storage && navigator.storage.persisted ? await navigator.storage.persisted() : null; } catch { /* unknown */ }
@@ -104,6 +109,12 @@ export async function render(screen, ctx) {
     h('div', { class: 'card flush list' },
       itemRow({ label: 'Exercises', value: 'increments, alternates', chevron: true, onClick: () => exercisesSheet(ctx) })),
 
+    sectionLabel('GitHub sync'),
+    sync,
+
+    sectionLabel('Notifications'),
+    notifications,
+
     sectionLabel('Backup'),
     h('div', { class: 'stack-sm' },
       h('button', { type: 'button', class: 'btn primary block', onClick: () => exportFlow(ctx) }, icon('share', { size: 20 }), 'Export backup'),
@@ -117,6 +128,38 @@ export async function render(screen, ctx) {
       itemRow({ label: 'Data schema', value: `v${ctx.db.version}` }),
       itemRow({ label: 'Storage', value: persisted === null ? 'Unknown' : persisted ? 'Persistent' : 'Best effort' }),
       itemRow({ label: 'Check for update', extra: icon('refresh', { size: 20 }), onClick: () => ctx.checkUpdate() })));
+}
+
+async function notificationSection(ctx) {
+  const st = await pushState(ctx.db);
+  const card = (...kids) => h('div', { class: 'card stack-sm' }, ...kids);
+  const text = (t, cls = 'body') => h('p', { class: cls, style: 'margin:0' }, t);
+  const WHAT = 'One on the morning of check-in day, and one when next week’s plan is ready. The daily coach run sends them.';
+  if (st.permission === 'install') return card(text('Add WMCoach to the Home Screen first: iOS only sends notifications to installed apps.'), text(WHAT, 'muted small'));
+  if (st.permission === 'unsupported') return card(text('This iPhone can’t receive web app notifications (needs iOS 16.4 or later).'));
+  if (st.permission === 'denied') return card(text('Notifications are blocked for WMCoach.'), text('Turn them on in iOS Settings → Notifications → WMCoach, then come back here.', 'muted small'));
+  if (!st.subscribed) {
+    const btn = h('button', { type: 'button', class: 'btn primary block' }, icon('bell', { size: 20 }), 'Turn on notifications');
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      try {
+        const r = await enablePush(ctx.db);
+        toast(r.ok ? 'Notifications on' : 'Notifications not allowed');
+      } catch (err) {
+        toast(`Couldn’t turn on notifications: ${err.message || err}`, 5000);
+      }
+      ctx.refresh();
+    });
+    return h('div', { class: 'stack-sm' }, card(text(WHAT, 'muted small')), btn);
+  }
+  return h('div', { class: 'stack-sm' },
+    h('div', { class: 'card flush list' },
+      itemRow({ label: 'Status', value: 'On' }),
+      itemRow({ label: 'This phone', value: `since ${formatDayMonth(localDate(new Date(st.sub.created_utc), ctx.tz()))}` })),
+    h('p', { class: 'muted xsmall', style: 'margin:0' }, WHAT),
+    h('div', { class: 'row-buttons' },
+      h('button', { type: 'button', class: 'btn outline', onClick: async () => { try { await testNotification(); toast('Test sent'); } catch (err) { toast(err.message || String(err), 5000); } } }, 'Send a test'),
+      h('button', { type: 'button', class: 'btn ghost', onClick: async () => { await disablePush(ctx.db); toast('Notifications off'); ctx.refresh(); } }, 'Turn off')));
 }
 
 function zonePicker(ctx, save, onCancel = null) {

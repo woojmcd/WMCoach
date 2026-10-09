@@ -7,8 +7,9 @@ import { join } from 'node:path';
 import assert from 'node:assert/strict';
 import { startServer } from '../../scripts/serve.mjs';
 import { DB_VERSION } from '../../app/db.js';
+import { FakeGitHub } from '../fixtures/fake-github.mjs';
 
-const STAGE = process.env.E2E_STAGE || 'stage-4';
+const STAGE = process.env.E2E_STAGE || 'stage-5';
 const OUT = new URL(`../../docs/screenshots/${STAGE}/`, import.meta.url).pathname;
 const PORT = Number(process.env.E2E_PORT || 4173);
 await mkdir(OUT, { recursive: true });
@@ -21,7 +22,8 @@ const DEVICE = { viewport: { width: 375, height: 812 }, deviceScaleFactor: 2, is
 
 function watch(page) {
   page.on('pageerror', (e) => errors.push(`pageerror: ${e.message}`));
-  page.on('console', (m) => { if (m.type() === 'error') errors.push(`console: ${m.text()}`); });
+  // GitHub API errors (a wrong token on purpose, offline) are expected and handled in the app
+  page.on('console', (m) => { if (m.type() === 'error' && !(m.location().url || '').startsWith('https://api.github.com/')) errors.push(`console: ${m.text()}`); });
 }
 // Each screenshot documents one stage; a run saves only the current stage's
 // (E2E_STAGE), so older stages' PR screenshots stay as they were.
@@ -47,6 +49,31 @@ const countStore = (page, store) => page.evaluate((s) => new Promise((resolve, r
   req.onerror = () => reject(req.error);
 }), store);
 const toastText = (page, text) => page.locator('.toast.show', { hasText: text }).waitFor({ timeout: 5000 });
+// api.github.com, answered by an in-memory repo (tests/fixtures/fake-github.mjs).
+const CORS = { 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization, content-type, accept, x-github-api-version', 'access-control-allow-methods': 'GET, POST, PATCH, OPTIONS' };
+async function routeGitHub(context, gh) {
+  await context.route('https://api.github.com/**', async (route) => {
+    const req = route.request();
+    if (gh.offline) return route.abort('internetdisconnected');
+    if (req.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: CORS });
+    try {
+      const r = gh.handle({ method: req.method(), url: req.url(), headers: req.headers(), body: req.postData() });
+      return await route.fulfill({ status: r.status, contentType: 'application/json', headers: CORS, body: JSON.stringify(r.body) });
+    } catch (err) {
+      console.error('fake GitHub:', err);
+      return route.abort('failed');
+    }
+  });
+}
+async function until(fn, what, ms = 15000) {
+  const t0 = Date.now();
+  while (Date.now() - t0 < ms) {
+    const v = await fn();
+    if (v) return v;
+    await new Promise((r) => setTimeout(r, 150));
+  }
+  throw new Error(`timed out waiting for ${what}`);
+}
 async function tab(page, name) {
   await page.locator('.tabbar a', { hasText: name }).click();
   await page.locator('.title').first().waitFor();
@@ -520,6 +547,167 @@ try {
     assert.deepEqual(plans, [['2026-10-04', 'seed', 2353], ['2026-10-11', 'carry', 2353]]);
     await p.waitForTimeout(300);
     await shot(p, 'd05-week1-carried', S4);
+    await c.close();
+  }
+
+  const S5 = { stage: 'stage-5' };
+  step('Week: "Week in review" after the check-in (blunt, every section, folds away)');
+  {
+    await tab(page, 'Week');
+    const review = page.locator('.card.summary');
+    await review.waitFor();
+    const text = await review.textContent();
+    for (const t of ['Week in review', 'Focus', 'Adherence', 'Weight', 'Training', 'Measurements', 'Recovery', 'Plan']) assert.ok(text.includes(t), `review shows ${t}`);
+    assert.match(text, /50 %\. Too low to judge anything/, 'the Partial tap is called out, not softened');
+    assert.match(text, /No macro change while adherence is under 90 %/);
+    assert.ok(!/\bnull\b|undefined|NaN/.test(text), 'no stray null/undefined/NaN');
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(300);
+    await shot(page, 'e01-week-review', { ...S5, full: true });
+    await review.getByRole('button', { name: 'Hide details' }).click();
+    assert.equal(await review.locator('.summary-points').isHidden(), true);
+    await review.getByRole('button', { name: 'Read the full review' }).click();
+    assert.equal(await review.locator('.summary-points').isVisible(), true);
+    await noHorizontalScroll(page, 'week review');
+  }
+  const afterReview = await context.storageState({ indexedDB: true });
+
+  const gh = new FakeGitHub();
+  step('GitHub sync: connect, first push (one commit, never the token)');
+  {
+    const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: afterReview });
+    await routeGitHub(c, gh);
+    // headless Chromium has no push service or notification prompt: stand in for iOS
+    await c.addInitScript(() => {
+      let perm = 'default';
+      Object.defineProperty(Notification, 'permission', { get: () => perm });
+      Notification.requestPermission = async () => { perm = 'granted'; return perm; };
+      ServiceWorkerRegistration.prototype.showNotification = async function showNotification(title, opts) { window.__shown = [...(window.__shown || []), [title, opts.body]]; };
+      let sub = null;
+      const fake = { endpoint: 'https://web.push.apple.com/QE2E-test', options: {}, toJSON() { return { endpoint: this.endpoint, keys: { p256dh: 'BPe2e', auth: 'e2e' } }; }, async unsubscribe() { sub = null; return true; } };
+      PushManager.prototype.subscribe = async function subscribe() { sub = fake; return fake; };
+      PushManager.prototype.getSubscription = async function getSubscription() { return sub; };
+    });
+    const p = await c.newPage();
+    watch(p);
+    await p.goto(`${url}#/settings`);
+    await p.getByText('Continue in Safari (testing only)').click();
+    await p.getByRole('button', { name: 'Connect GitHub' }).waitFor();
+    assert.equal(await p.locator('.sync-badge').isHidden(), true, 'no badge before sync is set up');
+    await p.getByRole('button', { name: 'Connect GitHub' }).click();
+    await p.getByLabel('GitHub token').fill('wrong-token');
+    await p.locator('.sheet.show').getByRole('button', { name: 'Connect', exact: true }).click();
+    await p.locator('.sheet.show [role="alert"]', { hasText: 'rejected the token' }).waitFor();
+    await p.getByLabel('GitHub token').fill(gh.token);
+    await p.waitForTimeout(300);
+    await shot(p, 'e02-connect', S5);
+    await p.locator('.sheet.show').getByRole('button', { name: 'Connect', exact: true }).click();
+    await toastText(p, 'GitHub connected');
+    await until(() => gh.files()['data/log/settings.json'], 'the first push');
+    const files = Object.keys(gh.files()).filter((f) => f.startsWith('data/log/'));
+    assert.ok(files.includes('data/log/checkins/2026-10.json') || files.some((f) => f.startsWith('data/log/checkins/')), 'check-ins synced');
+    assert.ok(files.some((f) => f.startsWith('data/log/sessions/')), 'sessions synced');
+    assert.ok(files.includes('data/log/onboarding.json'));
+    for (const f of files) assert.ok(!gh.files()[f].includes(gh.token), `${f} must not contain the token`);
+    assert.ok(!files.some((f) => gh.files()[f].includes('"source": "history"')), 'seeded history is not copied');
+    assert.equal(gh.commitMessages().length, 2, 'one commit for the first sync');
+    assert.match(gh.commitMessages()[0], /^log \d{4}-\d{2}-\d{2} \(America\/Los_Angeles\): \d+ records$/);
+    await p.locator('.value', { hasText: 'Up to date' }).waitFor();
+    await p.getByText('GitHub sync', { exact: true }).scrollIntoViewIfNeeded();
+    await p.evaluate(() => window.scrollBy(0, -60));
+    await p.waitForTimeout(3000);
+    await shot(p, 'e03-settings-synced', S5);
+
+    step('GitHub sync: offline edit → "Unsynced (1)" badge; back online → Sync now');
+    gh.offline = true;
+    await tab(p, 'Body');
+    await p.getByLabel('Weight', { exact: true }).fill('168.8');
+    await p.getByLabel('Weight', { exact: true }).press('Enter');
+    await p.locator('.btn.primary', { hasText: /^(Update|Log weight)$/ }).click();
+    await toastText(p, '168.8 lb');
+    const badge = p.locator('.sync-badge');
+    await badge.filter({ hasText: 'Unsynced (1)' }).waitFor();
+    await until(async () => (await p.evaluate(() => new Promise((resolve) => {
+      indexedDB.open('wmcoach').onsuccess = (e) => { e.target.result.transaction('meta').objectStore('meta').get('sync').onsuccess = (r) => resolve(r.target.result && r.target.result.value.failures); };
+    }))) >= 1, 'a failed (offline) attempt');
+    await p.evaluate(() => window.scrollTo(0, 0));
+    await p.waitForTimeout(2500);
+    await shot(p, 'e04-unsynced-badge', S5);
+    gh.offline = false;
+    await badge.click();
+    await p.getByRole('button', { name: 'Sync now' }).click();
+    await toastText(p, 'Synced 1 change');
+    await badge.waitFor({ state: 'hidden' });
+    const todayW = Object.entries(gh.files()).filter(([f]) => f.startsWith('data/log/weighins/')).flatMap(([, t]) => JSON.parse(t).records).find((w) => w.local_date === today && w.source === 'app' && !w.deleted);
+    assert.equal(todayW.weight_lb, 168.8);
+
+    step('GitHub sync: held while a workout is in progress (one commit per session)');
+    const putSession = (rec) => p.evaluate((r) => new Promise((resolve) => {
+      indexedDB.open('wmcoach').onsuccess = (e) => { const tx = e.target.result.transaction('sessions', 'readwrite'); tx.objectStore('sessions').put(r); tx.oncomplete = resolve; };
+    }), rec);
+    const open = { id: 'sess-e2e-open', local_date: today, tz: 'America/Los_Angeles', utc: new Date().toISOString(), status: 'in_progress', day_dow: 5, day_name: 'Upper Pull #2', exercises: [], updated_utc: new Date().toISOString() };
+    await putSession(open);
+    const commits = gh.commitMessages().length;
+    await tab(p, 'Body');
+    await p.getByLabel('Weight', { exact: true }).fill('169.0');
+    await p.getByLabel('Weight', { exact: true }).press('Enter');
+    await p.locator('.btn.primary', { hasText: /^(Update|Log weight)$/ }).click();
+    await toastText(p, '169.0 lb');
+    await p.waitForTimeout(11000); // past the 8 s settle delay
+    assert.equal(gh.commitMessages().length, commits, 'nothing pushed mid-workout');
+    await badge.filter({ hasText: 'Unsynced' }).waitFor();
+    await putSession({ ...open, deleted: true, deleted_utc: new Date().toISOString(), updated_utc: new Date().toISOString() });
+    await badge.click();
+    await p.getByRole('button', { name: 'Sync now' }).click();
+    await toastText(p, 'Synced');
+    await badge.waitFor({ state: 'hidden' });
+    assert.equal(gh.commitMessages().length, commits + 1);
+
+    step('Notifications: turn on (after install), test, subscription syncs');
+    await p.getByText('Notifications', { exact: true }).scrollIntoViewIfNeeded();
+    await p.getByRole('button', { name: 'Turn on notifications' }).click();
+    await toastText(p, 'Notifications on');
+    await p.getByRole('button', { name: 'Send a test' }).click();
+    await toastText(p, 'Test sent');
+    assert.match((await p.evaluate(() => window.__shown))[0][1], /check-in mornings/);
+    await until(() => gh.json('data/log/push_subscription.json'), 'the subscription to sync');
+    const sub = gh.json('data/log/push_subscription.json');
+    assert.equal(sub.value.endpoint, 'https://web.push.apple.com/QE2E-test');
+    assert.ok(sub.value.vapid_public_key);
+    await p.getByText('Notifications', { exact: true }).scrollIntoViewIfNeeded();
+    await p.evaluate(() => window.scrollBy(0, -60));
+    await p.waitForTimeout(3000);
+    await shot(p, 'e05-notifications', S5);
+    await c.close();
+  }
+
+  step('Restore from GitHub on an empty phone: history + everything synced comes back');
+  {
+    const remoteWeighins = Object.entries(gh.files()).filter(([f]) => f.startsWith('data/log/weighins/')).flatMap(([, t]) => JSON.parse(t).records);
+    const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles' });
+    await routeGitHub(c, gh);
+    const p = await c.newPage();
+    watch(p);
+    await p.goto(url);
+    await p.getByText('Continue in Safari (testing only)').click();
+    await p.getByRole('button', { name: 'Restore from GitHub' }).click();
+    await p.getByLabel('GitHub token').fill(gh.token);
+    await p.waitForTimeout(300);
+    await shot(p, 'e06-restore', S5);
+    await p.locator('.sheet.show').getByRole('button', { name: 'Restore', exact: true }).click();
+    await toastText(p, 'Restored');
+    await p.locator('.weekstrip').waitFor();
+    assert.equal(await countStore(p, 'weighins'), 279 + remoteWeighins.length);
+    for (const store of ['checkins', 'measurements', 'sessions', 'adherence', 'plans', 'foods']) {
+      const remote = Object.entries(gh.files()).filter(([f]) => f.startsWith(`data/log/${store}`)).flatMap(([, t]) => JSON.parse(t).records).length;
+      assert.equal(await countStore(p, store), remote, `${store} restored`);
+    }
+    await p.locator('.card.summary').waitFor(); // the review is rebuilt from the restored data
+    await p.waitForTimeout(2500);
+    assert.equal(await p.locator('.sync-badge').isHidden(), true, 'nothing pending after a restore');
+    const before = gh.commitMessages().length;
+    await p.waitForTimeout(2000);
+    assert.equal(gh.commitMessages().length, before, 'a restore doesn’t push anything back');
     await c.close();
   }
   await tab(page, 'History');

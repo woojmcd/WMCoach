@@ -13,7 +13,7 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 - Work on a branch and open a PR; never force-push `main`.
 - IndexedDB migrations are additive only (spec §12a). Older app code must still read newer data.
 - Run the tests and the migration test before every PR. Bump `APP_VERSION` and the service-worker cache name on every release.
-- Never commit tokens or secrets.
+- Never commit tokens or secrets. That includes the VAPID private key (`scripts/vapid_keys.mjs` writes it to a file outside the repo; it belongs only in the daily routine's credentials).
 
 ## Working with Walter
 - Build in the stages Walter asks for; open a PR per stage and stop for him to test on his iPhone.
@@ -21,7 +21,8 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 
 ## Decisions Walter has made (don't re-ask)
 - **The repo stays public** (2026-10-09), so GitHub Pages works on a free account. Synced data under `data/` (`log/`, `health/`, `strava/`, …) is publicly readable; Walter accepted that. Still never commit tokens or secrets.
-- **Check-in prompts** (2026-10-09). On check-in day the Body tab shows a filled "Log measurements & check-in" button under Weight (a gold link on other days), and the Week tab shows a banner. Walter also wants a **push notification on the morning of check-in day**. iOS home-screen web apps can't schedule local notifications, so it is sent by the daily routine via Web Push (spec §8.4). Stage 5: the PWA asks permission (button, after install) and syncs the push subscription. Stage 6: `ops/daily_prompt.md` sends it on the morning run of check-in day. Until then Walter can use a one-line iOS Shortcut reminder.
+- **Check-in prompts** (2026-10-09). On check-in day the Body tab shows a filled "Log measurements & check-in" button under Weight (a gold link on other days), and the Week tab shows a banner. Walter also wants a **push notification on the morning of check-in day**. iOS home-screen web apps can't schedule local notifications, so it is sent by the daily routine via Web Push (spec §8.4). Stage 5 (done): Settings → Notifications asks permission from a button in the installed app and syncs the subscription to `data/log/push_subscription.json`. Stage 6: `ops/daily_prompt.md` sends it on the morning run of check-in day. Until then Walter can use a one-line iOS Shortcut reminder.
+- **Week in review** (2026-10-09). After each weekly check-in the Week tab shows an executive summary of the past 7 days and the plan change: blunt, but encouraging, never downplaying the numbers. It stays up through the plan week that follows (until the next check-in replaces it).
 
 ## Repo layout (spec §12a)
 | Path | What |
@@ -71,6 +72,20 @@ The new service worker installs in the background and waits. Walter sees "Update
 - Every plan stores `changes` from `diffPlans(previous, next)`; the Meals tab shows them as "What changed", and the Week tab shows a banner from the day before the new week starts.
 - GI flags live in the `foods` store (`gi_flag: true`). The plan generator (stage 6) must avoid flagged foods and offer the `SWAPS`.
 - Grocery amounts are raw or store units (meat ≈ cooked ÷ 0.75, dry rice ≈ cooked ÷ 3). Ticks are a per-phone convenience in `localStorage` (`wm.grocery.<week_start>`), not synced.
+
+## Week in review (weekly executive summary)
+- `weeklySummary()` in `coach/summary.js` (pure; the weekly routine reuses it and adds its macro decision). It reviews the 7 days ending on the check-in, in spec §10 order: adherence, weigh-ins, rate vs the mode's band, training (sessions, main lifts by best-set e1RM, increases, resets), waist vs limbs, biofeedback, then the plan. The headline names the first problem in that order, then the wins; "Focus" is one action.
+- Tone: state the number and what it means. Don't soften a miss (adherence 50 % is "too low to judge anything"), and always report what went well. Days before the first logged session are never "missed".
+- Shown from the check-in through the plan week after it (`summaryVisibleUntil`). Open on check-in day and the day after, folded to the headline later.
+
+## GitHub sync and notifications (stage 5)
+- `app/sync.js` (engine, works in Node) and `app/sync-ui.js` (queue, badge, Settings, Restore). The phone is the only writer of `data/log/`: monthly files per store (`data/log/<store>/YYYY-MM.json`), single files for phases, exercise prefs, foods and the synced meta (`settings.json`, `onboarding.json`, `push_subscription.json`). Seeded history (`source: "history"`) is not copied; Restore re-seeds it.
+- One commit per sync through the Git Data API (`log YYYY-MM-DD (<tz>): n records`). Each file is merged with the repo's copy (newer `updated_utc` wins, repo-only records kept), so a wiped phone can't erase history. A non-fast-forward (the routine pushed meanwhile) rebuilds on the new head.
+- Triggers: 8 s after a write (`onWrite` in `app/db.js`), on launch, when signal returns, and when the app is hidden. Held while a workout is in progress (one commit per session, which also keeps Pages under ~10 builds/hour once it serves `main`). Failures back off 15 s → 30 min; a bad token or missing access pauses until Settings. Never a blocking error: just the "Unsynced (n)" / "Sync paused" badge in the header.
+- The token and sync state are meta keys `github` and `sync` (`PRIVATE_META`): never exported, synced, or overwritten by an import.
+- Restore from GitHub: onboarding rebuilds an empty phone (`seedFromRemote`); Settings merges (never Replace: the repo doesn't hold the seeded history).
+- Push: `app/push.js`, public key in `app/push-config.js`. The service worker shows `{ title, body, url, tag }` payloads and opens only URLs inside the app's scope. Walter's guide: `docs/github-sync.md`.
+- Pulling routine outputs (`data/plan/`, `data/targets/`) into the phone comes with stage 6, together with their formats.
 
 ## Timezone
 Walter travels. "Today" always means his current local date in the zone from `settings.tz_current`. It follows the iPhone by default (Settings → Timezone); `coach/time.js` has the helpers. Every stored entry carries `utc`, `local_date` and `tz`. Daily records are keyed by `local_date` and never auto-merged when a date repeats after a date-line crossing.
