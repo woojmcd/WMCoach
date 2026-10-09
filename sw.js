@@ -6,7 +6,7 @@
 //   when the app posts SKIP_WAITING after Walter taps "Update available, reload".
 
 // Bump together with APP_VERSION in app/version.js on every release (a test checks).
-const CACHE_VERSION = '0.6.0';
+const CACHE_VERSION = '0.7.0';
 const SHELL_CACHE = `wmcoach-shell-${CACHE_VERSION}`;
 const DATA_CACHE = 'wmcoach-data';
 const NETWORK_FIRST = ['data/plan/', 'data/targets/'];
@@ -37,6 +37,7 @@ const SHELL_FILES = [
   "app/push-config.js",
   "app/remote.js",
   "app/views/common.js",
+  "app/views/cardio.js",
   "app/views/install.js",
   "app/views/onboarding.js",
   "app/views/week.js",
@@ -59,6 +60,7 @@ const SHELL_FILES = [
   "coach/readiness.js",
   "coach/tdee.js",
   "coach/weekly.js",
+  "coach/cardio.js",
   "coach/routine.js",
   "icons/icon.svg",
   "icons/icon-192.png",

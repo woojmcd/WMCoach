@@ -17,7 +17,8 @@ You are Walter's daily coach run. The routine's saved prompt is one line, "Follo
 3. **Strava** (only when `run` is true). Use the Strava connector:
    - `list_activities` with `range_start` / `range_end` from the preflight and `first: 50`. Follow `end_cursor` while `has_next_page` is true.
    - For each activity of 20 min or more, except WeightTraining, call `get_activity_performance` (average and max heart rate).
-   - Save what the tools returned, unedited, as `.coach/strava.json`: `{ "activities": [ …list items… ], "performance": { "<activity id>": { …performance… } } }`.
+   - Call `get_athlete_zones` once (no arguments). Its heart-rate zone 2 is the cardio target heart rate (spec §6.5).
+   - Save what the tools returned, unedited, as `.coach/strava.json`: `{ "activities": [ …list items… ], "performance": { "<activity id>": { …performance… } }, "zones": { …get_athlete_zones result… } }`. If `get_athlete_zones` fails, leave `zones` out; the script keeps the last known zones.
    - If the Strava tools aren't available in this session, say so in the report and go on without `--strava`. A green run status doesn't prove the connector loaded; the transcript must show the Strava tools.
 4. **Run.** `node scripts/daily.mjs --strava .coach/strava.json` (drop `--strava` if step 3 was skipped).
    - The script prints a short report and either `SKIP` or `COMMIT: <message>`.

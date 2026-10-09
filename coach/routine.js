@@ -4,7 +4,7 @@
 //
 // Writes only routine-owned paths (spec §2): data/strava/ (new files only),
 // data/targets/, data/plan/ (the changelog is append-only), data/model/.
-import { localDate, addDays, isoWeekday, daysBetween, HOME_TZ, WEEKDAYS_LONG } from './time.js';
+import { localDate, addDays, isoWeekday, daysBetween, weekDates, HOME_TZ, WEEKDAYS_LONG } from './time.js';
 import { parseWeightCsv, historyWeighins, historyPhases } from './seed.js';
 import { trendFromEntries, rateOverDays } from './trend.js';
 import { planDay, trainingCalendar } from './progression.js';
@@ -18,6 +18,9 @@ import {
 import { mainLiftChanges } from './summary.js';
 import { planWeekStart } from './meals.js';
 import { adherenceFromTaps, MODE_LABEL } from './phase.js';
+import {
+  baseCardio, nextCardio, rxForWeek, cardioItems, cardioForDay, parseHrZones, zone2, cardioText,
+} from './cardio.js';
 
 export const ROUTINE_SCHEMA = 1;
 export const OWNED = ['data/strava/', 'data/targets/', 'data/plan/', 'data/model/'];
@@ -117,6 +120,17 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
   const last = series[series.length - 1] || null;
   const rate = rateOverDays(series, today, 14);
 
+  // ---- plans: the published ones and the phone's ----
+  const published = { current: J('data/plan/current.json'), next: J('data/plan/next.json') };
+  const phonePlans = live(log.plans);
+  const allPlans = [...phonePlans.filter((p) => ![published.current, published.next].some((q) => q && q.week_start === p.week_start)), ...[published.current, published.next].filter(Boolean)]
+    .sort((a, b) => (a.week_start < b.week_start ? -1 : 1));
+  const inForce = (d) => [...allPlans].reverse().find((p) => p.week_start <= d) || null;
+
+  // ---- heart-rate zones from Strava (spec §6.5), kept in the model ----
+  const zonesFetched = kind === 'daily' && stravaFetched && !Array.isArray(stravaFetched) ? parseHrZones(stravaFetched.zones) : null;
+  if (zonesFetched) state.hr_zones = { zones: zonesFetched, updated_local_date: today };
+
   // ---- readiness + today's targets (spec §6.3, §6.2) ----
   const day = program ? dayForWeekday(program, isoWeekday(today)) : null;
   const cal = trainingCalendar(live(log.sessions), program, today);
@@ -126,6 +140,17 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
     mode, week: cal.week, deload: cal.deload.isDeload, liftedLess: Boolean(settings.lifted_less_since_may), prefs, readiness: r,
   }) : [];
   const addons = enduranceAddons(activities, today);
+  // today's cardio (spec §6.5): the week's prescription, adjusted for readiness
+  const week = weekDates(today);
+  const cardioToday = cardioForDay({
+    rx: rxForWeek(allPlans, today, mode),
+    date: today,
+    items: cardioItems({ activities, stairs: live(log.stairs), from: week[0], to: week[6] }),
+    readiness: r,
+    addons,
+    weightLb: last ? Math.round(last.trend * 10) / 10 : null,
+    hr: zone2({ zones: state.hr_zones ? state.hr_zones.zones : null, activities }),
+  });
   writes['data/targets/today.json'] = json({
     schema_version: ROUTINE_SCHEMA,
     local_date: today,
@@ -141,9 +166,11 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
       sets: p.target.sets.map((s) => ({ kind: s.kind, load: s.load, reps_min: s.reps_min, reps_max: s.reps_max, aim: s.aim, rir: s.rir, seconds: s.seconds })),
     })),
     addons,
+    cardio: cardioToday,
   });
   report.push(`Readiness ${r.status}: ${r.reason}.${day && day.exercises.length ? ` ${day.name}, week ${cal.week}${cal.deload.isDeload ? ' (deload)' : ''}.` : ' Open day.'}`);
   for (const a of addons) report.push(`Add-on today: +${a.kcal} kcal carbs (${a.reason}).`);
+  report.push(cardioReport(cardioToday));
 
   state.readiness_history = [...(state.readiness_history || []).filter((x) => x.local_date !== today), { local_date: today, status: r.status }].slice(-21);
   if (kind === 'health_rerun') {
@@ -157,13 +184,6 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
   state.trend = { ...(state.trend || {}), half_life_days: (state.trend && state.trend.half_life_days) || 7, last_local_date: last ? last.date : null, last_weight_lb: last ? Math.round(last.weight * 10) / 10 : null, trend_lb: last ? Math.round(last.trend * 10) / 10 : null, rate_14d_pct_bw_wk: rate ? Math.round(rate.pct_bw_per_wk * 100) / 100 : null };
   const phases = [...historyPhases(profile || { phases: [] }), ...live(log.phases).filter((p) => !p.superseded)];
   state.phase_history = phases.map(({ id, kind: k, label, start, end }) => ({ id, kind: k, label, start, end }));
-
-  // ---- plans: the published ones and the phone's ----
-  const published = { current: J('data/plan/current.json'), next: J('data/plan/next.json') };
-  const phonePlans = live(log.plans);
-  const allPlans = [...phonePlans.filter((p) => ![published.current, published.next].some((q) => q && q.week_start === p.week_start)), ...[published.current, published.next].filter(Boolean)]
-    .sort((a, b) => (a.week_start < b.week_start ? -1 : 1));
-  const inForce = (d) => [...allPlans].reverse().find((p) => p.week_start <= d) || null;
 
   // ---- prep-day swap: next.json becomes current.json (spec §8.1) ----
   if (published.next && published.next.week_start <= today && (!published.current || published.current.week_start < published.next.week_start)) {
@@ -206,19 +226,25 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
 
       const pending = settings.pending_mode && settings.pending_mode.effective_date <= weekStart ? settings.pending_mode : null;
       const nextMode = pending ? pending.to : mode;
-      let decision; let plan; let notes = []; let modeSwitch = null;
+      let decision; let plan; let notes = []; let modeSwitch = null; let cardioRx;
+      const currentCardio = current.cardio || baseCardio(mode);
       if (pending && pending.to !== mode) {
         const first = firstPlanForMode({ to: pending.to, current, tdee, weightLb: last ? last.trend : 170, cardioKcal: tdee ? tdee.cardio_kcal : 0, plansJson });
         const swapped = nextPlan({ current: { plan: first.plan }, decision: { change: 0 }, flags: foods, foodDb: plansJson.food_db });
         plan = swapped.plan; notes = swapped.notes;
         modeSwitch = MODE_LABEL[pending.to];
         decision = { change: 0, stoppedAt: null, mode_switch: { from: mode, to: pending.to }, reason: first.why, checks: [] };
+        cardioRx = nextCardio({ mode, current: currentCardio, decision, modeSwitch: { to: pending.to } }).cardio;
       } else {
         decision = weeklyDecision({
           mode, rate: rate ? rate.pct_bw_per_wk : null, prevRates: (state.weekly_history || []).map((h) => h.rate_pct).filter(Number.isFinite),
           bands, adherencePct, weighinsWeek: weekDays.size, observe, washout, mainLiftsDown: mainDown,
           bioAvg: mean(bio), stepsAvg: mean(steps), stepFloor: settings.step_floor || 8000,
         });
+        // one lever a week (spec §10): in a cut, cardio goes first (spec §6.5)
+        const nc = nextCardio({ mode, current: currentCardio, decision });
+        decision = nc.decision;
+        cardioRx = nc.cardio;
         const np = nextPlan({ current, decision, flags: foods, foodDb: plansJson.food_db });
         plan = np.plan; notes = np.notes;
         if (decision.change && !np.moved) decision = { ...decision, change: 0, reason: `${decision.reason} (no carb step left to take)` };
@@ -227,7 +253,7 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
       const record = planRecord({
         weekStart, mode: nextMode, plan, previous: current, decision, notes,
         reason: decision.change || modeSwitch ? `${cap(decision.reason)}.` : `No macro change: ${decision.reason}.`,
-        nowUtc, localDate: today,
+        nowUtc, localDate: today, cardio: cardioRx,
       });
       writes[isPrep ? 'data/plan/current.json' : 'data/plan/next.json'] = json(record);
       const changelog = J('data/plan/changelog.json') || { schema_version: 1, entries: [] };
@@ -237,12 +263,13 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
           week_start: weekStart, local_date: today, generated_utc: nowUtc, mode: nextMode, changed: record.changes.changed,
           kcal_from: record.changes.kcal.from, kcal_to: record.changes.kcal.to, delta: record.changes.kcal.delta,
           what: changeText(record.changes), reason: record.reason, stopped_at: decision.stoppedAt || null,
+          cardio: cardioText(cardioRx), cardio_changed: Boolean(cardioRx.change),
         }],
       });
-      const n = weeklyNotification({ weekStart, changes: record.changes, decision, modeSwitch });
+      const n = weeklyNotification({ weekStart, changes: record.changes, decision, modeSwitch, cardio: cardioRx });
       notifications.push({ kind: 'weekly', ...n });
       state.last_weekly_run_week = weekStart;
-      state.weekly_history = [{ week_start: weekStart, local_date: today, rate_pct: rate ? Math.round(rate.pct_bw_per_wk * 100) / 100 : null, change: decision.change, kcal: record.plan.weekly_avg.kcal, stopped_at: decision.stoppedAt || null }, ...(state.weekly_history || [])].slice(0, 26);
+      state.weekly_history = [{ week_start: weekStart, local_date: today, rate_pct: rate ? Math.round(rate.pct_bw_per_wk * 100) / 100 : null, change: decision.change, kcal: record.plan.weekly_avg.kcal, cardio_min: cardioRx.weekly_min, stopped_at: decision.stoppedAt || null }, ...(state.weekly_history || [])].slice(0, 26);
       if (record.changes.changed) state.last_change_week_start = weekStart;
       report.push(`Weekly step for ${weekStart}: ${n.body}`);
     }
@@ -267,6 +294,12 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
 }
 
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+function cardioReport(c) {
+  const t = c.today;
+  const what = t ? `${t.minutes} min ${t.kind}${t.makeup ? ' (make-up)' : ''}${t.status === 'done' ? ', done' : ''}` : 'none planned today';
+  return `Cardio: ${what}; week ${c.week.done_sessions}/${c.week.target_sessions} sessions (${cardioText(c.rx)}).`;
+}
 
 // Paths the routine may write, and how (spec §2: one writer per path).
 export function checkWrites(writes, exists) {

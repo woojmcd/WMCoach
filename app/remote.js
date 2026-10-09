@@ -7,6 +7,7 @@
 import { getAll, getMeta, setMeta, put } from './db.js';
 import { live } from './records.js';
 import { GitHub } from './sync.js';
+import { weekDates } from '../coach/time.js';
 
 const PULL_EVERY_MS = 5 * 60 * 1000;
 const FILES = ['data/targets/today.json', 'data/plan/current.json', 'data/plan/next.json'];
@@ -76,6 +77,14 @@ export async function pullRemote(ctx, { force = false, fetchImpl = (...a) => fet
 // Today's routine targets (only if they are for today's local date).
 export function todaysTargets(remote, today) {
   return remote && remote.targets && remote.targets.local_date === today ? remote.targets : null;
+}
+
+// The latest routine targets from this Mon–Sun week (today's or an earlier day's):
+// their Strava cardio list still counts toward this week's cardio (spec §6.5).
+export function weekTargets(remote, today) {
+  const t = remote && remote.targets;
+  if (!t || !t.local_date || t.local_date > today) return null;
+  return t.local_date >= weekDates(today)[0] ? t : null;
 }
 
 // "Sync Health" chip: only when we know today's file is missing.

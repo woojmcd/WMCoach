@@ -6,6 +6,8 @@ import { readFileSync } from 'node:fs';
 import { dailyRun, preflight, checkWrites } from '../../coach/routine.js';
 import { startingPlan } from '../../coach/meals.js';
 import { addDays } from '../../coach/time.js';
+import { seedModelState } from '../../coach/model.js';
+import { parseWeightCsv, historyWeighins, historyPhases } from '../../coach/seed.js';
 
 const disk = (p) => readFileSync(new URL(`../../${p}`, import.meta.url), 'utf8');
 const plansJson = JSON.parse(disk('data/plans.json'));
@@ -25,7 +27,10 @@ const at = (date) => new Date(`${date}T15:00:00Z`); // 08:00 in Los Angeles
 
 function phone({ settings = {}, weight = () => 175, until = '2026-11-08' } = {}) {
   const files = {};
-  for (const p of ['data/program.json', 'data/plans.json', 'data/weight_daily.csv', 'data/metabolic_profile.json', 'data/model/state.json']) files[p] = disk(p);
+  for (const p of ['data/program.json', 'data/plans.json', 'data/weight_daily.csv', 'data/metabolic_profile.json']) files[p] = disk(p);
+  // a freshly seeded model (the committed one is the live routine's by now)
+  const profile = JSON.parse(disk('data/metabolic_profile.json'));
+  files['data/model/state.json'] = `${JSON.stringify(seedModelState(profile, { weighins: historyWeighins(parseWeightCsv(disk('data/weight_daily.csv'))), phases: historyPhases(profile), generatedUtc: '2026-10-09T16:00:00Z' }), null, 2)}\n`;
   files['data/log/settings.json'] = metaDoc('settings', {
     tz_mode: 'auto', tz_current: 'America/Los_Angeles', tz_history: [{ tz: 'America/Los_Angeles', from_utc: '2026-10-09T16:00:00Z' }],
     prep_day: 7, checkin_day: 1, mode: 'bulk', mode_since: ONBOARD, lifted_less_since_may: false, step_floor: 8000, units: 'lb', ...settings,
@@ -173,4 +178,52 @@ test('write guard: the routine may never write the phone\'s or the Shortcut\'s p
     'data/health/2026-10-10.json: not a routine-owned path',
   ]);
   assert.deepEqual(checkWrites({ 'data/strava/2026-10-16-777.json': '{}' }, () => true), ['data/strava/2026-10-16-777.json: Strava entries are never rewritten']);
+});
+
+test('cardio (spec §6.5): today\'s session in the targets, the dose in next week\'s plan and the Saturday message', () => {
+  const repo = phone();
+  // Tue 13th: a bulk cardio day; Strava zones come in with the fetch
+  const zones = { heart_rate: { zones: [{ min: 0, max: 118 }, { min: 118, max: 147 }, { min: 147, max: 162 }, { min: 162, max: 176 }, { min: 176, max: -1 }] } };
+  run(repo, '2026-10-12');
+  run(repo, '2026-10-13', { stravaFetched: { activities: [], zones } });
+  const t = J(repo, 'data/targets/today.json');
+  assert.deepEqual([t.cardio.today.minutes, t.cardio.today.kind, t.cardio.today.status], [25, 'stairs', 'todo']);
+  assert.deepEqual(t.cardio.today.hr, { lo: 118, hi: 147, source: 'strava' });
+  assert.equal(t.cardio.today.kcal, 190, '175 lb trend × his stairs rate');
+  assert.deepEqual(J(repo, 'data/model/state.json').hr_zones.zones[1], { min: 118, max: 147 });
+  // a Stairs ✓ tap counts: Thursday sees 1 of 2 done
+  repo.files['data/log/stairs/2026-10.json'] = doc('stairs', [{ id: 'stairs-2026-10-13', local_date: '2026-10-13', minutes: 26 }]);
+  run(repo, '2026-10-14');
+  run(repo, '2026-10-15');
+  const thu = J(repo, 'data/targets/today.json').cardio;
+  assert.deepEqual([thu.week.done_sessions, thu.week.target_sessions, thu.today.status], [1, 2, 'todo']);
+  run(repo, '2026-10-16');
+  const r = run(repo, '2026-10-17');
+  const next = J(repo, 'data/plan/next.json');
+  assert.equal(next.cardio.sessions, 2);
+  assert.match(r.notifications.find((n) => n.kind === 'weekly').body, / Cardio: 2 × 25 min stairs \(Tue, Thu\)\.$/);
+  assert.equal(J(repo, 'data/plan/changelog.json').entries.at(-1).cardio, '2 × 25 min stairs (Tue, Thu)');
+});
+
+test('cut stall: cardio is the lever before food (one more session, no carb step), said in the Saturday message', () => {
+  // in a cut since before onboarding (no observe-only), weight flat at 175 → too slow for 2 weeks
+  const repo = phone({ settings: { mode: 'cut', mode_since: '2026-09-01' } });
+  repo.files['data/log/onboarding.json'] = metaDoc('onboarding', { completed_local_date: '2026-09-20', tz: 'America/Los_Angeles' });
+  const weekly = {};
+  for (let d = '2026-10-10'; d <= '2026-10-31'; d = addDays(d, 1)) {
+    const r = run(repo, d);
+    const n = r.notifications.find((x) => x.kind === 'weekly');
+    if (n) weekly[d] = { n, next: J(repo, 'data/plan/next.json') };
+  }
+  const lever = Object.values(weekly).find((w) => w.next.cardio.change);
+  assert.ok(lever, 'a stall moved cardio');
+  assert.equal(lever.next.decision.lever, 'cardio');
+  assert.equal(lever.next.decision.change, 0);
+  assert.equal(lever.next.changes.changed, false, 'food unchanged that week');
+  assert.equal(lever.next.cardio.sessions, 5);
+  assert.equal(lever.n.title, 'More cardio from Sunday');
+  assert.match(lever.n.body, /^No macro change\. Cardio goes to 5 × 30 min stairs \(Mon, Tue, Thu, Fri, Sat\) \(was 4 × 30 min stairs \(Mon, Tue, Thu, Fri\)\)\. Reason: rate/);
+  // the next Monday's targets use the new dose
+  run(repo, addDays(lever.next.week_start, 1));
+  assert.equal(J(repo, 'data/targets/today.json').cardio.rx.sessions, 5);
 });

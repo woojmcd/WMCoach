@@ -6,20 +6,49 @@ import { newId } from './seed.js';
 import { planDay, trainingCalendar, roundToIncrement } from '../coach/progression.js';
 import { dayForWeekday } from '../coach/program.js';
 import { isoWeekday, stamp } from '../coach/time.js';
-import { remoteState, todaysTargets, healthMissing } from './remote.js';
+import { remoteState, todaysTargets, weekTargets, healthMissing } from './remote.js';
+import { cardioForDay, cardioItems, rxForWeek } from '../coach/cardio.js';
+import { weekDates } from '../coach/time.js';
 
 export async function loadTraining(ctx) {
-  const [sAll, prefsAll, stairsAll] = await Promise.all([getAll(ctx.db, 'sessions'), getAll(ctx.db, 'exercise_prefs'), getAll(ctx.db, 'stairs')]);
+  const [sAll, prefsAll, stairsAll, plansAll, weighins] = await Promise.all([
+    getAll(ctx.db, 'sessions'), getAll(ctx.db, 'exercise_prefs'), getAll(ctx.db, 'stairs'), getAll(ctx.db, 'plans'), getAll(ctx.db, 'weighins'),
+  ]);
   const prefs = Object.fromEntries(prefsAll.map((p) => [p.id, p]));
   const today = ctx.today();
   const { sessions, programStart, week, deload } = trainingCalendar(live(sAll), ctx.program, today);
   // today's readiness from the daily run (spec §6.3), if it has run today
   const remote = await remoteState(ctx.db);
   const targets = todaysTargets(remote, today);
+  const stairs = live(stairsAll);
+  const readiness = targets ? targets.readiness : null;
+  const addons = targets ? targets.addons || [] : [];
   return {
-    sessions, prefs, stairs: live(stairsAll), today, programStart, week, deload,
-    readiness: targets ? targets.readiness : null, addons: targets ? targets.addons || [] : [], healthMissing: healthMissing(remote, today),
+    sessions, prefs, stairs, today, programStart, week, deload,
+    readiness, addons, healthMissing: healthMissing(remote, today),
+    cardio: cardioOnPhone(ctx, { today, remote, targets, stairs, plans: live(plansAll), weighins: live(weighins), readiness, addons }),
   };
+}
+
+// Today's cardio (spec §6.5), worked out on the phone so it works offline and before
+// the morning run: the week's prescription, Strava sessions the routine has seen this
+// week, and Stairs ✓ taps (which count at once).
+export function cardioOnPhone(ctx, { today, remote, targets, stairs, plans, weighins, readiness, addons }) {
+  const wk = weekTargets(remote, today);
+  const latest = remote && remote.targets && remote.targets.cardio ? remote.targets.cardio : null;
+  const rx = (targets && targets.cardio && targets.cardio.rx) || rxForWeek(plans, today, ctx.settings.mode);
+  const days = weekDates(today);
+  const strava = wk && wk.cardio && wk.cardio.week ? wk.cardio.week.items.filter((i) => i.source === 'strava') : [];
+  const lastW = [...weighins].sort((a, b) => (a.local_date < b.local_date ? -1 : 1)).pop();
+  return cardioForDay({
+    rx,
+    date: today,
+    items: cardioItems({ activities: strava, stairs, from: days[0], to: days[6] }),
+    readiness,
+    addons,
+    weightLb: (latest && latest.weight_lb) || (lastW ? lastW.weight_lb : null),
+    hr: latest ? latest.hr : null,
+  });
 }
 
 export function planOptions(ctx, training) {

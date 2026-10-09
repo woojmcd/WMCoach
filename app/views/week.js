@@ -6,13 +6,15 @@ import { focusCheckin } from './body.js';
 import { checkinState, currentPhase, realPhases } from '../../coach/phase.js';
 import { weeklySummary, activeSummaryCheckin } from '../../coach/summary.js';
 import { header, note, sessionList, addonCard } from './common.js';
+import { cardioMeta, weekTracker, whySheet } from './cardio.js';
+import { cardioText } from '../../coach/cardio.js';
 import { loadTraining, planFor, progressCount } from '../training.js';
 import { planItem } from './log.js';
 import { ensurePlans, planNotice } from '../meal-plans.js';
 import { weekDates, isoWeekday, WEEKDAYS, formatDayMonth, formatLong, tzCity } from '../../coach/time.js';
 import { dayForWeekday } from '../../coach/program.js';
 
-const OPEN_DAY = 'Stairs by default, or runs, rides, swims and social sessions, read from Strava.';
+const OPEN_DAY = 'Rest, or runs, rides, swims and social sessions, read from Strava.';
 // Same values as the seeded model (brief §5); used only if the model record is missing.
 const DEFAULT_BANDS = { cut: { target: [-0.75, -0.5], slow_limit: -0.4, cap: -1.0 }, bulk: { target: [0.1, 0.2], cap: 0.35 }, maintenance: { target: [-0.1, 0.1] } };
 const ui = { summaryOpen: {} };
@@ -29,6 +31,10 @@ export async function render(screen, ctx) {
   const sessionsOn = (date) => training.sessions.filter((x) => x.local_date === date);
   const stairsOn = (date) => training.stairs.filter((x) => x.local_date === date).pop() || null;
 
+  const cardioLine = (date) => {
+    const c = cardioMeta(training.cardio, date, today);
+    return c ? h('p', { class: 'small', style: 'margin:0 0 8px' }, `Cardio: ${c.replace(/^\+ /, '')}`) : null;
+  };
   const openDay = (date) => {
     const day = dayOf(date);
     const logged = sessionsOn(date);
@@ -37,22 +43,22 @@ export async function render(screen, ctx) {
     const title = `${WEEKDAYS[isoWeekday(date) - 1]} ${formatDayMonth(date)}`;
     if (logged.length) {
       const sx = logged[logged.length - 1];
-      openSheet({ title: `${title} · ${sx.day_name}`, subtitle: sx.status === 'finished' ? 'Logged' : 'In progress', body: sessionList(sx, ctx.program), actions: [{ label: 'Close', kind: 'outline' }] });
+      openSheet({ title: `${title} · ${sx.day_name}`, subtitle: sx.status === 'finished' ? 'Logged' : 'In progress', body: h('div', {}, cardioLine(date), sessionList(sx, ctx.program)), actions: [{ label: 'Close', kind: 'outline' }] });
       return;
     }
     if (!day || !day.exercises.length) {
-      openSheet({ title: `${title} · Open day`, subtitle: stairs ? `Stairs ${stairs.minutes} min logged.` : OPEN_DAY, actions: [{ label: 'Close', kind: 'outline' }] });
+      openSheet({ title: `${title} · Open day`, subtitle: stairs && !cardioLine(date) ? `Stairs ${stairs.minutes} min logged.` : OPEN_DAY, body: cardioLine(date), actions: [{ label: 'Close', kind: 'outline' }] });
       return;
     }
     if (date < today) {
-      openSheet({ title: `${title} · ${day.name}`, subtitle: 'No session logged.', actions: [{ label: 'Close', kind: 'outline' }] });
+      openSheet({ title: `${title} · ${day.name}`, subtitle: 'No session logged.', body: cardioLine(date), actions: [{ label: 'Close', kind: 'outline' }] });
       return;
     }
     const plan = planFor(ctx, training, day);
     openSheet({
       title: `${title} · ${day.name}`,
       subtitle: `Preview: targets from your last sessions${day.est_min ? ` · ~${day.est_min} min` : ''}.`,
-      body: h('div', { class: 'list' }, plan.map(planItem)),
+      body: h('div', {}, cardioLine(date), h('div', { class: 'list' }, plan.map(planItem))),
       actions: [{ label: 'Close', kind: 'outline' }],
     });
   };
@@ -60,7 +66,7 @@ export async function render(screen, ctx) {
   const strip = h('div', { class: 'weekstrip', role: 'group', 'aria-label': 'This week' },
     dates.map((d) => {
       const day = dayOf(d);
-      const done = sessionsOn(d).length > 0 || stairsOn(d);
+      const done = sessionsOn(d).length > 0 || stairsOn(d) || (training.cardio && training.cardio.week.items.some((i) => i.local_date === d));
       const cls = [d === today ? 'today' : '', d < today ? 'past' : ''].filter(Boolean).join(' ');
       return h('button', {
         type: 'button', class: cls, 'aria-current': d === today ? 'date' : null,
@@ -74,7 +80,6 @@ export async function render(screen, ctx) {
   const rows = h('div', { class: 'card flush list' }, dates.map((d) => {
     const day = dayOf(d);
     const logged = sessionsOn(d);
-    const stairs = stairsOn(d);
     let meta;
     if (logged.length) {
       const sx = logged[logged.length - 1];
@@ -83,8 +88,10 @@ export async function render(screen, ctx) {
     } else if (day && day.exercises.length) {
       meta = `${day.exercises.length} exercises${day.est_min ? ` · ~${day.est_min} min` : ''}`;
     } else {
-      meta = stairs ? `Stairs ${stairs.minutes} min` : 'Stairs, runs, rides, social';
+      meta = cardioMeta(training.cardio, d, today) ? null : 'Rest, runs, rides, social';
     }
+    const cm = cardioMeta(training.cardio, d, today);
+    meta = [meta, cm].filter(Boolean).join(' · ');
     return h('button', { type: 'button', class: `item day-row${d === today ? ' today' : ''}${logged.length ? ' logged' : ''}`, onClick: () => openDay(d) },
       h('span', { class: 'when' }, WEEKDAYS[isoWeekday(d) - 1]),
       h('span', { class: 'grow' }, h('div', { class: 'name' }, day ? day.name : '—'), h('div', { class: 'meta' }, meta)),
@@ -118,8 +125,20 @@ export async function render(screen, ctx) {
     h('div', { class: 'stack' },
       strip,
       rows,
+      training.cardio ? cardioWeekCard(training.cardio, today) : null,
       ctx.program ? null : note('Program not loaded yet: connect once to fetch it.'),
       h('p', { class: 'faint xsmall center' }, `${tzCity(s.tz_current)} time · ${s.tz_mode === 'auto' ? 'follows iPhone' : 'set manually'}`)));
+}
+
+// ---- cardio this week (spec §6.5) ---------------------------------------------------------
+
+function cardioWeekCard(cardio, today) {
+  return h('section', { class: 'card stack-sm cardio-card', 'aria-label': 'Cardio this week' },
+    h('p', { class: 'label', style: 'margin:0' }, 'Cardio this week'),
+    h('div', { class: 'cardio-title' }, cardioText(cardio.rx)),
+    cardio.rx.change ? h('p', { class: 'small accent', style: 'margin:0' }, `New this week (was ${cardio.rx.change.from}).`) : null,
+    weekTracker(cardio, today),
+    h('button', { type: 'button', class: 'link-btn', style: 'align-self:flex-start', onClick: () => whySheet(cardio) }, 'Why this cardio'));
 }
 
 // ---- weekly executive summary ----------------------------------------------------------------

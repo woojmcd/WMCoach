@@ -167,6 +167,7 @@ Backoff      [ 55] [12 ]             ✓
 - Quick actions: swap exercise (from a per-exercise alternates list), add/skip a set, note.
 - "Finish session" saves the log, and the app immediately computes the baseline next-session targets on-device (§6.2), so progression works offline even if the daily run never comes.
 - On weekend days, the Log tab shows a one-tap **"Stairs ✓ (__ min)"** fallback for sessions that don't reach Strava.
+- Every day, a cardio card shows the coach's cardio for today with the lifts (§6.5).
 
 ### 4.3 Body
 Top to bottom:
@@ -283,6 +284,43 @@ Inputs: overnight HRV vs 7-day rolling baseline, resting HR vs 7-day baseline, s
 ### 6.4 Deload
 Every 6th week, or earlier when ≥ 3 main lifts (Flat DB Bench, Incline DB Bench, Hammer Pulldowns, Single Arm DB Rows, Smith Squat, Single Leg Press) show 2 consecutive sessions of rep drops. The deload halves the sets, keeps the loads, sets RIR ≥ 3, and turns failure finishers into RIR 2. The app announces it on the Week tab the Friday before.
 
+### 6.5 Cardio prescription (Walter, 2026-10-09)
+The coach prescribes cardio as part of each day's workout. Strava and the Stairs ✓ tap record what he did. All of it is pure code in `coach/cardio.js`, shared by the routine and the phone.
+- **Weekly dose**, locked with the meal plan (`plans[].cardio`, set by the weekly step, §8.1):
+
+  | Mode | Dose |
+  |---|---|
+  | Bulk | 2 × 25 min stairs (Tue, Thu) |
+  | Maintenance | 3 × 30 (Mon, Tue, Thu) |
+  | Cut | 4 × 30 (Mon, Tue, Thu, Fri), up a ladder to 5 × 30 (+Sat) and 6 × 30 (+Sun, his 2026 cut) |
+
+  - Never on Wednesday (legs).
+  - A Mon–Sun week uses the plan in force on its Monday.
+  - Older plans without `cardio` fall back to the mode's base dose.
+- **The cut lever** (one lever a week, §10 step 6). In a cut, a "slower than target" decision adds a cardio session before food comes down; "faster than the limit" removes one.
+  - Food only moves when cardio is at the top or bottom of the ladder.
+  - Gates (adherence, data, recovery, diet break) leave cardio alone.
+  - A mode switch starts the new mode's base dose.
+  - The weekly notification and the changelog say what changed ("More cardio from Sunday · no macro change").
+- **Intensity:** easy Zone 2 stairs.
+  - The heart-rate range is Strava's zone 2 from `get_athlete_zones` (kept in `data/model/state.json` → `hr_zones`).
+  - Without Strava zones, it's 60–70 % of his highest recent Strava heart rate.
+  - kcal estimate: 5.4 net MET × trend weight.
+- **Today** (`targets/today.json` → `cardio`, also computed on the phone):
+  - The session on scheduled days.
+  - Optional once the weekly target is met.
+  - A make-up on the next free non-Wednesday when he's behind.
+  - Readiness amber: same session, keep it easy.
+  - Readiness red: a 20-min easy walk instead.
+  - After a long endurance session (§8.5 add-on): 20 min, optional.
+- **What counts:**
+  - Strava cardio activities ≥ 15 min (rides, runs, swims, stairs, …).
+  - Stairs ✓ taps ≥ 15 min. A tap on a day with a Strava StairStepper session is the same session.
+- **Where it shows:**
+  - Log tab: a cardio card under the exercises, with the dose, heart rate, readiness note, Stairs ✓ with the prescribed minutes, the week's tracker and "Why this cardio".
+  - Open days: the cardio card is the main card.
+  - Week tab: each day's row and preview, plus a "Cardio this week" card.
+
 ---
 
 ## 7. Daily routine (`coach-daily`, each morning via the Shortcut; see §2b)
@@ -290,7 +328,7 @@ Every 6th week, or earlier when ≥ 3 main lifts (Flat DB Bench, Incline DB Benc
 1. Pull the repo. Read `data/log/settings.json` for the current timezone and compute Walter's local date. If `last_daily_run_local_date` equals it, exit without committing.
 2. Read `data/log/`, `data/health/<local date>.json`, and Strava activities since the last run via the Strava connector (summary, HR zones, relative effort). Normalize the Strava data into `data/strava/`.
 3. Update the trend (EWMA) and the model state. Exclude days with adherence = Off from TDEE learning, as with breaks.
-4. Compute readiness (§6.3) and today's targets (§6.2) → `data/targets/today.json`, with a one-line reason per modified exercise.
+4. Compute readiness (§6.3) and today's targets (§6.2) → `data/targets/today.json`, with a one-line reason per modified exercise, plus today's cardio (§6.5).
 5. If yesterday had an endurance session > 2 h, write the same-/next-day add-on (§8.5).
 6. If it's the local day before prep day (or prep day and the weekly step was missed): run the weekly macro step (§8).
 7. Outside step 6, **never change the meal plan.** Commit to `main` with message `daily YYYY-MM-DD (<tz>)` and push.

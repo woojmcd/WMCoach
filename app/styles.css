@@ -648,3 +648,15 @@ body.resting .screen { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom)
 .chip-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 0 0 12px; }
 .health-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 14px; border-radius: 18px; border: 1px solid rgba(212, 180, 119, 0.45); color: var(--accent); background: var(--accent-dim); font-size: 14px; font-weight: 600; text-decoration: none; }
 .banner.addon { margin-bottom: 12px; }
+
+/* ---- Cardio (spec §6.5) ------------------------------------------------------------- */
+.cardio-card { border-left: 3px solid var(--accent); }
+.cardio-card.done { border-left-color: var(--good); }
+.cardio-card .badge { margin-top: 0; }
+.cardio-title { font-size: 20px; font-weight: 300; color: var(--text); font-variant-numeric: tabular-nums; }
+.cardio-note { color: var(--warn); }
+.cardio-week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cardio-week span { text-align: center; font-size: 11px; font-weight: 500; padding: 4px 0; border-radius: 8px; color: var(--text-3); border: 1px solid transparent; }
+.cardio-week span.planned { border-color: var(--hairline); color: var(--text-2); }
+.cardio-week span.done { background: var(--accent-dim); color: var(--accent); border-color: transparent; }
+.cardio-week span.today { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }

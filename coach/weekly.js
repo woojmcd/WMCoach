@@ -4,6 +4,7 @@
 import { rateStatus } from './trend.js';
 import { withMacros, nextCarbStep, applyCarbSteps, diffPlans, TEMPLATE_ID } from './meals.js';
 import { addDays, daysBetween, formatDayMonth, WEEKDAYS, isoWeekday } from './time.js';
+import { cardioText } from './cardio.js';
 
 export const MAX_WEEKLY_KCAL = 150; // spec §10: safety rail in code
 export const ADHERENCE_GATE = 90;
@@ -214,23 +215,33 @@ export function changeText(changes, max = 3) {
   return parts.slice(0, max).join(', ');
 }
 
-// The Saturday notification (spec §8.1): always sent, changed or not.
-export function weeklyNotification({ weekStart, changes, decision, modeSwitch = null }) {
+// The Saturday notification (spec §8.1): always sent, changed or not. With `cardio`
+// (spec §6.5) it also says next week's cardio, and leads with it when cardio was the lever.
+export function weeklyNotification({ weekStart, changes, decision, modeSwitch = null, cardio = null }) {
   const day = WEEKDAYS[isoWeekday(weekStart) - 1];
   const longDay = { Mon: 'Monday', Tue: 'Tuesday', Wed: 'Wednesday', Thu: 'Thursday', Fri: 'Friday', Sat: 'Saturday', Sun: 'Sunday' }[day];
+  const cardioLine = cardio ? ` Cardio: ${cardioText(cardio)}.` : '';
   if (changes && changes.changed) {
     const d = changes.kcal.delta;
     const head = modeSwitch ? `${modeSwitch} starts ${longDay}: ${d > 0 ? '+' : ''}${d} kcal.` : `Plan changes ${longDay}: ${d > 0 ? '+' : ''}${d} kcal.`;
-    return { title: modeSwitch ? `${modeSwitch} starts ${longDay}` : `New plan ${longDay}`, body: `${head} ${changeText(changes)}. Reason: ${decision.reason}.`.replace(/\.\./g, '.'), url: './#/meals', tag: `plan-${weekStart}` };
+    return { title: modeSwitch ? `${modeSwitch} starts ${longDay}` : `New plan ${longDay}`, body: `${head} ${changeText(changes)}. Reason: ${decision.reason}.${cardioLine}`.replace(/\.\./g, '.'), url: './#/meals', tag: `plan-${weekStart}` };
   }
-  return { title: 'No macro change this week', body: `No macro change this week. ${cap(decision.reason)}. Prep as last week.`, url: './#/meals', tag: `plan-${weekStart}` };
+  if (cardio && cardio.change && !modeSwitch) {
+    const more = cardio.change.sessions_delta > 0 || cardio.change.min_delta > 0;
+    return {
+      title: `${more ? 'More' : 'Less'} cardio from ${longDay}`,
+      body: `No macro change. Cardio goes to ${cardio.change.to} (was ${cardio.change.from}). Reason: ${decision.reason}.`.replace(/\.\./g, '.'),
+      url: './#/week', tag: `plan-${weekStart}`,
+    };
+  }
+  return { title: 'No macro change this week', body: `No macro change this week. ${cap(decision.reason)}. Prep as last week.${cardioLine}`, url: './#/meals', tag: `plan-${weekStart}` };
 }
 
 const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
 // The record published as data/plan/next.json (and later current.json): the same
 // shape as the phone's plan records, so the app uses it as is.
-export function planRecord({ weekStart, mode, plan, previous, source = 'routine', decision, notes = [], reason, nowUtc, localDate }) {
+export function planRecord({ weekStart, mode, plan, previous, source = 'routine', decision, notes = [], reason, nowUtc, localDate, cardio = null }) {
   return {
     schema_version: 1,
     id: weekStart,
@@ -244,6 +255,7 @@ export function planRecord({ weekStart, mode, plan, previous, source = 'routine'
     decision,
     notes,
     reason,
+    ...(cardio ? { cardio } : {}),
     generated_utc: nowUtc,
     generated_local_date: localDate,
     created_utc: nowUtc,
