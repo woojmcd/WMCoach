@@ -1,405 +1,84 @@
 {
   "schema_version": 1,
-  "local_date": "2026-10-09",
+  "local_date": "2026-10-10",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-09T23:08:56.109Z",
+  "generated_utc": "2026-10-10T14:00:29.619Z",
   "readiness": {
-    "status": "amber",
-    "flags": [
-      {
-        "key": "sleep",
-        "text": "5.0 h sleep"
-      }
-    ],
-    "reason": "5.0 h sleep",
-    "missing": false,
-    "travel": null,
-    "hrv_ms": null,
-    "resting_hr": null,
-    "sleep_h": 5.01666666666667,
-    "baseline": {
-      "hrv_ms": null,
-      "resting_hr": null
-    }
+    "status": "green",
+    "flags": [],
+    "reason": "no recovery data",
+    "missing": true,
+    "travel": null
   },
   "day": {
-    "dow": 5,
-    "name": "Upper Pull #2",
-    "rest_day": false
+    "dow": 6,
+    "name": "Open: cardio / social",
+    "rest_day": true
   },
   "program_week": 0,
   "deload": {
     "active": false,
     "reason": null
   },
-  "exercises": [
-    {
-      "slot_id": "fri-reverse-pec-deck-flyes",
-      "movement": "reverse-pec-deck-flyes",
-      "name": "Reverse Pec Deck Flyes",
-      "load": null,
-      "change": null,
-      "calibration": true,
-      "reason": "Calibration: pick a weight for 10–12 reps at RIR 2",
-      "sets": [
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 10,
-          "reps_max": 12,
-          "aim": null,
-          "rir": [
-            2,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 10,
-          "reps_max": 12,
-          "aim": null,
-          "rir": [
-            2,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 10,
-          "reps_max": 12,
-          "aim": null,
-          "rir": [
-            2,
-            2
-          ],
-          "seconds": null
-        }
-      ]
+  "exercises": [],
+  "addons": [],
+  "cardio": {
+    "schema_version": 1,
+    "date": "2026-10-10",
+    "rx": {
+      "schema_version": 1,
+      "mode": "bulk",
+      "modality": "stairs",
+      "zone": 2,
+      "days": [
+        2,
+        4
+      ],
+      "sessions": 2,
+      "minutes": 25,
+      "weekly_min": 50,
+      "reason": "Bulk: two easy sessions a week for heart health, recovery and appetite. Their calories count in your expenditure, so the food covers them and you keep gaining.",
+      "change": null
     },
-    {
-      "slot_id": "fri-cable-lat-pullovers",
-      "movement": "cable-lat-pullovers",
-      "name": "Cable Lat Pullovers",
-      "load": null,
-      "change": null,
-      "calibration": true,
-      "reason": "Calibration: pick a weight for 12–15 reps at RIR 1–2",
-      "sets": [
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        }
-      ]
+    "today": null,
+    "extra": null,
+    "hr": {
+      "lo": 126,
+      "hi": 156,
+      "source": "strava"
     },
-    {
-      "slot_id": "fri-single-arm-db-rows",
-      "movement": "single-arm-db-rows",
-      "name": "Single Arm DB Rows",
-      "load": null,
-      "change": null,
-      "calibration": true,
-      "reason": "Calibration: pick a weight for 8–10 reps at RIR 1–2",
-      "sets": [
+    "weight_lb": 175.2,
+    "week": {
+      "from": "2026-10-05",
+      "to": "2026-10-11",
+      "target_sessions": 2,
+      "target_min": 50,
+      "done_sessions": 2,
+      "done_min": 203,
+      "days": [
+        2,
+        4
+      ],
+      "items": [
         {
-          "kind": "work",
-          "load": null,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
+          "local_date": "2026-10-05",
+          "minutes": 180,
+          "type": "Ride",
+          "name": "Lunch Ride",
+          "avg_hr": 108,
+          "source": "strava",
+          "id": "20460941096"
         },
         {
-          "kind": "work",
-          "load": null,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-single-arm-cable-pulldowns",
-      "movement": "single-arm-cable-pulldowns",
-      "name": "Single Arm Cable Pulldowns",
-      "load": null,
-      "change": null,
-      "calibration": true,
-      "reason": "Calibration: pick a weight for 10 reps at RIR 1–2",
-      "sets": [
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 10,
-          "reps_max": 10,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 10,
-          "reps_max": 10,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 10,
-          "reps_max": 10,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-incline-db-curls",
-      "movement": "incline-db-curls",
-      "name": "Incline DB Curls",
-      "load": null,
-      "change": null,
-      "calibration": true,
-      "reason": "Calibration: pick a weight for 8–10 reps at RIR 1",
-      "sets": [
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": null,
-          "rir": [
-            1,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": null,
-          "rir": [
-            1,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": null,
-          "rir": [
-            1,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-hammer-rope-curls",
-      "movement": "hammer-rope-curls",
-      "name": "Hammer Rope Curls",
-      "load": null,
-      "change": null,
-      "calibration": true,
-      "reason": "Calibration: pick a weight for 12–15 reps at RIR 1–2",
-      "sets": [
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-cable-ab-crunches",
-      "movement": "cable-ab-crunches",
-      "name": "Cable Ab Crunches",
-      "load": null,
-      "change": null,
-      "calibration": true,
-      "reason": "Calibration: pick a weight for 15 reps at RIR 1–2",
-      "sets": [
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 15,
-          "reps_max": 15,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 15,
-          "reps_max": 15,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": null,
-          "reps_min": 15,
-          "reps_max": 15,
-          "aim": null,
-          "rir": [
-            1,
-            2
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-ab-plank",
-      "movement": "ab-plank",
-      "name": "Ab Plank",
-      "load": null,
-      "change": null,
-      "calibration": false,
-      "reason": null,
-      "sets": [
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
-        },
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
-        },
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
+          "local_date": "2026-10-09",
+          "minutes": 23,
+          "type": "Run",
+          "name": "Afternoon Run",
+          "avg_hr": 165,
+          "source": "strava",
+          "id": "20521778437"
         }
       ]
     }
-  ],
-  "addons": []
+  }
 }

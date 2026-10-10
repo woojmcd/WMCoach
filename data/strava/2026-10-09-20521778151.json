@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20521778151",
+  "name": "Morning Weight Training",
+  "type": "WeightTraining",
+  "start_local": "2026-10-09T06:41:12",
+  "local_date": "2026-10-09",
+  "duration_s": 2677,
+  "elapsed_s": 2677,
+  "distance_km": 0,
+  "elevation_m": 0,
+  "avg_hr": null,
+  "max_hr": null,
+  "hr_zones_s": null,
+  "relative_effort": 6,
+  "kcal": 272,
+  "location": null,
+  "source": "strava"
+}

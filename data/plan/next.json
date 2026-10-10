@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "id": "2026-10-11",
+  "week_start": "2026-10-11",
+  "week_end": "2026-10-17",
+  "mode": "bulk",
+  "plan": {
+    "structure": "single",
+    "days": {
+      "MP": {
+        "M1": [
+          {
+            "food": "egg",
+            "name": "Whole egg, large",
+            "qty": 3,
+            "unit": "each"
+          },
+          {
+            "food": "ezekiel",
+            "name": "Ezekiel 4:9 bread",
+            "qty": 3,
+            "unit": "slice"
+          }
+        ],
+        "Pre-workout": [
+          {
+            "food": "rice_cake",
+            "name": "Flavored rice cake",
+            "qty": 6,
+            "unit": "each"
+          },
+          {
+            "food": "nut_butter",
+            "name": "Natural peanut/almond butter",
+            "qty": 19,
+            "unit": "g"
+          },
+          {
+            "food": "whey_iso",
+            "name": "Whey protein isolate",
+            "qty": 1,
+            "unit": "scoop"
+          }
+        ],
+        "Post-workout": [
+          {
+            "food": "chicken",
+            "name": "Chicken breast, cooked",
+            "qty": 5,
+            "unit": "oz"
+          },
+          {
+            "food": "rice",
+            "name": "Jasmine/white rice, cooked",
+            "qty": 340,
+            "unit": "g"
+          },
+          {
+            "food": "green_veg",
+            "name": "Green beans/broccoli/asparagus",
+            "qty": 65,
+            "unit": "g"
+          }
+        ],
+        "M4": [
+          {
+            "food": "lean_beef",
+            "name": "93/7 ground beef/turkey, cooked",
+            "qty": 6,
+            "unit": "oz"
+          },
+          {
+            "food": "sweet_potato",
+            "name": "Sweet potato",
+            "qty": 300,
+            "unit": "g"
+          },
+          {
+            "food": "green_veg",
+            "name": "Green beans/broccoli/asparagus",
+            "qty": 65,
+            "unit": "g"
+          }
+        ],
+        "Snack": [
+          {
+            "food": "greek_yogurt",
+            "name": "0% Greek yogurt, single-serve cup",
+            "qty": 1,
+            "unit": "cup"
+          },
+          {
+            "food": "granola",
+            "name": "Granola (15 g carbs worth)",
+            "qty": 1,
+            "unit": "each"
+          },
+          {
+            "food": "blueberries",
+            "name": "Blueberries",
+            "qty": 70,
+            "unit": "g"
+          }
+        ]
+      }
+    },
+    "macros": {
+      "MP": {
+        "P": 191.9,
+        "C": 312.5,
+        "F": 52.7,
+        "kcal": 2492,
+        "per_meal": {
+          "M1": {
+            "P": 33.9,
+            "C": 46.2,
+            "F": 15.9,
+            "kcal": 464
+          },
+          "Pre-workout": {
+            "P": 34,
+            "C": 71.2,
+            "F": 11.8,
+            "kcal": 527
+          },
+          "Post-workout": {
+            "P": 54.8,
+            "C": 99.8,
+            "F": 6.3,
+            "kcal": 675
+          },
+          "M4": {
+            "P": 51.5,
+            "C": 64.2,
+            "F": 15,
+            "kcal": 597
+          },
+          "Snack": {
+            "P": 17.8,
+            "C": 31.1,
+            "F": 3.7,
+            "kcal": 229
+          }
+        }
+      }
+    },
+    "weekly_avg": {
+      "P": 191.9,
+      "C": 312.5,
+      "F": 52.7,
+      "kcal": 2492
+    },
+    "id": "BULK-2026-10-11",
+    "phase": "Bulk",
+    "start": "2026-10-11",
+    "based_on": "CUT26-V4",
+    "carb_steps": 1,
+    "coach_note": "Week 1 of the bulk: CUT26-V4's high-carb day (MP2), +1 carb step to fit 2488 kcal."
+  },
+  "source": "routine",
+  "based_on": "2026-10-04",
+  "changes": {
+    "structure": null,
+    "items": [],
+    "kcal": {
+      "from": 2492,
+      "to": 2492,
+      "delta": 0
+    },
+    "changed": false
+  },
+  "decision": {
+    "change": 0,
+    "stoppedAt": "adherence",
+    "reason": "adherence not logged; observe-only start: 13 more days and 9 more weigh-ins before the first change",
+    "checks": [
+      {
+        "key": "adherence",
+        "ok": false,
+        "text": "adherence not logged; observe-only start: 13 more days and 9 more weigh-ins before the first change"
+      }
+    ]
+  },
+  "notes": [],
+  "reason": "No macro change: adherence not logged; observe-only start: 13 more days and 9 more weigh-ins before the first change.",
+  "cardio": {
+    "schema_version": 1,
+    "mode": "bulk",
+    "modality": "stairs",
+    "zone": 2,
+    "days": [
+      2,
+      4
+    ],
+    "sessions": 2,
+    "minutes": 25,
+    "weekly_min": 50,
+    "reason": "Bulk: two easy sessions a week for heart health, recovery and appetite. Their calories count in your expenditure, so the food covers them and you keep gaining.",
+    "change": null
+  },
+  "generated_utc": "2026-10-10T14:00:29.619Z",
+  "generated_local_date": "2026-10-10",
+  "created_utc": "2026-10-10T14:00:29.619Z",
+  "updated_utc": "2026-10-10T14:00:29.619Z"
+}

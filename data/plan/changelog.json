@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "entries": [
+    {
+      "week_start": "2026-10-11",
+      "local_date": "2026-10-10",
+      "generated_utc": "2026-10-10T14:00:29.619Z",
+      "mode": "bulk",
+      "changed": false,
+      "kcal_from": 2492,
+      "kcal_to": 2492,
+      "delta": 0,
+      "what": "",
+      "reason": "No macro change: adherence not logged; observe-only start: 13 more days and 9 more weigh-ins before the first change.",
+      "stopped_at": "adherence",
+      "cardio": "2 × 25 min stairs (Tue, Thu)",
+      "cardio_changed": false
+    }
+  ]
+}
