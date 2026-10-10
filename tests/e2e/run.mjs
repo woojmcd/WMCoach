@@ -10,8 +10,9 @@ import { DB_VERSION } from '../../app/db.js';
 import { FakeGitHub } from '../fixtures/fake-github.mjs';
 import { startingPlan, nextCarbStep, withMacros } from '../../coach/meals.js';
 import { planRecord } from '../../coach/weekly.js';
+import { baseCardio, cardioForDay, cardioItems } from '../../coach/cardio.js';
 
-const STAGE = process.env.E2E_STAGE || 'stage-6';
+const STAGE = process.env.E2E_STAGE || 'stage-7';
 const OUT = new URL(`../../docs/screenshots/${STAGE}/`, import.meta.url).pathname;
 const PORT = Number(process.env.E2E_PORT || 4173);
 await mkdir(OUT, { recursive: true });
@@ -774,6 +775,66 @@ try {
     }));
     assert.equal(plans.source, 'routine');
     assert.equal(plans.plan.weekly_avg.kcal, after.weekly_avg.kcal);
+    await c.close();
+  }
+
+  const S7 = { stage: 'stage-7' };
+  step('Cardio: today\'s prescription with the lifts, heart rate, Stairs ✓, the week\'s tracker');
+  {
+    const tue = '2026-10-20';
+    const rx = baseCardio('bulk');
+    const strava = cardioItems({ activities: [{ id: 901, local_date: '2026-10-19', type: 'Run', duration_s: 2100, name: 'Easy run', avg_hr: 139 }] });
+    const cardio = cardioForDay({ rx, date: tue, items: strava, readiness: { status: 'amber', reason: '5.4 h sleep' }, weightLb: 176.2, hr: { lo: 126, hi: 156, source: 'strava' } });
+    gh.externalCommit('data/targets/today.json', JSON.stringify({
+      schema_version: 1, local_date: tue, tz: 'America/Los_Angeles', generated_utc: '2026-10-20T15:00:00Z',
+      readiness: { status: 'amber', reason: '5.4 h sleep', flags: [{ key: 'sleep', text: '5.4 h sleep' }], missing: false },
+      day: { dow: 2, name: 'Pull #1' }, program_week: 2, deload: { active: false }, exercises: [], addons: [], cardio,
+    }), 'daily 2026-10-20 (America/Los_Angeles)');
+    gh.externalCommit(`data/health/${tue}.json`, JSON.stringify({ date: tue, tz: 'America/Los_Angeles', hrv_ms: 61, resting_hr: 52, sleep_h: 5.4, steps: 4100 }), 'health');
+    const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: synced });
+    await routeGitHub(c, gh);
+    const p = await c.newPage();
+    watch(p);
+    await p.clock.install({ time: new Date('2026-10-20T15:00:00Z') }); // Tue 08:00 in LA
+    await p.goto(`${url}#/log`);
+    await p.getByText('Continue in Safari (testing only)').click();
+    const card = p.locator('.cardio-card');
+    await card.locator('.cardio-title', { hasText: '25 min stairs · Zone 2' }).waitFor({ timeout: 15000 });
+    const text = await card.textContent();
+    assert.match(text, /Cardio after lifting/);
+    assert.match(text, /Heart rate 126–156 bpm \(your Strava zone 2\)/);
+    assert.match(text, /≈190 kcal/);
+    assert.match(text, /Readiness amber \(5\.4 h sleep\): keep it truly easy/);
+    assert.match(text, /This week: 1 of 2 sessions/, 'Monday\'s Strava run counts');
+    assert.match(text, /Ahead of plan: 1 more this week, today or Thu\./, 'Monday\'s run makes today optional');
+    // the card sits after the last exercise, in the same stack
+    assert.equal(await p.locator('.stack > .cardio-card').count(), 1);
+    await noHorizontalScroll(p, 'Log with cardio');
+    await p.waitForTimeout(2500);
+    await shot(p, 'g01-log-cardio', { ...S7, full: true });
+    await card.scrollIntoViewIfNeeded();
+    await card.screenshot({ path: STAGE === 'stage-7' ? `${OUT}g02-cardio-card.png` : `${tmp}/x.png` });
+    await card.getByRole('button', { name: 'Stairs ✓' }).click();
+    await toastText(p, 'Stairs 25 min logged');
+    await p.locator('.cardio-card.done .badge', { hasText: 'Done' }).waitFor();
+    assert.match(await p.locator('.cardio-card').textContent(), /This week: 2 of 2 sessions/);
+    await p.locator('.cardio-card').scrollIntoViewIfNeeded();
+    await p.locator('.cardio-card').screenshot({ path: STAGE === 'stage-7' ? `${OUT}g03-cardio-done.png` : `${tmp}/x.png` });
+
+    await p.locator('.toast.show').waitFor({ state: 'detached', timeout: 6000 }).catch(() => {});
+    await tab(p, 'Week');
+    const wk = p.locator('section[aria-label="Cardio this week"]');
+    await wk.waitFor();
+    assert.match(await wk.textContent(), /2 × 25 min stairs \(Tue, Thu\)/);
+    assert.match(await p.locator('.day-row', { hasText: 'Thu' }).textContent(), /\+ 25 min stairs/);
+    assert.match(await p.locator('.day-row.today').textContent(), /25 min stairs ✓/);
+    assert.match(await p.locator('.day-row', { hasText: 'Mon' }).textContent(), /35 min run \(Strava\) ✓/);
+    await noHorizontalScroll(p, 'Week with cardio');
+    await shot(p, 'g04-week-cardio', { ...S7, full: true });
+    await wk.getByRole('button', { name: 'Why this cardio' }).click();
+    await p.locator('.sheet.show', { hasText: 'Your cardio this week' }).waitFor();
+    await p.waitForTimeout(300);
+    await shot(p, 'g05-why-cardio', S7);
     await c.close();
   }
 

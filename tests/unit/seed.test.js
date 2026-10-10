@@ -57,10 +57,12 @@ test('model prior: 13.2 kcal/lb × trend, rate bands and floors from the profile
   assert.equal(m.last_weekly_run_week, null);
 });
 
-test('committed data/model/state.json matches the seed (minus timestamp)', () => {
+// The daily routine owns data/model/state.json once it runs (spec §2), so only the
+// seeded priors and rate bands must still match what the seed would write.
+test('committed data/model/state.json keeps the seeded priors and rate bands', () => {
   const committed = JSON.parse(read('data/model/state.json'));
-  const fresh = seedModelState(profile, { weighins: historyWeighins(rows), phases: historyPhases(profile), generatedUtc: committed.generated_utc });
-  assert.deepEqual(committed, JSON.parse(JSON.stringify(fresh)));
+  const fresh = JSON.parse(JSON.stringify(seedModelState(profile, { weighins: historyWeighins(rows), phases: historyPhases(profile), generatedUtc: committed.generated_utc })));
+  for (const key of ['schema_version', 'priors', 'rate_bands_pct_bw_per_wk', 'macro_floors']) assert.deepEqual(committed[key], fresh[key], key);
 });
 
 test('Health weigh-in CSV: ISO datetimes with offsets, kg, headers, duplicates', () => {

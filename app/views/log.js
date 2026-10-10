@@ -2,8 +2,8 @@
 // "Finish session" → next targets computed on-device (spec §6.2).
 import { h, icon, toast, openSheet, confirmSheet, stepper, chips, segmented } from '../ui.js';
 import { header, note, healthChip, addonCard } from './common.js';
+import { cardioCard } from './cardio.js';
 import { put } from '../db.js';
-import { saveDaily } from '../records.js';
 import {
   loadTraining, draftSession, saveSession, logSet, updateExercise, progressCount, finishSession, planFor, exerciseFromPlan, restAfter, setFromPlan,
 } from '../training.js';
@@ -151,6 +151,9 @@ export async function render(screen, ctx) {
 
   const stack = h('div', { class: 'stack' });
   for (const idxs of cards(session)) stack.append(exerciseCard(ctx, { session, idxs, pidx, training, save }));
+  // the coach's cardio for today, part of the session (spec §6.5)
+  const cc = cardioCard(ctx, training);
+  if (cc) stack.append(cc);
   screen.append(stack);
 
   // finish
@@ -436,25 +439,12 @@ function chooseDay(ctx, today) {
 
 async function renderOpenDay(screen, ctx, training) {
   const today = training.today;
-  const logged = training.stairs.filter((s) => s.local_date === today).pop() || null;
-  let minutes = logged ? logged.minutes : 30;
-  const field = stepper({ value: minutes, step: 5, min: 5, max: 180, unit: 'min', compact: true, label: 'Stairs minutes', onChange: (v) => { minutes = v; } });
+  if (training.healthMissing) screen.append(h('div', { class: 'chip-row' }, healthChip(), h('span', { class: 'muted xsmall' }, 'Today’s recovery data isn’t in yet.')));
+  screen.append(header({ label: `Today · ${WEEKDAYS[isoWeekday(today) - 1]} ${formatDayMonth(today)}`, title: 'Open day' }));
+  for (const a of training.addons) screen.append(addonCard(a));
   screen.append(
-    header({ label: `Today · ${WEEKDAYS[isoWeekday(today) - 1]} ${formatDayMonth(today)}`, title: 'Open day' }),
-    h('div', { class: 'card stack' },
-      h('p', { class: 'label' }, 'Stairs'),
-      field,
-      h('button', {
-        type: 'button', class: 'btn primary block',
-        onClick: async () => {
-          const v = field.getValue();
-          if (!(v > 0)) return;
-          await saveDaily(ctx.db, 'stairs', { localDate: today, tz: ctx.tz(), prefix: 'stairs', fields: { minutes: v } });
-          toast(`Stairs ${v} min logged`);
-          ctx.refresh();
-        },
-      }, icon('check', { size: 20 }), logged ? `Update stairs (${logged.minutes} min)` : 'Stairs ✓'),
-      h('p', { class: 'muted xsmall', style: 'margin:0' }, 'For sessions that don’t reach Strava. Runs, rides and swims come from Strava once the daily run is set up.')),
+    cardioCard(ctx, training, { openDay: true }),
+    h('p', { class: 'muted xsmall', style: 'margin:12px 0 0' }, 'Stairs ✓ is for sessions that don’t reach Strava. Runs, rides and swims come from Strava with the morning run.'),
     h('div', { class: 'center', style: 'margin-top:16px' },
       h('button', { type: 'button', class: 'link-btn', onClick: () => chooseDay(ctx, today) }, 'Lift today instead')));
 }

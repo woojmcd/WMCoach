@@ -99,5 +99,13 @@ The new service worker installs in the background and waits. Walter sees "Update
 - Expenditure (`coach/tdee.js`, brief §5): prior 13.2 kcal/lb × trend + cardio, blended with observed (intake − slope × K), weight min(0.85, n/30), ±150/week clamp against a recent estimate. `blockMaintenance()` reproduces every brief §1b block (back-test).
 - Web Push (`scripts/lib/webpush.mjs`): RFC 8291 aes128gcm (test vector) + VAPID ES256, `node:crypto` only. Payload `{ title, body, url, tag }`. Notifications: a one-time hello on the first run, check-in morning on `settings.checkin_day`, the weekly plan message.
 
+## Cardio (stage 7, spec §6.5)
+- The prescription is pure code in `coach/cardio.js`. The routine and the phone both use it; don't re-implement it.
+  - `baseCardio`, `nextCardio` (the weekly step), `rxForWeek`, `cardioItems`, `cardioForDay`, `zone2`.
+- The weekly dose is stored on the plan record (`plans[].cardio`) and locked with the food. A carried plan keeps it unless the mode changed.
+- In a cut, cardio is the first lever: a stall adds a session (4 → 6 × 30) before carbs come down. That decision is still the week's one change.
+- `targets/today.json` → `cardio` holds today's session, the heart-rate range and the week's done items. The phone recomputes it offline from the week's Strava items in the latest targets plus local Stairs ✓ taps.
+- Strava HR zones come from `get_athlete_zones` (routine step 3, saved as `zones` in `.coach/strava.json`) and are kept in `data/model/state.json` → `hr_zones`.
+
 ## Timezone
 Walter travels. "Today" always means his current local date in the zone from `settings.tz_current`. It follows the iPhone by default (Settings → Timezone); `coach/time.js` has the helpers. Every stored entry carries `utc`, `local_date` and `tz`. Daily records are keyed by `local_date` and never auto-merged when a date repeats after a date-line crossing.

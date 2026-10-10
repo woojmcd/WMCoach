@@ -61,6 +61,8 @@ export async function ensurePlans(ctx, { now = new Date() } = {}) {
       id: weekStart, week_start: weekStart, week_end: addDays(weekStart, 6), mode: settings.mode,
       plan: { ...prev.plan, id: `${(settings.mode || 'bulk').toUpperCase()}-${weekStart}`, start: weekStart },
       source: 'carry', based_on: prev.id, changes: diffPlans(prev.plan, prev.plan),
+      // the cardio dose carries too (spec §6.5), unless the mode changed (then its base dose)
+      ...(prev.cardio && prev.cardio.mode === settings.mode ? { cardio: { ...prev.cardio, change: null } } : {}),
       reason: 'No change: the plan carries over until the weekly check-in changes it.',
       created_utc: utc, updated_utc: utc,
     };
