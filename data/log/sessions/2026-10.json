@@ -9,8 +9,8 @@
       "tz": "America/Los_Angeles",
       "utc": "2026-10-09T17:42:30.414Z",
       "started_utc": "2026-10-09T17:42:30.414Z",
-      "finished_utc": null,
-      "status": "in_progress",
+      "finished_utc": "2026-10-09T17:42:30.414Z",
+      "status": "finished",
       "day_dow": 5,
       "day_name": "Upper Pull #2",
       "program_id": "TRAIN-CUT26",
@@ -682,7 +682,8 @@
         }
       ],
       "note": null,
-      "updated_utc": "2026-10-09T17:42:30.414Z"
+      "updated_utc": "2026-10-10T14:01:50.042Z",
+      "auto_finished": true
     }
   ]
 }
