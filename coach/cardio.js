@@ -182,7 +182,11 @@ export function cardioForDay({ rx, date, items = [], readiness = null, addons = 
   const owed = Math.max(0, rx.sessions - before.length);
 
   let today = null;
-  if (scheduled && owed > 0) today = { minutes: rx.minutes, makeup: false };
+  // ahead of plan (an extra or moved session earlier this week): today is one of the
+  // remaining slots, so it's optional until the slots left equal the sessions owed
+  const later = rx.days.filter((d) => d > dow);
+  if (scheduled && owed > 0 && owed < slots) today = { minutes: rx.minutes, makeup: false, optional: true, note: `Ahead of plan: ${owed} more this week, today or ${daysText(later)}.` };
+  else if (scheduled && owed > 0) today = { minutes: rx.minutes, makeup: false };
   else if (scheduled) today = { minutes: rx.minutes, makeup: false, optional: true, note: 'Weekly target already met: today’s is optional.' };
   else if (owed > slots && dow !== LEG_DAY) today = { minutes: rx.minutes, makeup: true, note: `Make-up: ${owed - slots} session${owed - slots === 1 ? '' : 's'} behind this week.` };
 

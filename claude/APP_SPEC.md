@@ -309,6 +309,7 @@ The coach prescribes cardio as part of each day's workout. Strava and the Stairs
 - **Today** (`targets/today.json` → `cardio`, also computed on the phone):
   - The session on scheduled days.
   - Optional once the weekly target is met.
+  - Days are flexible: optional when he's ahead (an extra or moved session earlier in the week) until the days left equal the sessions owed. Cardio on any day counts.
   - A make-up on the next free non-Wednesday when he's behind.
   - Readiness amber: same session, keep it easy.
   - Readiness red: a 20-min easy walk instead.

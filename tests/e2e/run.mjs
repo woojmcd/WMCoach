@@ -806,6 +806,7 @@ try {
     assert.match(text, /≈190 kcal/);
     assert.match(text, /Readiness amber \(5\.4 h sleep\): keep it truly easy/);
     assert.match(text, /This week: 1 of 2 sessions/, 'Monday\'s Strava run counts');
+    assert.match(text, /Ahead of plan: 1 more this week, today or Thu\./, 'Monday\'s run makes today optional');
     // the card sits after the last exercise, in the same stack
     assert.equal(await p.locator('.stack > .cardio-card').count(), 1);
     await noHorizontalScroll(p, 'Log with cardio');

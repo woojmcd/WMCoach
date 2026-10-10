@@ -102,6 +102,18 @@ test('today: scheduled days, done status, readiness, a long ride yesterday, targ
   assert.equal(extra.extra.length, 1, 'cardio on an unplanned day still shows and counts');
 });
 
+test('days are flexible: a session moved to Monday makes Tuesday optional, Thursday still needed', () => {
+  const rx = baseCardio('bulk');
+  const mon = [{ local_date: '2026-10-12', minutes: 30, type: 'StairStepper', source: 'tap' }];
+  const tue = cardioForDay({ rx, date: '2026-10-13', items: mon });
+  assert.equal(tue.today.optional, true);
+  assert.match(tue.today.note, /^Ahead of plan: 1 more this week, today or Thu\./);
+  const thu = cardioForDay({ rx, date: '2026-10-15', items: mon });
+  assert.deepEqual([thu.today.optional, thu.today.note], [false, null], 'the last slot for the session still owed');
+  const cut = cardioForDay({ rx: baseCardio('cut'), date: '2026-10-12' });
+  assert.equal(cut.today.optional, false, 'on plan (nothing extra yet): every slot is needed');
+});
+
 test('a missed session moves to the next free day (not Wednesday), e.g. Friday after a missed Tuesday', () => {
   const rx = baseCardio('bulk');
   const thu = [{ local_date: '2026-10-15', minutes: 25, type: 'StairStepper' }];
