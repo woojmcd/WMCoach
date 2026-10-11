@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "local_date": "2026-10-10",
+  "local_date": "2026-10-11",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-10T14:00:29.619Z",
+  "generated_utc": "2026-10-11T17:08:47.331Z",
   "readiness": {
     "status": "green",
     "flags": [],
@@ -11,7 +11,7 @@
     "travel": null
   },
   "day": {
-    "dow": 6,
+    "dow": 7,
     "name": "Open: cardio / social",
     "rest_day": true
   },
@@ -24,7 +24,7 @@
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-10-10",
+    "date": "2026-10-11",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
