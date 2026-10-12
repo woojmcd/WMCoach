@@ -1,30 +1,464 @@
 {
   "schema_version": 1,
-  "local_date": "2026-10-11",
+  "local_date": "2026-10-12",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-11T17:08:47.331Z",
+  "generated_utc": "2026-10-12T14:00:44.659Z",
   "readiness": {
     "status": "green",
     "flags": [],
-    "reason": "no recovery data",
-    "missing": true,
-    "travel": null
+    "reason": "recovery normal",
+    "missing": false,
+    "travel": null,
+    "hrv_ms": null,
+    "resting_hr": null,
+    "sleep_h": 6.80833333333333,
+    "baseline": {
+      "hrv_ms": null,
+      "resting_hr": null
+    }
   },
   "day": {
-    "dow": 7,
-    "name": "Open: cardio / social",
-    "rest_day": true
+    "dow": 1,
+    "name": "Push #1",
+    "rest_day": false
   },
-  "program_week": 0,
+  "program_week": 1,
   "deload": {
     "active": false,
     "reason": null
   },
-  "exercises": [],
+  "exercises": [
+    {
+      "slot_id": "mon-incline-db-flyes",
+      "movement": "incline-db-flyes",
+      "name": "Incline DB Flyes",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 8–10 reps at RIR 2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            2,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            2,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            2,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-flat-db-bench",
+      "movement": "flat-db-bench",
+      "name": "Flat DB Bench",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 8–10 reps at RIR 2",
+      "sets": [
+        {
+          "kind": "top",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            2,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "top",
+          "load": null,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": null,
+          "rir": [
+            2,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "backoff",
+          "load": null,
+          "reps_min": 12,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-chest-dips",
+      "movement": "chest-dips",
+      "name": "Chest Dips",
+      "load": 0,
+      "change": null,
+      "calibration": false,
+      "reason": "As many reps as possible · easing back: RIR +1",
+      "sets": [
+        {
+          "kind": "amrap",
+          "load": 0,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 0,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 0,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 0,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-single-cable-lateral-raise",
+      "movement": "single-cable-lateral-raise",
+      "name": "Single Cable Lateral Raise",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 12–15 reps at RIR 1–2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-standing-lateral-db-raises",
+      "movement": "standing-lateral-db-raises",
+      "name": "Standing Lateral DB Raises",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 10–12 reps at RIR 1–2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-rope-tricep-extensions",
+      "movement": "rope-tricep-extensions",
+      "name": "Rope Tricep Extensions",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 10–12 reps at RIR 1–2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-rope-pushdowns",
+      "movement": "rope-pushdowns",
+      "name": "Rope Pushdowns",
+      "load": null,
+      "change": null,
+      "calibration": false,
+      "reason": "Same weight as the first exercise, to failure · easing back: RIR +1",
+      "sets": [
+        {
+          "kind": "amrap",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-cable-ab-crunches",
+      "movement": "cable-ab-crunches",
+      "name": "Cable Ab Crunches",
+      "load": null,
+      "change": null,
+      "calibration": true,
+      "reason": "Calibration: pick a weight for 15 reps at RIR 1–2",
+      "sets": [
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 15,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 15,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": null,
+          "reps_min": 15,
+          "reps_max": 15,
+          "aim": null,
+          "rir": [
+            1,
+            2
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-ab-vacuum",
+      "movement": "ab-vacuum",
+      "name": "Ab Vacuum",
+      "load": null,
+      "change": null,
+      "calibration": false,
+      "reason": null,
+      "sets": [
+        {
+          "kind": "timed",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": null,
+          "seconds": 15
+        },
+        {
+          "kind": "timed",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": null,
+          "seconds": 15
+        },
+        {
+          "kind": "timed",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": null,
+          "seconds": 15
+        }
+      ]
+    }
+  ],
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-10-11",
+    "date": "2026-10-12",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -49,36 +483,17 @@
     },
     "weight_lb": 175.2,
     "week": {
-      "from": "2026-10-05",
-      "to": "2026-10-11",
+      "from": "2026-10-12",
+      "to": "2026-10-18",
       "target_sessions": 2,
       "target_min": 50,
-      "done_sessions": 2,
-      "done_min": 203,
+      "done_sessions": 0,
+      "done_min": 0,
       "days": [
         2,
         4
       ],
-      "items": [
-        {
-          "local_date": "2026-10-05",
-          "minutes": 180,
-          "type": "Ride",
-          "name": "Lunch Ride",
-          "avg_hr": 108,
-          "source": "strava",
-          "id": "20460941096"
-        },
-        {
-          "local_date": "2026-10-09",
-          "minutes": 23,
-          "type": "Run",
-          "name": "Afternoon Run",
-          "avg_hr": 165,
-          "source": "strava",
-          "id": "20521778437"
-        }
-      ]
+      "items": []
     }
   }
 }

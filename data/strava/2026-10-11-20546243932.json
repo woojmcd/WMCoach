@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20546243932",
+  "name": "Morning Yoga",
+  "type": "Yoga",
+  "start_local": "2026-10-11T10:55:28",
+  "local_date": "2026-10-11",
+  "duration_s": 3064,
+  "elapsed_s": 3064,
+  "distance_km": 0,
+  "elevation_m": 0,
+  "avg_hr": null,
+  "max_hr": null,
+  "hr_zones_s": null,
+  "relative_effort": null,
+  "kcal": null,
+  "location": null,
+  "source": "strava"
+}
