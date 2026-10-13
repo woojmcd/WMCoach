@@ -9,6 +9,7 @@ import { deviceTimeZone, localDate, tzCity } from '../coach/time.js';
 import { IN_TO_CM } from '../coach/body.js';
 import { applyPendingMode, MODE_LABEL } from '../coach/phase.js';
 import { finishStaleSessions } from './training.js';
+import { screenGap } from './layout.js';
 import { ensurePlans } from './meal-plans.js';
 import { startSync } from './sync-ui.js';
 import { renderInstall } from './views/install.js';
@@ -217,10 +218,27 @@ function resetPageShift() {
   if (isTyping()) return;
   if (window.scrollY || window.scrollX || document.documentElement.scrollTop || document.body.scrollTop) window.scrollTo(0, 0);
 }
-document.addEventListener('focusout', () => setTimeout(resetPageShift, 60));
+// The home-screen app is full screen (black-translucent status bar, portrait), so the layout
+// should end at the screen's bottom edge. If iOS ends it higher, measure the gap and let the
+// bottom-pinned parts (tab bar, rest timer, sheets, the scroll area) reach the edge (--vp-gap).
+const display = { gap: 0 };
+function fitScreen() {
+  display.gap = screenGap({
+    standalone: Boolean(window.navigator.standalone) || window.matchMedia('(display-mode: standalone)').matches,
+    innerWidth: window.innerWidth, innerHeight: window.innerHeight,
+    screenWidth: window.screen.width, screenHeight: window.screen.height, typing: isTyping(),
+  });
+  document.documentElement.style.setProperty('--vp-gap', `${display.gap}px`);
+}
+ctx.display = () => ({ ...display, innerHeight: window.innerHeight, screenHeight: window.screen.height, vvHeight: window.visualViewport ? Math.round(window.visualViewport.height) : null });
+fitScreen();
+window.addEventListener('resize', fitScreen);
+window.addEventListener('orientationchange', () => setTimeout(fitScreen, 300));
+
+document.addEventListener('focusout', () => setTimeout(() => { resetPageShift(); fitScreen(); }, 60));
 window.addEventListener('scroll', resetPageShift, { passive: true });
-if (window.visualViewport) window.visualViewport.addEventListener('resize', () => setTimeout(resetPageShift, 60));
-document.addEventListener('visibilitychange', () => { if (!document.hidden) resetPageShift(); });
+if (window.visualViewport) window.visualViewport.addEventListener('resize', () => setTimeout(() => { resetPageShift(); fitScreen(); }, 60));
+document.addEventListener('visibilitychange', () => { if (!document.hidden) { resetPageShift(); fitScreen(); } });
 
 async function loadProgram() {
   try {

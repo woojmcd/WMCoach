@@ -125,6 +125,8 @@ export async function render(screen, ctx) {
     sectionLabel('App'),
     h('div', { class: 'card flush list' },
       itemRow({ label: 'Version', value: ctx.version }),
+      // what iOS reports about the screen, for layout bugs (screen · layout · gap filled)
+      ...(ctx.display ? [(() => { const d = ctx.display(); return itemRow({ label: 'Screen', value: `${d.screenHeight} · ${d.innerHeight}${d.vvHeight && d.vvHeight !== d.innerHeight ? ` (${d.vvHeight})` : ''} · gap ${d.gap}` }); })()] : []),
       itemRow({ label: 'Data schema', value: `v${ctx.db.version}` }),
       itemRow({ label: 'Storage', value: persisted === null ? 'Unknown' : persisted ? 'Persistent' : 'Best effort' }),
       itemRow({ label: 'Check for update', extra: icon('refresh', { size: 20 }), onClick: () => ctx.checkUpdate() })));

@@ -910,6 +910,15 @@ try {
     const bar = await p.evaluate(() => ({ bottom: Math.round(document.querySelector('.tabbar').getBoundingClientRect().bottom), h: window.innerHeight, page: window.scrollY, app: document.getElementById('app').scrollTop }));
     assert.ok(bar.app > 0, 'the content scrolled');
     assert.deepEqual([bar.bottom, bar.page], [bar.h, 0], 'tab bar on the bottom edge');
+    // when iOS ends the layout above the screen's edge (seen 2026-10-13, ~55 pt), the measured gap
+    // (--vp-gap) carries the tab bar and the scroll area down to the real bottom
+    const filled = await p.evaluate(() => {
+      document.documentElement.style.setProperty('--vp-gap', '55px');
+      const r = { bar: Math.round(document.querySelector('.tabbar').getBoundingClientRect().bottom), app: Math.round(document.getElementById('app').getBoundingClientRect().bottom), h: innerHeight };
+      document.documentElement.style.setProperty('--vp-gap', '0px');
+      return r;
+    });
+    assert.deepEqual([filled.bar, filled.app], [filled.h + 55, filled.h + 55]);
     // a page shift left behind by the keyboard (iOS) is put back once no input is focused
     const shifted = await p.evaluate(async () => {
       const de = document.documentElement;

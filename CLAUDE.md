@@ -59,7 +59,9 @@ The new service worker installs in the background and waits. Walter sees "Update
 ## Layout (iPhone)
 - The page never scrolls: `#app` is a fixed, full-screen scroll container (`app/styles.css`). Use `root.scrollTo` / `scrollIntoView`, never `window.scrollTo`.
 - `resetPageShift()` in `app/main.js` puts the page back when iOS leaves it shifted after the keyboard closes. Before this, the fixed tab bar and rest timer could float mid-screen until a relaunch (Walter, 2026-10-13).
-- e2e checks that the page can't scroll and that the tab bar sits on the bottom edge when scrolled to the end.
+- Don't put `height: 100%` + `overflow: hidden` on html/body. With those, iOS ended the layout about 55 pt above the screen bottom, so the tab bar looked twice as thick (0.8.0). The body is `min-height: 100dvh`.
+- `--vp-gap` (`fitScreen()` in `main.js`, `screenGap()` in `app/layout.js`) is any gap iOS still leaves at the bottom of the full-screen app. The tab bar, rest timer, sheets and `#app` extend down into it. Settings → Screen shows iOS's numbers (screen · layout · gap).
+- e2e checks that the page can't scroll, that the tab bar sits on the bottom edge when scrolled to the end, and that a gap is filled.
 
 ## Records
 - Daily records (weigh-ins, measurements, check-ins, on-plan taps) are written with `saveDaily()` in `app/records.js`: saving again for a date edits that day's entry made in the same zone.
