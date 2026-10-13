@@ -56,6 +56,11 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 ## How updates reach the phone
 The new service worker installs in the background and waits. Walter sees "Update available" and taps Reload. The app first saves a local snapshot (last 3 kept, Settings → Local snapshots), then the new version takes over. Never call `skipWaiting()` automatically and never auto-reload. The banner stays hidden while a workout session is in progress (`ctx.sessionInProgress()`).
 
+## Layout (iPhone)
+- The page never scrolls: `#app` is a fixed, full-screen scroll container (`app/styles.css`). Use `root.scrollTo` / `scrollIntoView`, never `window.scrollTo`.
+- `resetPageShift()` in `app/main.js` puts the page back when iOS leaves it shifted after the keyboard closes. Before this, the fixed tab bar and rest timer could float mid-screen until a relaunch (Walter, 2026-10-13).
+- e2e checks that the page can't scroll and that the tab bar sits on the bottom edge when scrolled to the end.
+
 ## Records
 - Daily records (weigh-ins, measurements, check-ins, on-plan taps) are written with `saveDaily()` in `app/records.js`: saving again for a date edits that day's entry made in the same zone.
 - Nothing is hard-deleted in the app. `removeRecord()` leaves a tombstone (`deleted: true`, `deleted_utc`) so sync and a newer-wins merge can't resurrect it. Read with `live()`.

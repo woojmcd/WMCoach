@@ -36,7 +36,7 @@ async function shot(page, name, { full = false, stage = 'stage-1' } = {}) {
   if (!full) return page.screenshot({ path: `${OUT}${name}.png` });
   // A taller viewport (not fullPage) keeps the fixed tab bar at the bottom, as on the phone.
   const size = page.viewportSize();
-  const height = await page.evaluate(() => document.documentElement.scrollHeight);
+  const height = await page.evaluate(() => (document.getElementById('app') || document.documentElement).scrollHeight);
   await page.setViewportSize({ width: size.width, height: Math.max(size.height, height) });
   await page.waitForTimeout(100);
   await page.screenshot({ path: `${OUT}${name}.png` });
@@ -47,8 +47,10 @@ const step = (s) => console.log(`• ${s}`);
 // clock of its own runs at this time, so the result never depends on the day it runs.
 const FRIDAY = new Date('2026-10-09T16:30:00Z');
 async function noHorizontalScroll(page, where) {
-  const w = await page.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
+  const w = await page.evaluate(() => { const a = document.getElementById('app'); return [a.scrollWidth, a.clientWidth, document.documentElement.scrollHeight, window.innerHeight]; });
   assert.ok(w[0] <= w[1], `${where}: horizontal scroll (${w[0]} > ${w[1]})`);
+  // the page itself never scrolls (only #app does), so iOS can't strand the tab bar mid-screen
+  assert.ok(w[2] <= w[3], `${where}: the page scrolls (${w[2]} > ${w[3]})`);
 }
 const countStore = (page, store) => page.evaluate((s) => new Promise((resolve, reject) => {
   const req = indexedDB.open('wmcoach');
@@ -264,7 +266,7 @@ try {
   assert.equal(meas.avg.waist, 32.2);
   assert.deepEqual(meas.readings.waist, [32.1, 32.3]);
   if (await page.getByText('Back up this week?').count()) {
-    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.evaluate(() => document.getElementById('app').scrollTo(0, 0));
     await page.waitForTimeout(3000);
     await shot(page, 'b05-checkin-done', { ...S2, full: true });
   }
@@ -529,7 +531,7 @@ try {
   await toastText(page, 'Flagged');
   await page.locator('.food.flagged', { hasText: '93/7 beef or turkey' }).waitFor();
   assert.deepEqual((await readStore('foods')).map((f) => [f.id, f.gi_flag]), [['lean_beef', true]]);
-  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.evaluate(() => document.getElementById('app').scrollTo(0, 0));
   await page.getByRole('button', { name: 'Travel', exact: true }).click();
   await page.getByText('Travel targets').waitFor();
   assert.match(await page.locator('.travel-grid').innerText(), /189\s*g[\s\S]*2,353\s*kcal/);
@@ -571,7 +573,7 @@ try {
     assert.match(text, /50 %\. Too low to judge anything/, 'the Partial tap is called out, not softened');
     assert.match(text, /No macro change while adherence is under 90 %/);
     assert.ok(!/\bnull\b|undefined|NaN/.test(text), 'no stray null/undefined/NaN');
-    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.evaluate(() => document.getElementById('app').scrollTo(0, 0));
     await page.waitForTimeout(300);
     await shot(page, 'e01-week-review', { ...S5, full: true });
     await review.getByRole('button', { name: 'Hide details' }).click();
@@ -642,7 +644,7 @@ try {
     await until(async () => (await p.evaluate(() => new Promise((resolve) => {
       indexedDB.open('wmcoach').onsuccess = (e) => { e.target.result.transaction('meta').objectStore('meta').get('sync').onsuccess = (r) => resolve(r.target.result && r.target.result.value.failures); };
     }))) >= 1, 'a failed (offline) attempt');
-    await p.evaluate(() => window.scrollTo(0, 0));
+    await p.evaluate(() => document.getElementById('app').scrollTo(0, 0));
     await p.waitForTimeout(2500);
     await shot(p, 'e04-unsynced-badge', S5);
     gh.offline = false;
@@ -773,7 +775,7 @@ try {
     assert.match(await changed.textContent(), /Why: Rate −0\.14 %BW\/wk for 2 wks/);
     assert.match(await changed.textContent(), /Post-workout rice 270 → 340 g/);
     await p.locator('.banner.addon').first().waitFor();
-    await p.evaluate(() => window.scrollTo(0, 0));
+    await p.evaluate(() => document.getElementById('app').scrollTo(0, 0));
     await p.waitForTimeout(300);
     await shot(p, 'f03-meals-published-plan', { ...S6, full: true });
     await tab(p, 'Week');
@@ -902,6 +904,25 @@ try {
     await card.locator('.summary-points').waitFor();
     assert.match(await card.locator('.summary-points').textContent(), /Pull #1: 9 of 10 sets logged\. Beat last time on 5: Assisted Pullups 45 assist × 10 \(was 50 assist × 10\);.*; and 2 more\./);
     await card.screenshot({ path: STAGE === 'stage-8' ? `${OUT}h02-daily-details.png` : `${tmp}/x.png` });
+    // scrolled to the very end, the tab bar stays on the bottom edge and the page itself hasn't moved
+    await p.evaluate(() => document.getElementById('app').scrollTo(0, 1e6));
+    await p.waitForTimeout(200);
+    const bar = await p.evaluate(() => ({ bottom: Math.round(document.querySelector('.tabbar').getBoundingClientRect().bottom), h: window.innerHeight, page: window.scrollY, app: document.getElementById('app').scrollTop }));
+    assert.ok(bar.app > 0, 'the content scrolled');
+    assert.deepEqual([bar.bottom, bar.page], [bar.h, 0], 'tab bar on the bottom edge');
+    // a page shift left behind by the keyboard (iOS) is put back once no input is focused
+    const shifted = await p.evaluate(async () => {
+      const de = document.documentElement;
+      for (const el of [de, document.body]) { el.style.height = '200%'; el.style.overflow = 'visible'; } // let the page move, as iOS does
+      window.scrollTo(0, 300);
+      const moved = window.scrollY; // the scroll event fires before the next frame
+      await new Promise((r) => setTimeout(r, 150));
+      const after = window.scrollY;
+      for (const el of [de, document.body]) { el.style.height = ''; el.style.overflow = ''; }
+      return { moved, after };
+    });
+    assert.ok(shifted.moved > 0, 'the page could move in this test');
+    assert.equal(shifted.after, 0, 'and was put back');
     // today's file is there but empty: the chip shows and opens the Resync Shortcut
     await tab(p, 'Log');
     const chip = p.locator('.health-chip');
