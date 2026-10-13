@@ -660,3 +660,5 @@ body.resting .screen { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom)
 .cardio-week span.planned { border-color: var(--hairline); color: var(--text-2); }
 .cardio-week span.done { background: var(--accent-dim); color: var(--accent); border-color: transparent; }
 .cardio-week span.today { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.card.summary .focus.today { margin-top: 8px; background: transparent; border: 1px solid var(--hairline); }
+.card.summary .focus.today .label { color: var(--text-2); }

@@ -17,7 +17,7 @@ import { dayForWeekday } from '../../coach/program.js';
 const OPEN_DAY = 'Rest, or runs, rides, swims and social sessions, read from Strava.';
 // Same values as the seeded model (brief §5); used only if the model record is missing.
 const DEFAULT_BANDS = { cut: { target: [-0.75, -0.5], slow_limit: -0.4, cap: -1.0 }, bulk: { target: [0.1, 0.2], cap: 0.35 }, maintenance: { target: [-0.1, 0.1] } };
-const ui = { summaryOpen: {} };
+const ui = { summaryOpen: {}, dailyOpen: {} };
 
 export async function render(screen, ctx) {
   const today = ctx.today();
@@ -121,6 +121,7 @@ export async function render(screen, ctx) {
   screen.append(
     header({ label: formatLong(today).replace(/ \d{4}$/, ''), title: todayDay ? todayDay.name : 'This week' }),
     ...(banners.length ? [h('div', { class: 'stack-sm', style: 'margin-bottom:16px' }, banners)] : []),
+    ...(training.daily ? [dailyCard(training.daily)] : []),
     ...(summary ? [summaryCard(summary)] : []),
     h('div', { class: 'stack' },
       strip,
@@ -156,6 +157,31 @@ async function buildSummary(ctx, { today, checkins, training, plans }) {
     bands: (model && model.rate_bands_pct_bw_per_wk) || DEFAULT_BANDS,
     plans, today, prepDow: s.prep_day, units: s.units,
   });
+}
+
+// Yesterday in review + today's focus (the morning run's targets.daily). The headline,
+// focus and today's plan always show; the per-area details fold.
+function dailyCard(d) {
+  const open = Boolean(ui.dailyOpen[d.date]);
+  const details = h('div', { class: 'summary-points', hidden: !open },
+    d.points.map((p) => h('div', { class: 'summary-point' },
+      h('span', { class: `dot ${p.tone}`, 'aria-hidden': 'true' }),
+      h('div', { class: 'grow' }, h('div', { class: 'pt-title' }, p.title), h('p', {}, p.text)))));
+  const toggle = h('button', { type: 'button', class: 'link-btn', 'aria-expanded': String(open) }, open ? 'Hide details' : 'See the details');
+  toggle.addEventListener('click', () => {
+    const now = details.hidden;
+    details.hidden = !now;
+    ui.dailyOpen[d.date] = now;
+    toggle.textContent = now ? 'Hide details' : 'See the details';
+    toggle.setAttribute('aria-expanded', String(now));
+  });
+  return h('section', { class: `card summary daily ${d.tone}`, 'aria-label': 'Yesterday in review', style: 'margin-bottom:16px' },
+    h('p', { class: 'label' }, `Yesterday · ${d.label}`),
+    h('p', { class: 'headline' }, d.headline),
+    h('div', { class: 'focus' }, h('span', { class: 'label' }, 'Focus today'), h('span', {}, d.focus)),
+    d.today ? h('div', { class: 'focus today' }, h('span', { class: 'label' }, 'Today'), h('span', {}, d.today)) : null,
+    details,
+    toggle);
 }
 
 function summaryCard(sum) {

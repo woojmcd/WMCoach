@@ -11,8 +11,9 @@ import { FakeGitHub } from '../fixtures/fake-github.mjs';
 import { startingPlan, nextCarbStep, withMacros } from '../../coach/meals.js';
 import { planRecord } from '../../coach/weekly.js';
 import { baseCardio, cardioForDay, cardioItems } from '../../coach/cardio.js';
+import { dailySummary } from '../../coach/daily.js';
 
-const STAGE = process.env.E2E_STAGE || 'stage-7';
+const STAGE = process.env.E2E_STAGE || 'stage-8';
 const OUT = new URL(`../../docs/screenshots/${STAGE}/`, import.meta.url).pathname;
 const PORT = Number(process.env.E2E_PORT || 4173);
 await mkdir(OUT, { recursive: true });
@@ -42,6 +43,9 @@ async function shot(page, name, { full = false, stage = 'stage-1' } = {}) {
   await page.setViewportSize(size);
 }
 const step = (s) => console.log(`• ${s}`);
+// The walkthrough's "today" (Fri 9 Oct 2026, 09:30 in LA): every context without a scenario
+// clock of its own runs at this time, so the result never depends on the day it runs.
+const FRIDAY = new Date('2026-10-09T16:30:00Z');
 async function noHorizontalScroll(page, where) {
   const w = await page.evaluate(() => [document.documentElement.scrollWidth, window.innerWidth]);
   assert.ok(w[0] <= w[1], `${where}: horizontal scroll (${w[0]} > ${w[1]})`);
@@ -85,6 +89,9 @@ async function tab(page, name) {
 
 try {
   const context = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles' });
+  // The main walkthrough was written for a Friday (Upper Pull #2, check-in banners, the
+  // prep-day swap): pin its clock so the run doesn't depend on the day it's executed.
+  await context.clock.install({ time: FRIDAY });
   const page = await context.newPage();
   watch(page);
 
@@ -580,6 +587,7 @@ try {
   step('GitHub sync: connect, first push (one commit, never the token)');
   {
     const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: afterReview });
+    await c.clock.install({ time: FRIDAY });
     await routeGitHub(c, gh);
     // headless Chromium has no push service or notification prompt: stand in for iOS
     await c.addInitScript(() => {
@@ -690,6 +698,7 @@ try {
   {
     const remoteWeighins = Object.entries(gh.files()).filter(([f]) => f.startsWith('data/log/weighins/')).flatMap(([, t]) => JSON.parse(t).records);
     const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles' });
+    await c.clock.install({ time: FRIDAY });
     await routeGitHub(c, gh);
     const p = await c.newPage();
     watch(p);
@@ -838,6 +847,71 @@ try {
     await c.close();
   }
 
+  const S8 = { stage: 'stage-8' };
+  step('Daily summary: yesterday in review + today\'s focus on the Week tab; an empty Health file shows Sync Health → Resync');
+  {
+    const wed = '2026-10-21';
+    const program = JSON.parse(await readFile(new URL('../../data/program.json', import.meta.url), 'utf8'));
+    const pull = program.days.find((d) => d.dow === 2);
+    const legs = program.days.find((d) => d.dow === 3);
+    const set = (load, reps) => ({ kind: 'work', load, reps, rir: 1, done: true, skipped: false });
+    // a week on: +5 lb everywhere, 5 lb less help on the assisted pull-ups
+    const exs = (date, bump) => pull.exercises.slice(0, 5).map((e, i) => ({ slot_id: e.id, movement: e.movement, name: e.name, type: e.type, skipped: false, sets: [set(50 + i * 10 + (e.load_kind === 'assistance' ? -bump : bump), 10), set(50 + i * 10 + (e.load_kind === 'assistance' ? -bump : bump), 9)] }));
+    const sessions = [
+      { id: 's1', local_date: '2026-10-13', status: 'finished', day_dow: 2, day_name: 'Pull #1', exercises: exs('2026-10-13', 0) },
+      { id: 's2', local_date: '2026-10-20', status: 'finished', day_dow: 2, day_name: 'Pull #1', exercises: exs('2026-10-20', 5).map((e, i) => (i === 4 ? { ...e, sets: [e.sets[0], { ...e.sets[1], done: false }] } : e)) },
+    ];
+    const rx = baseCardio('bulk');
+    const hr = { lo: 126, hi: 156, source: 'strava' };
+    const readinessToday = { status: 'amber', reason: '5.6 h sleep', flags: [{ key: 'sleep', text: '5.6 h sleep' }], missing: false, baseline: { resting_hr: 58 } };
+    const daily = dailySummary({
+      date: '2026-10-20', today: wed, program, sessions, programStart: '2026-10-13', rx, hr,
+      stairs: [{ local_date: '2026-10-20', minutes: 25 }],
+      health: { [wed]: { sleep_h: 5.6, resting_hr: 59, steps: 7412 } }, readiness: readinessToday,
+      weighins: [{ local_date: '2026-10-20', weight_lb: 175.8 }], series: [{ date: '2026-10-13', weight: 175, trend: 175.1 }, { date: '2026-10-20', weight: 175.8, trend: 175.4 }],
+      taps: [{ local_date: '2026-10-20', status: 'yes' }], plans: [],
+      todayPlan: { day: legs, planned: [], cardio: null },
+    });
+    gh.externalCommit('data/targets/today.json', JSON.stringify({
+      schema_version: 1, local_date: wed, tz: 'America/Los_Angeles', generated_utc: '2026-10-21T14:00:00Z',
+      readiness: readinessToday, day: { dow: 3, name: legs.name }, program_week: 2, deload: { active: false }, exercises: [], addons: [], daily,
+    }), 'daily 2026-10-21 (America/Los_Angeles)');
+    // the 07:00 sync came before Oura wrote the night: the file exists but has no recovery data
+    gh.externalCommit(`data/health/${wed}.json`, JSON.stringify({ hrv_ms: '', date: wed, steps: '7412', sleep_h: '', resting_hr: '' }), `health ${wed}`);
+    const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: synced });
+    await routeGitHub(c, gh);
+    const p = await c.newPage();
+    watch(p);
+    await p.clock.install({ time: new Date('2026-10-21T14:30:00Z') }); // Wed 07:30 in LA
+    await p.goto(`${url}#/week`);
+    await p.getByText('Continue in Safari (testing only)').click();
+    const card = p.locator('section[aria-label="Yesterday in review"]');
+    await card.waitFor({ timeout: 15000 });
+    const text = await card.textContent();
+    assert.match(text, /Yesterday · Tue 20 Oct/);
+    assert.match(text, /Short night \(5\.6 h\)\. Good: 5 lifts beat last time, cardio done, on plan\./);
+    assert.doesNotMatch(await card.locator('.headline').textContent(), /amber/, 'the short night is said once');
+    assert.match(text, /Focus today/);
+    assert.match(text, /Today.*Legs and abs/);
+    assert.equal(await card.locator('.summary-points').isHidden(), true, 'details fold by default');
+    await noHorizontalScroll(p, 'Week with the daily summary');
+    await p.waitForTimeout(2500);
+    await shot(p, 'h01-week-daily-summary', S8);
+    await card.getByRole('button', { name: 'See the details' }).click();
+    await p.waitForTimeout(800); // a background pull may re-render the tab; the card stays open
+    await card.locator('.summary-points').waitFor();
+    assert.match(await card.locator('.summary-points').textContent(), /Pull #1: 9 of 10 sets logged\. Beat last time on 5: Assisted Pullups 45 assist × 10 \(was 50 assist × 10\);.*; and 2 more\./);
+    await card.screenshot({ path: STAGE === 'stage-8' ? `${OUT}h02-daily-details.png` : `${tmp}/x.png` });
+    // today's file is there but empty: the chip shows and opens the Resync Shortcut
+    await tab(p, 'Log');
+    const chip = p.locator('.health-chip');
+    await chip.waitFor();
+    assert.equal(await chip.getAttribute('href'), 'shortcuts://run-shortcut?name=WMCoach%20Health%20Resync');
+    await p.waitForTimeout(300);
+    await shot(p, 'h03-log-resync-chip', S8);
+    await c.close();
+  }
+
   await tab(page, 'History');
 
   step('Settings: manual timezone → toast + history; back to auto');
@@ -938,6 +1012,7 @@ try {
   const saved = await context.storageState({ indexedDB: true });
   await context.close();
   const tokyo = await browser.newContext({ ...DEVICE, timezoneId: 'Asia/Tokyo', storageState: saved });
+  await tokyo.clock.install({ time: FRIDAY });
   const page2 = await tokyo.newPage();
   watch(page2);
   await page2.goto(url);
@@ -948,6 +1023,7 @@ try {
 
   step('Narrowest width (320 pt): no horizontal scroll');
   const narrow = await browser.newContext({ ...DEVICE, viewport: { width: 320, height: 640 }, storageState: saved });
+  await narrow.clock.install({ time: FRIDAY });
   const page3 = await narrow.newPage();
   watch(page3);
   await page3.goto(url);
@@ -964,6 +1040,7 @@ try {
   step('A stage-1 phone (v1 database) upgrades in the browser and keeps everything');
   const v1 = JSON.parse(await readFile(new URL('../fixtures/backup-v1.json', import.meta.url), 'utf8'));
   const old = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles' });
+  await old.clock.install({ time: FRIDAY });
   const p4 = await old.newPage();
   watch(p4);
   await p4.goto(`${url}manifest.webmanifest`);

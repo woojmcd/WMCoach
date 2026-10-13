@@ -83,7 +83,7 @@ Everything that means "today", "this morning" or "Saturday" is in **Walter's cur
   - Primary: the iOS Shortcut fires the routine's API trigger right after its Health commit, on Walter's first unlocked use of the phone each morning (§12). Automations follow the phone's clock, so this happens in his morning wherever he is.
   - Backup: two schedule triggers (e.g. 10:07 and 18:07 in his home zone, America/Los_Angeles). These cover a day the Shortcut didn't run. They must not be earlier than his usual wake time, or they would claim the day before the Health data arrives.
   - Every run is **idempotent**: it reads the current zone from `settings.json`, computes Walter's local date, and exits early if `last_daily_run_local_date` already equals it. Backup runs do nothing on normal days.
-  - Exception: if the day's run happened without `data/health/<local date>.json` and that file appears later, the next fire recomputes **readiness and today's targets only** (no plan or model changes), once.
+  - Exception: when today's Health file has **new numbers** since the day's run (it arrived late, or was re-synced), the next fire recomputes **readiness, today's targets and the daily summary only** (no plan or model changes), at most 3 times a day. A file without sleep, resting HR or HRV counts as missing: an early sync can come before Oura has written the night (Walter, 2026-10-13). The phone shows the Sync Health chip for a missing or empty file; it opens the "WMCoach Health Resync" Shortcut when the file exists (§12).
 - **Weekly step:** runs inside the daily run when the local weekday is the day before prep day (default Saturday) and `last_weekly_run_week` isn't this week. Missing Saturday entirely (e.g. no signal) → the first run on prep day does it, before the swap.
 - **Readiness baselines** use nightly values regardless of zone. On the first 2 nights after a shift of ≥ 3 h, flag "travel" and cap readiness at Amber instead of Red: jet lag skews HRV and sleep, and the data isn't telling us about training fatigue.
 - **Travel mode** (§4.4) is separate from the timezone and is still a manual toggle.
@@ -322,6 +322,25 @@ The coach prescribes cardio as part of each day's workout. Strava and the Stairs
   - Open days: the cardio card is the main card.
   - Week tab: each day's row and preview, plus a "Cardio this week" card.
 
+### 6.6 Daily summary (Walter, 2026-10-13)
+Each morning the Week tab opens on **Yesterday · <date>**: an executive summary of the previous day and the focus for today. It's pure code in `coach/daily.js`, computed by the daily run into `targets/today.json` → `daily`, and recomputed when Health data is re-synced (§2b). The voice is the weekly review's (§10): the numbers first, no softening, always what went well, then one thing to do.
+- **Yesterday, by area** (each with a good / warn / bad dot; folded under "See the details"):
+
+  | Area | What it says |
+  |---|---|
+  | Training | Sets logged of planned; lifts that beat last time (e1RM ±1 %; assisted lifts by less help, bodyweight by total reps); first-time baselines; unlogged sets. A lift day with nothing logged is "missed", or "not logged" when Strava shows a lift. Open days and days before the first session aren't judged. |
+  | Cardio | Prescribed (§6.5) and done, missed (with the week so far, or "ended N short" on Sunday), or extra, plus the average HR against Zone 2. |
+  | Food | The on-plan tap (latest of the day) and the plan's kcal. |
+  | Weight | The weigh-in, the trend and its 7-day change, and how many of the last 7 days have one. |
+  | Last night | Sleep, resting HR vs the 7-day average, HRV if any, yesterday's steps (vs the floor in a cut), and today's readiness. |
+
+- **Headline:** the first problem, then up to two more, then what went well.
+  - Problems, in order: readiness red, lift not logged, under 80 % of sets logged, food not logged or off plan, no weigh-in, sleep under 6 h, prescribed cardio missed, readiness amber.
+  - Amber that's only short sleep isn't repeated once the short night has been named.
+- **Focus today:** one action, the fix for the first problem, or "Same again" on a clean day.
+- **Today:** the session, its load increases and calibrations, held loads on amber or red, and the cardio with its heart-rate range.
+- There's no push notification for it (Walter, 2026-10-13); it's in the app each morning.
+
 ---
 
 ## 7. Daily routine (`coach-daily`, each morning via the Shortcut; see §2b)
@@ -329,7 +348,7 @@ The coach prescribes cardio as part of each day's workout. Strava and the Stairs
 1. Pull the repo. Read `data/log/settings.json` for the current timezone and compute Walter's local date. If `last_daily_run_local_date` equals it, exit without committing.
 2. Read `data/log/`, `data/health/<local date>.json`, and Strava activities since the last run via the Strava connector (summary, HR zones, relative effort). Normalize the Strava data into `data/strava/`.
 3. Update the trend (EWMA) and the model state. Exclude days with adherence = Off from TDEE learning, as with breaks.
-4. Compute readiness (§6.3) and today's targets (§6.2) → `data/targets/today.json`, with a one-line reason per modified exercise, plus today's cardio (§6.5).
+4. Compute readiness (§6.3) and today's targets (§6.2) → `data/targets/today.json`, with a one-line reason per modified exercise, plus today's cardio (§6.5) and yesterday's summary (§6.6).
 5. If yesterday had an endurance session > 2 h, write the same-/next-day add-on (§8.5).
 6. If it's the local day before prep day (or prep day and the weekly step was missed): run the weekly macro step (§8).
 7. Outside step 6, **never change the meal plan.** Commit to `main` with message `daily YYYY-MM-DD (<tz>)` and push.

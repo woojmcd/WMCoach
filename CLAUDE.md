@@ -107,5 +107,19 @@ The new service worker installs in the background and waits. Walter sees "Update
 - `targets/today.json` → `cardio` holds today's session, the heart-rate range and the week's done items. The phone recomputes it offline from the week's Strava items in the latest targets plus local Stairs ✓ taps.
 - Strava HR zones come from `get_athlete_zones` (routine step 3, saved as `zones` in `.coach/strava.json`) and are kept in `data/model/state.json` → `hr_zones`.
 
+## Daily summary (stage 8, spec §6.6)
+- `dailySummary()` in `coach/daily.js` is pure. The daily run puts it in `targets/today.json` → `daily`, and the Week tab shows it as "Yesterday · <date>" (`dailyCard` in `app/views/week.js`).
+  - Yesterday's training, cardio, food tap and weigh-in come from the log and Strava.
+  - Last night (sleep, resting HR) and yesterday's steps come from this morning's Health file.
+- Health re-syncs (§2b):
+  - A Health file only counts with recovery data: `hasRecovery()` in `coach/readiness.js`.
+  - New numbers since the run rerun readiness, targets and the summary, up to `MAX_HEALTH_RERUNS` (3) a day. The run tracks this in `state.health_seen` and `state.health_reruns`.
+  - The phone reads today's file to show the Sync Health chip, and opens the "WMCoach Health Resync" Shortcut when the file exists.
+- What the Shortcut can read (`docs/shortcut.md`): Oura gives sleep and overnight heart rate, but not HRV or resting HR. So:
+  - resting HR = the lowest Oura heart rate since 6 PM;
+  - sleep = In Bed − Awake;
+  - steps = iPhone only.
+- e2e: the main walkthrough and every context without its own scenario clock run at `FRIDAY` (Fri 9 Oct 2026, 09:30 LA), so results don't depend on the day the suite runs.
+
 ## Timezone
 Walter travels. "Today" always means his current local date in the zone from `settings.tz_current`. It follows the iPhone by default (Settings → Timezone); `coach/time.js` has the helpers. Every stored entry carries `utc`, `local_date` and `tz`. Daily records are keyed by `local_date` and never auto-merged when a date repeats after a date-line crossing.

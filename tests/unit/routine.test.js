@@ -114,6 +114,48 @@ test('late Health data: the next fire recomputes readiness and targets only, onc
   assert.equal(run(repo, '2026-10-14').status, 'skip');
 });
 
+test('Health re-syncs (Walter, 2026-10-13): an empty file counts as missing; new numbers rerun, up to 3 a day', () => {
+  const repo = phone();
+  for (let i = 1; i <= 7; i += 1) repo.files[`data/health/${addDays('2026-10-14', -i)}.json`] = JSON.stringify({ resting_hr: 55, sleep_h: 7.5 });
+  // the 07:00 sync came before Oura wrote the night: steps only, recovery blank (as strings, like the Shortcut)
+  repo.files['data/health/2026-10-14.json'] = JSON.stringify({ hrv_ms: '', resting_hr: '', sleep_h: '', steps: '5732' });
+  run(repo, '2026-10-14');
+  assert.equal(J(repo, 'data/targets/today.json').readiness.reason, 'no recovery data');
+  assert.equal(J(repo, 'data/model/state.json').health_missing_on, '2026-10-14');
+  assert.equal(preflight({ repo, now: at('2026-10-14') }).rerun, false, 'the same empty file: nothing to do');
+  // the Resync Shortcut overwrites it with last night's numbers
+  repo.files['data/health/2026-10-14.json'] = JSON.stringify({ hrv_ms: '', resting_hr: '61', sleep_h: '5.4', steps: '5732' });
+  assert.equal(preflight({ repo, now: at('2026-10-14') }).rerun, true);
+  const r = run(repo, '2026-10-14');
+  assert.equal(r.status, 'rerun');
+  const t = J(repo, 'data/targets/today.json');
+  assert.equal(t.readiness.status, 'red', 'short sleep and resting HR 6 over the average');
+  assert.match(t.daily.headline, /^Recovery is red this morning/);
+  assert.match(t.daily.points.find((p) => p.key === 'recovery').text, /^5\.4 h sleep, under 6 h\. Resting HR 61 \(\+6 vs your 55 average/);
+  assert.equal(run(repo, '2026-10-14').status, 'skip', 'unchanged file');
+  // a corrected sync runs again; after 3 reruns in a day it stops
+  repo.files['data/health/2026-10-14.json'] = JSON.stringify({ resting_hr: 56, sleep_h: 7.1 });
+  assert.equal(run(repo, '2026-10-14').status, 'rerun');
+  assert.equal(J(repo, 'data/targets/today.json').readiness.status, 'green');
+  repo.files['data/health/2026-10-14.json'] = JSON.stringify({ resting_hr: 56, sleep_h: 7.2 });
+  assert.equal(run(repo, '2026-10-14').status, 'rerun');
+  repo.files['data/health/2026-10-14.json'] = JSON.stringify({ resting_hr: 57, sleep_h: 7.2 });
+  assert.equal(run(repo, '2026-10-14').status, 'skip', 'three reruns a day at most');
+});
+
+test('daily summary: yesterday reviewed in today\'s targets, with today\'s focus', () => {
+  const repo = phone();
+  run(repo, '2026-10-12');
+  const t = J(repo, 'data/targets/today.json');
+  assert.equal(t.daily.date, '2026-10-11');
+  assert.equal(t.daily.label, 'Sun 11 Oct');
+  assert.deepEqual(t.daily.points.map((p) => p.key), ['cardio', 'food', 'weight', 'recovery'], 'Sunday: an open day, so no training to judge');
+  assert.match(t.daily.points[0].text, /^Prescribed 25 min easy stairs: not done\. Week so far: 0 of 2 sessions\. The week ended 2 sessions short\.$/, 'two behind by Sunday: a make-up was due');
+  assert.equal(t.daily.points[1].tone, 'good', 'on plan');
+  assert.match(t.daily.today, /^Push #1: \d+ to calibrate \(log the weight you use\)\./, 'first week: calibration sessions');
+  assert.match(t.daily.headline, /^No recovery data|^Good day|On plan|weighed in/);
+});
+
 test('weekly step on Saturday, swap on Sunday; observe-only start, then the first change, then a washout week', () => {
   const repo = phone(); // flat at 175 lb: a slow bulk
   const days = [];

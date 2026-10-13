@@ -27,19 +27,28 @@ Shortcuts app → **+** → name it exactly **`WMCoach Health`**. The app's **Sy
 
 **1. Read Health.** Allow each type when iOS asks the first time.
 
-6. **Find Health Samples** where *Type is Heart Rate Variability* and *Start Date is in the last 12 hours*.
-   - Then **Calculate Statistics**: *Average* of Health Samples. Rename it **HRV**.
-7. **Find Health Samples** where *Type is Resting Heart Rate* and *Start Date is today*.
-   - Sort by Start Date, Latest First, Limit 1. Rename it **RHR**.
-8. **Find Health Samples** where *Type is Sleep Analysis*, *Start Date is in the last 1 day*, and *Value is Asleep*.
-   - Then **Get Details of Health Samples**: *Duration*.
-   - Then **Calculate Statistics**: *Sum*.
-   - Then **Calculate**: Sum ÷ 3600. Rename it **Sleep**.
-   - If the result is a large number, Shortcuts already gave minutes: divide by 60 instead.
-9. **Find Health Samples** where *Type is Steps* and *Start Date is yesterday*.
-   - Then **Calculate Statistics**: *Sum*. Rename it **Steps**.
-10. **Find Health Samples** where *Type is Weight* and *Start Date is today*, Latest First, Limit 1. Rename it **Weight**.
-   - Optional. The app's weigh-in is still the main one; this only fills a day you forgot.
+Oura writes sleep and overnight heart rate to Apple Health, but not HRV or resting heart rate (checked 2026-10-13). So resting HR is your lowest overnight heart rate (Oura's own definition), and HRV stays blank, which the coach treats as "no data".
+
+The **"in the last 1 day"** filter counts from midnight at the start of *yesterday*, not 24 hours, so it would mix in the night before. Every step below uses a fixed window instead.
+
+6. **Windows.**
+   - **Date**: Current Date.
+   - **Adjust Date**: *Get Start of Day* (today at midnight).
+   - **Adjust Date**: *Subtract 6 hours* from that. Rename it **Sleep Window** (yesterday at 6 PM).
+   - **Adjust Date**: *Subtract 1 day* from today at midnight. Rename it **Yesterday Start**.
+7. **Resting HR.** **Find Health Samples** where (all): *Type is Heart Rate*, *Source is Oura*, *Start Date is after* **Sleep Window**.
+   - Then **Calculate Statistics**: *Minimum*. This is **RHR**.
+8. **Sleep = time in bed − time awake.** Leave the Source filter off here: with it, Oura's sleep isn't found.
+   - **Find Health Samples** where (all): *Type is Sleep Analysis*, *Start Date is after* **Sleep Window**, *Value is In Bed*. Then **Get Details**: *Duration*. Then **Calculate Statistics**: *Sum*.
+   - The same again with *Value is Awake*.
+   - **Calculate**: In Bed Sum − Awake Sum. Then **Calculate**: ÷ 3600. That's **Sleep** (hours).
+   - Don't add up Core + Deep + REM instead: Oura writes some of those windows twice, and the sum reads about 45 minutes high. In Bed − Awake lands within about 10 minutes of Oura's number.
+   - "Value is Asleep" finds nothing: Oura labels every piece Core, Deep or REM.
+9. **Steps (yesterday).** **Find Health Samples** where (all): *Type is Steps*, *Source is* your iPhone, *Start Date is after* **Yesterday Start**, *Start Date is before* today at midnight.
+   - Then **Calculate Statistics**: *Sum*. That's **Steps**.
+   - Without the Source filter, the iPhone, Oura and Garmin are all added up and it reads about 35 % high. The iPhone alone comes within a few percent of the Health app's total.
+10. **Weight** (optional): **Find Health Samples** where *Type is Weight* and *Start Date is today*, Latest First, Limit 1. Rename it **Weight**.
+   - Only useful if a smart scale writes to Health. The app's weigh-in is still the main one; this only fills a day you forgot.
 
 **2. Build the file.**
 
@@ -84,6 +93,14 @@ Tap ▶︎ once to test. Then check two things:
 
 A second tap should stop at step 5.
 
+## The Resync copy: "WMCoach Health Resync"
+The morning Shortcut stops once today's file exists. That's on purpose, so every trigger is safe. But an early sync can arrive before Oura has written last night. For that, keep a second copy that overwrites today's file:
+1. Long-press **WMCoach Health** → **Duplicate**. Rename the copy exactly **`WMCoach Health Resync`**.
+2. In the copy, delete step 5 (the **If**, **Stop This Shortcut** and **End If**). Keep steps 3 and 4.
+3. In the copy's step 13 (the PUT), add a fourth Request Body field: `sha` (Text) = the **Dictionary Value** variable from step 4. GitHub only replaces an existing file when it gets that ID.
+
+When today's file is missing or has no sleep or heart-rate data, the app shows a **Sync Health** chip on the Log and Body tabs. It opens the Resync copy when today's file exists, and the main Shortcut when it doesn't. A re-sync with new numbers makes the next coach run redo today's readiness, targets and daily summary, up to 3 times a day.
+
 ## Triggers
 Shortcuts → **Automation** → **+** → **Create Personal Automation**. Set every automation to **Run Immediately** and turn **Notify When Run** off.
 
@@ -94,6 +111,6 @@ Shortcuts → **Automation** → **+** → **Create Personal Automation**. Set e
 | **Manual** | Nothing to set up. | When today's file is missing, the app's Log and Body tabs show a **Sync Health** chip that runs this Shortcut. |
 
 ## When something's off
-- **The Sync Health chip stays:** open the Shortcut and run it. If step 13 fails, the GitHub token has expired (make a new one and paste it in steps 3 and 13).
+- **The Sync Health chip stays:** open Oura so it syncs last night to Health, then tap the chip (or run the Resync copy). If step 13 fails, the GitHub token has expired: make a new one and paste it in steps 3 and 13 of both Shortcuts.
 - **"Protected health data is inaccessible":** the phone was locked. The App-opened trigger covers it.
 - **Travel:** nothing to change. The Shortcut uses the phone's clock and zone, so it runs in your morning wherever you are.

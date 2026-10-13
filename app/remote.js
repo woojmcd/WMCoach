@@ -8,10 +8,13 @@ import { getAll, getMeta, setMeta, put } from './db.js';
 import { live } from './records.js';
 import { GitHub } from './sync.js';
 import { weekDates } from '../coach/time.js';
+import { normalizeHealth, hasRecovery } from '../coach/readiness.js';
 
 const PULL_EVERY_MS = 5 * 60 * 1000;
 const FILES = ['data/targets/today.json', 'data/plan/current.json', 'data/plan/next.json'];
 export const SHORTCUT_URL = 'shortcuts://run-shortcut?name=WMCoach%20Health';
+// today's file exists but is incomplete: the copy that overwrites it (docs/shortcut.md)
+export const RESYNC_URL = 'shortcuts://run-shortcut?name=WMCoach%20Health%20Resync';
 
 export async function remoteState(db) {
   return (await getMeta(db, 'remote')) || { shas: {}, targets: null, health: null, pulled_utc: null };
@@ -28,7 +31,14 @@ async function viaApi(cfg, today, prev, fetchImpl) {
     if (prev.shas[path] === sha[path] && prev.docs && path in prev.docs) { docs[path] = prev.docs[path]; continue; }
     try { docs[path] = JSON.parse(await gh.blobText(sha[path])); } catch { docs[path] = null; }
   }
-  return { docs, shas: Object.fromEntries(FILES.map((p) => [p, sha[p] || null])), healthToday: Boolean(sha[`data/health/${today}.json`]) };
+  // today's Health file: does it carry last night's recovery data yet? (cached by blob sha)
+  const hp = `data/health/${today}.json`;
+  let complete = null;
+  if (sha[hp]) {
+    if (prev.health && prev.health.date === today && prev.health.sha === sha[hp] && typeof prev.health.complete === 'boolean') complete = prev.health.complete;
+    else { try { complete = hasRecovery(normalizeHealth(JSON.parse(await gh.blobText(sha[hp])))); } catch { complete = null; } }
+  }
+  return { docs, shas: Object.fromEntries(FILES.map((p) => [p, sha[p] || null])), healthToday: Boolean(sha[hp]), healthSha: sha[hp] || null, healthComplete: complete };
 }
 
 // Published plans go into the phone's plans store (same record shape), replacing
@@ -67,7 +77,7 @@ export async function pullRemote(ctx, { force = false, fetchImpl = (...a) => fet
     shas: got.shas,
     docs: got.docs,
     targets: targets && targets.local_date ? targets : null,
-    health: { date: today, present: got.healthToday },
+    health: { date: today, present: got.healthToday, sha: got.healthSha, complete: got.healthComplete },
   };
   const changed = plansChanged || JSON.stringify(prev.targets) !== JSON.stringify(next.targets) || JSON.stringify(prev.health) !== JSON.stringify(next.health);
   await setMeta(ctx.db, 'remote', next);
@@ -87,7 +97,14 @@ export function weekTargets(remote, today) {
   return t.local_date >= weekDates(today)[0] ? t : null;
 }
 
-// "Sync Health" chip: only when we know today's file is missing.
+// "Sync Health" chip: only when we know today's file is missing, or has no recovery data.
 export function healthMissing(remote, today) {
-  return Boolean(remote && remote.health && remote.health.date === today && remote.health.present === false);
+  const hl = remote && remote.health;
+  return Boolean(hl && hl.date === today && (hl.present === false || hl.complete === false));
+}
+
+// Which Shortcut the chip opens: the morning one stops once today's file exists.
+export function healthShortcut(remote, today) {
+  const hl = remote && remote.health;
+  return hl && hl.date === today && hl.present ? RESYNC_URL : SHORTCUT_URL;
 }
