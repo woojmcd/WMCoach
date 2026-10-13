@@ -1,0 +1,44 @@
+{
+  "schema_version": 4,
+  "store": "measurements",
+  "partition": "2026-10",
+  "records": [
+    {
+      "id": "meas-7a830056-6924-45e2-bd09-5327aff27562",
+      "local_date": "2026-10-13",
+      "utc": "2026-10-13T15:17:21.373Z",
+      "tz": "America/Los_Angeles",
+      "readings": {
+        "waist": [
+          32.5,
+          32.2
+        ],
+        "neck": [
+          14.5,
+          14.75
+        ],
+        "chest": [
+          39.5,
+          40.8
+        ],
+        "arm": [
+          13.75,
+          13.5
+        ],
+        "thigh": [
+          23,
+          23
+        ]
+      },
+      "avg": {
+        "waist": 32.35,
+        "neck": 14.63,
+        "chest": 40.15,
+        "arm": 13.63,
+        "thigh": 23
+      },
+      "unit": "in",
+      "updated_utc": "2026-10-13T15:17:21.373Z"
+    }
+  ]
+}

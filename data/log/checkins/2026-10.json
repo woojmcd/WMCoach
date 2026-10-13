@@ -1,0 +1,28 @@
+{
+  "schema_version": 4,
+  "store": "checkins",
+  "partition": "2026-10",
+  "records": [
+    {
+      "id": "ci-a7445f0c-880b-4c8d-bc6b-669a004a2ac0",
+      "local_date": "2026-10-13",
+      "utc": "2026-10-13T15:17:21.373Z",
+      "tz": "America/Los_Angeles",
+      "week": "2026-W42",
+      "due_date": "2026-10-13",
+      "adherence_pct": 0,
+      "adherence_auto_pct": 0,
+      "adherence_taps": 2,
+      "biofeedback": {
+        "hunger": 4,
+        "energy": 1,
+        "sleep": 2,
+        "stress": 1,
+        "digestion": 3
+      },
+      "note": null,
+      "measurement_id": "meas-7a830056-6924-45e2-bd09-5327aff27562",
+      "updated_utc": "2026-10-13T15:17:21.373Z"
+    }
+  ]
+}
