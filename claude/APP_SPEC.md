@@ -326,7 +326,8 @@ The coach prescribes cardio as part of each day's workout. Strava and the Stairs
 
 ### 6.6 Daily summary (Walter, 2026-10-13)
 Each morning the Week tab opens on **Yesterday · <date>**: an executive summary of the previous day and the focus for today. It's pure code in `coach/daily.js`, computed by the daily run into `targets/today.json` → `daily`, and recomputed when Health data is re-synced (§2b). The voice is the weekly review's (§10): the numbers first, no softening, always what went well, then one thing to do.
-- **Yesterday, by area** (each with a good / warn / bad dot; folded under "See the details"):
+- **Always fully open** (Walter, 2026-10-13). By contrast, the Week in review is a box that opens and closes with a tap on its header; it starts closed and the phone remembers how each week's was left.
+- **Yesterday, by area** (each with a good / warn / bad dot):
 
   | Area | What it says |
   |---|---|

@@ -673,3 +673,10 @@ body.resting .screen { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom)
 .cardio-week span.today { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .card.summary .focus.today { margin-top: 8px; background: transparent; border: 1px solid var(--hairline); }
 .card.summary .focus.today .label { color: var(--text-2); }
+/* Week in review opens and closes from its header */
+.summary-head { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 0; margin: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; font: inherit; }
+.summary-head .label { display: block; }
+.summary-head .headline { display: block; margin: 8px 0 0; font-size: 17px; line-height: 1.45; color: var(--text); }
+.summary-head .chev { flex: 0 0 auto; margin-top: 1px; color: var(--text-2); transform: rotate(90deg); transition: transform var(--dur) var(--ease); }
+.summary-head[aria-expanded="true"] .chev { transform: rotate(-90deg); }
+.summary-body[hidden] { display: none; }

@@ -17,7 +17,7 @@ import { dayForWeekday } from '../../coach/program.js';
 const OPEN_DAY = 'Rest, or runs, rides, swims and social sessions, read from Strava.';
 // Same values as the seeded model (brief §5); used only if the model record is missing.
 const DEFAULT_BANDS = { cut: { target: [-0.75, -0.5], slow_limit: -0.4, cap: -1.0 }, bulk: { target: [0.1, 0.2], cap: 0.35 }, maintenance: { target: [-0.1, 0.1] } };
-const ui = { summaryOpen: {}, dailyOpen: {} };
+const ui = { summaryOpen: {} };
 
 export async function render(screen, ctx) {
   const today = ctx.today();
@@ -159,53 +159,50 @@ async function buildSummary(ctx, { today, checkins, training, plans }) {
   });
 }
 
-// Yesterday in review + today's focus (the morning run's targets.daily). The headline,
-// focus and today's plan always show; the per-area details fold.
+// Yesterday in review + today's focus (the morning run's targets.daily). Always fully
+// open (Walter, 2026-10-13): the headline, focus, today's plan and every area.
+const pointList = (points) => h('div', { class: 'summary-points' },
+  points.map((p) => h('div', { class: 'summary-point' },
+    h('span', { class: `dot ${p.tone}`, 'aria-hidden': 'true' }),
+    h('div', { class: 'grow' }, h('div', { class: 'pt-title' }, p.title), h('p', {}, p.text)))));
+
 function dailyCard(d) {
-  const open = Boolean(ui.dailyOpen[d.date]);
-  const details = h('div', { class: 'summary-points', hidden: !open },
-    d.points.map((p) => h('div', { class: 'summary-point' },
-      h('span', { class: `dot ${p.tone}`, 'aria-hidden': 'true' }),
-      h('div', { class: 'grow' }, h('div', { class: 'pt-title' }, p.title), h('p', {}, p.text)))));
-  const toggle = h('button', { type: 'button', class: 'link-btn', 'aria-expanded': String(open) }, open ? 'Hide details' : 'See the details');
-  toggle.addEventListener('click', () => {
-    const now = details.hidden;
-    details.hidden = !now;
-    ui.dailyOpen[d.date] = now;
-    toggle.textContent = now ? 'Hide details' : 'See the details';
-    toggle.setAttribute('aria-expanded', String(now));
-  });
   return h('section', { class: `card summary daily ${d.tone}`, 'aria-label': 'Yesterday in review', style: 'margin-bottom:16px' },
     h('p', { class: 'label' }, `Yesterday · ${d.label}`),
     h('p', { class: 'headline' }, d.headline),
     h('div', { class: 'focus' }, h('span', { class: 'label' }, 'Focus today'), h('span', {}, d.focus)),
     d.today ? h('div', { class: 'focus today' }, h('span', { class: 'label' }, 'Today'), h('span', {}, d.today)) : null,
-    details,
-    toggle);
+    pointList(d.points));
 }
 
+
+// Week in review: a box that opens and closes with a tap anywhere on its header
+// (Walter, 2026-10-13). Starts closed; this phone remembers how each week's was left.
+const reviewKey = (week) => `wm.review.${week}`;
+function reviewOpen(week) {
+  if (week in ui.summaryOpen) return ui.summaryOpen[week];
+  try { return localStorage.getItem(reviewKey(week)) === 'open'; } catch { return false; }
+}
 function summaryCard(sum) {
-  // open on check-in day and the day after; later it folds to the headline (tap to read)
-  const open = ui.summaryOpen[sum.week_of] ?? sum.days_since <= 1;
+  let open = reviewOpen(sum.week_of);
   const range = sum.period.from.slice(5, 7) === sum.period.to.slice(5, 7)
     ? `${Number(sum.period.from.slice(8))}–${formatDayMonth(sum.period.to)}`
     : `${formatDayMonth(sum.period.from)} – ${formatDayMonth(sum.period.to)}`;
-  const details = h('div', { class: 'summary-points', hidden: !open },
-    sum.points.map((p) => h('div', { class: 'summary-point' },
-      h('span', { class: `dot ${p.tone}`, 'aria-hidden': 'true' }),
-      h('div', { class: 'grow' }, h('div', { class: 'pt-title' }, p.title), h('p', {}, p.text)))));
-  const toggle = h('button', { type: 'button', class: 'link-btn', 'aria-expanded': String(open) }, open ? 'Hide details' : 'Read the full review');
-  toggle.addEventListener('click', () => {
-    const now = details.hidden;
-    details.hidden = !now;
-    ui.summaryOpen[sum.week_of] = now;
-    toggle.textContent = now ? 'Hide details' : 'Read the full review';
-    toggle.setAttribute('aria-expanded', String(now));
-  });
-  return h('section', { class: `card summary ${sum.tone}`, 'aria-label': 'Week in review', style: 'margin-bottom:16px' },
-    h('p', { class: 'label' }, `Week in review · ${range}`),
-    h('p', { class: 'headline' }, sum.headline),
+  const id = `review-${sum.week_of}`;
+  const body = h('div', { class: 'summary-body', id, hidden: !open },
     h('div', { class: 'focus' }, h('span', { class: 'label' }, 'Focus'), h('span', {}, sum.focus)),
-    details,
-    toggle);
+    pointList(sum.points));
+  const head = h('button', { type: 'button', class: 'summary-head', 'aria-expanded': String(open), 'aria-controls': id },
+    h('span', { class: 'grow' },
+      h('span', { class: 'label' }, `Week in review · ${range}`),
+      h('span', { class: 'headline' }, sum.headline)),
+    h('span', { class: 'chev', 'aria-hidden': 'true' }, icon('chevron', { size: 18 })));
+  head.addEventListener('click', () => {
+    open = !open;
+    body.hidden = !open;
+    head.setAttribute('aria-expanded', String(open));
+    ui.summaryOpen[sum.week_of] = open;
+    try { localStorage.setItem(reviewKey(sum.week_of), open ? 'open' : 'closed'); } catch { /* private mode: this session only */ }
+  });
+  return h('section', { class: `card summary ${sum.tone}`, 'aria-label': 'Week in review', style: 'margin-bottom:16px' }, head, body);
 }

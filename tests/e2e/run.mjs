@@ -576,10 +576,22 @@ try {
     await page.evaluate(() => document.getElementById('app').scrollTo(0, 0));
     await page.waitForTimeout(300);
     await shot(page, 'e01-week-review', { ...S5, full: true });
-    await review.getByRole('button', { name: 'Hide details' }).click();
-    assert.equal(await review.locator('.summary-points').isHidden(), true);
-    await review.getByRole('button', { name: 'Read the full review' }).click();
+    // a box that opens and closes from its header; it starts closed (Walter, 2026-10-13)
+    const head = review.locator('.summary-head');
+    assert.equal(await head.getAttribute('aria-expanded'), 'false');
+    assert.equal(await review.locator('.summary-body').isHidden(), true);
+    await shot(page, 'h04-week-review-closed', { stage: 'stage-8' });
+    await head.click();
     assert.equal(await review.locator('.summary-points').isVisible(), true);
+    assert.equal(await head.getAttribute('aria-expanded'), 'true');
+    await shot(page, 'h05-week-review-open', { stage: 'stage-8' });
+    await head.click();
+    assert.equal(await review.locator('.summary-body').isHidden(), true);
+    // this phone remembers how it was left
+    await head.click();
+    await tab(page, 'Log');
+    await tab(page, 'Week');
+    assert.equal(await page.locator('.card.summary:not(.daily) .summary-body').isVisible(), true, 'still open after switching tabs');
     await noHorizontalScroll(page, 'week review');
   }
   const afterReview = await context.storageState({ indexedDB: true });
@@ -895,13 +907,12 @@ try {
     assert.doesNotMatch(await card.locator('.headline').textContent(), /amber/, 'the short night is said once');
     assert.match(text, /Focus today/);
     assert.match(text, /Today.*Legs and abs/);
-    assert.equal(await card.locator('.summary-points').isHidden(), true, 'details fold by default');
+    assert.equal(await card.locator('.summary-points').isVisible(), true, 'the daily card is always fully open');
+    assert.equal(await card.getByRole('button').count(), 0, 'nothing to open or close');
     await noHorizontalScroll(p, 'Week with the daily summary');
     await p.waitForTimeout(2500);
     await shot(p, 'h01-week-daily-summary', S8);
-    await card.getByRole('button', { name: 'See the details' }).click();
-    await p.waitForTimeout(800); // a background pull may re-render the tab; the card stays open
-    await card.locator('.summary-points').waitFor();
+    await p.waitForTimeout(800); // a background pull may re-render the tab
     assert.match(await card.locator('.summary-points').textContent(), /Pull #1: 9 of 10 sets logged\. Beat last time on 5: Assisted Pullups 45 assist × 10 \(was 50 assist × 10\);.*; and 2 more\./);
     await card.screenshot({ path: STAGE === 'stage-8' ? `${OUT}h02-daily-details.png` : `${tmp}/x.png` });
     // scrolled to the very end, the tab bar stays on the bottom edge and the page itself hasn't moved
