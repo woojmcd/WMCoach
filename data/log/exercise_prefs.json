@@ -1,0 +1,48 @@
+{
+  "schema_version": 4,
+  "store": "exercise_prefs",
+  "records": [
+    {
+      "id": "mon-cable-ab-crunches",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-13T00:38:34.540Z"
+    },
+    {
+      "id": "mon-incline-db-flyes",
+      "increment_lb": null,
+      "alternates": [],
+      "updated_utc": "2026-10-13T00:19:54.979Z"
+    },
+    {
+      "id": "mon-rope-pushdowns",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-13T00:38:32.172Z"
+    },
+    {
+      "id": "mon-rope-tricep-extensions",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-13T00:38:29.688Z"
+    },
+    {
+      "id": "mon-single-cable-lateral-raise",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-13T00:26:02.796Z"
+    },
+    {
+      "id": "mon-standing-lateral-db-raises",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-13T00:38:24.657Z"
+    },
+    {
+      "id": "tue-assisted-pullups",
+      "increment_lb": 5,
+      "alternates": [],
+      "updated_utc": "2026-10-13T00:38:51.001Z"
+    }
+  ]
+}
