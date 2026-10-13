@@ -43,6 +43,15 @@ async function shot(page, name, { full = false, stage = 'stage-1' } = {}) {
   await page.setViewportSize(size);
 }
 const step = (s) => console.log(`• ${s}`);
+// Scroll to an element that a background re-render (e.g. a sync finishing) may replace mid-way.
+async function scrollToStable(locator, tries = 4) {
+  for (let i = 0; ; i += 1) {
+    try { await locator.scrollIntoViewIfNeeded({ timeout: 3000 }); return; } catch (err) {
+      if (i >= tries - 1 || !/not attached|detached/i.test(err.message)) throw err;
+      await new Promise((r) => setTimeout(r, 400));
+    }
+  }
+}
 // The walkthrough's "today" (Fri 9 Oct 2026, 09:30 in LA): every context without a scenario
 // clock of its own runs at this time, so the result never depends on the day it runs.
 const FRIDAY = new Date('2026-10-09T16:30:00Z');
@@ -640,7 +649,7 @@ try {
     assert.equal(gh.commitMessages().length, 2, 'one commit for the first sync');
     assert.match(gh.commitMessages()[0], /^log \d{4}-\d{2}-\d{2} \(America\/Los_Angeles\): \d+ records$/);
     await p.locator('.value', { hasText: 'Up to date' }).waitFor();
-    await p.getByText('GitHub sync', { exact: true }).scrollIntoViewIfNeeded();
+    await scrollToStable(p.getByText('GitHub sync', { exact: true }));
     await p.evaluate(() => window.scrollBy(0, -60));
     await p.waitForTimeout(3000);
     await shot(p, 'e03-settings-synced', S5);
@@ -691,7 +700,7 @@ try {
     assert.equal(gh.commitMessages().length, commits + 1);
 
     step('Notifications: turn on (after install), test, subscription syncs');
-    await p.getByText('Notifications', { exact: true }).scrollIntoViewIfNeeded();
+    await scrollToStable(p.getByText('Notifications', { exact: true }));
     await p.getByRole('button', { name: 'Turn on notifications' }).click();
     await toastText(p, 'Notifications on');
     await p.getByRole('button', { name: 'Send a test' }).click();
@@ -701,7 +710,7 @@ try {
     const sub = gh.json('data/log/push_subscription.json');
     assert.equal(sub.value.endpoint, 'https://web.push.apple.com/QE2E-test');
     assert.ok(sub.value.vapid_public_key);
-    await p.getByText('Notifications', { exact: true }).scrollIntoViewIfNeeded();
+    await scrollToStable(p.getByText('Notifications', { exact: true }));
     await p.evaluate(() => window.scrollBy(0, -60));
     await p.waitForTimeout(3000);
     await shot(p, 'e05-notifications', S5);
@@ -867,6 +876,42 @@ try {
     await p.locator('.sheet.show', { hasText: 'Your cardio this week' }).waitFor();
     await p.waitForTimeout(300);
     await shot(p, 'g05-why-cardio', S7);
+    await c.close();
+  }
+
+  step('iPhone viewport bug: a home-screen app stuck 55 px short is re-measured (and the tab bar stays whole)');
+  {
+    const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: synced });
+    await c.clock.install({ time: FRIDAY });
+    // pretend to be the installed app on an iPhone whose viewport iOS left 55 px short
+    await c.addInitScript(() => {
+      const mm = window.matchMedia.bind(window);
+      window.matchMedia = (q) => (q === '(display-mode: standalone)' ? { matches: true, media: q, addEventListener() {}, removeEventListener() {}, addListener() {}, removeListener() {} } : mm(q));
+      Object.defineProperty(window.screen, 'height', { get: () => window.innerHeight + 55 });
+      Object.defineProperty(window.screen, 'width', { get: () => window.innerWidth });
+      window.__displayToggles = 0;
+      const desc = Object.getOwnPropertyDescriptor(CSSStyleDeclaration.prototype, 'display') || null;
+      document.addEventListener('DOMContentLoaded', () => {
+        const app = document.getElementById('app');
+        const style = app.style;
+        let v = '';
+        Object.defineProperty(style, 'display', { get: () => v, set: (x) => { if (x === 'none') window.__displayToggles += 1; v = x; style.setProperty('display', x); } });
+      });
+    });
+    const p = await c.newPage();
+    watch(p);
+    await p.goto(`${url}#/week`);
+    await p.locator('.tabbar').waitFor();
+    await p.waitForTimeout(800);
+    const s1 = await p.evaluate(() => ({ toggles: window.__displayToggles, gap: getComputedStyle(document.documentElement).getPropertyValue('--vp-gap').trim(), pad: getComputedStyle(document.querySelector('.tabbar')).paddingBottom }));
+    assert.equal(s1.toggles, 1, 'one re-measure at launch');
+    assert.deepEqual([s1.gap, s1.pad], ['55px', '4px'], 'still short (Chromium can’t heal): the tab bar stays whole and compact');
+    // the keyboard closes: re-measure again, but never in a loop (at most once per 1.5 s)
+    await p.waitForTimeout(1200);
+    await p.evaluate(() => { const i = document.createElement('input'); document.body.append(i); i.focus(); i.blur(); i.remove(); });
+    await p.waitForTimeout(900);
+    const s2 = await p.evaluate(() => window.__displayToggles);
+    assert.ok(s2 >= 2 && s2 <= 3, `re-measured after the keyboard, throttled (${s2})`);
     await c.close();
   }
 

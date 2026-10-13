@@ -221,24 +221,52 @@ function resetPageShift() {
 // The home-screen app is full screen (black-translucent status bar, portrait), so the layout
 // should end at the screen's bottom edge. If iOS ends it higher, measure the gap and let the
 // bottom-pinned parts (tab bar, rest timer, sheets, the scroll area) reach the edge (--vp-gap).
-const display = { gap: 0 };
-function fitScreen() {
-  display.gap = screenGap({
-    standalone: Boolean(window.navigator.standalone) || window.matchMedia('(display-mode: standalone)').matches,
+const display = { gap: 0, heals: 0, healed: 0 };
+function measureGap() {
+  return screenGap({
+    standalone: isStandalone(),
     innerWidth: window.innerWidth, innerHeight: window.innerHeight,
     screenWidth: window.screen.width, screenHeight: window.screen.height, typing: isTyping(),
   });
+}
+function fitScreen() {
+  display.gap = measureGap();
   document.documentElement.style.setProperty('--vp-gap', `${display.gap}px`);
+}
+
+// iOS home-screen app bug (2026-10-13; documented for iOS 17–26): the first time the keyboard
+// opens, the app's viewport shrinks by ~55–60 pt and never comes back until a force-quit,
+// leaving a black band under the tab bar (and, in 0.7, a tab bar floating mid-screen).
+// Hiding and re-showing the full-screen container with a reflow in between makes WebKit
+// re-measure the viewport. Done only when there is a gap, never while typing.
+let lastHeal = 0;
+function healViewport() {
+  if (!isStandalone() || isTyping() || measureGap() === 0) return;
+  if (Date.now() - lastHeal < 1500) return; // never in a loop if iOS keeps the gap
+  lastHeal = Date.now();
+  display.heals += 1;
+  const y = root.scrollTop;
+  root.style.display = 'none';
+  void root.offsetHeight; // force the reflow
+  root.style.display = '';
+  root.scrollTop = y;
+  resetPageShift();
+  requestAnimationFrame(() => {
+    fitScreen();
+    if (display.gap === 0) display.healed += 1;
+  });
 }
 ctx.display = () => ({ ...display, innerHeight: window.innerHeight, screenHeight: window.screen.height, vvHeight: window.visualViewport ? Math.round(window.visualViewport.height) : null });
 fitScreen();
+setTimeout(healViewport, 300);
 window.addEventListener('resize', fitScreen);
-window.addEventListener('orientationchange', () => setTimeout(fitScreen, 300));
+window.addEventListener('orientationchange', () => setTimeout(() => { fitScreen(); healViewport(); }, 300));
 
-document.addEventListener('focusout', () => setTimeout(() => { resetPageShift(); fitScreen(); }, 60));
+const afterKeyboard = () => { resetPageShift(); fitScreen(); healViewport(); };
+document.addEventListener('focusout', () => { setTimeout(afterKeyboard, 140); setTimeout(afterKeyboard, 600); });
 window.addEventListener('scroll', resetPageShift, { passive: true });
-if (window.visualViewport) window.visualViewport.addEventListener('resize', () => setTimeout(() => { resetPageShift(); fitScreen(); }, 60));
-document.addEventListener('visibilitychange', () => { if (!document.hidden) { resetPageShift(); fitScreen(); } });
+if (window.visualViewport) window.visualViewport.addEventListener('resize', () => setTimeout(afterKeyboard, 140));
+document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(afterKeyboard, 140); });
 
 async function loadProgram() {
   try {
