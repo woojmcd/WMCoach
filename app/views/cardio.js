@@ -1,7 +1,7 @@
 // Cardio on the Log and Week tabs (spec §6.5): what the coach prescribes today, at what
-// heart rate and why, what's done this week (Strava + Stairs ✓ taps), and logging a tap.
-import { h, toast, stepper, openSheet } from '../ui.js';
-import { saveDaily } from '../records.js';
+// heart rate and why, and what's done this week. Walter records cardio in Strava, so the
+// card is a reminder only (Walter, 2026-10-13: no logging controls).
+import { h, openSheet } from '../ui.js';
 import { cardioText, itemText, MIN_SESSION_MIN } from '../../coach/cardio.js';
 import { weekDates, isoWeekday, WEEKDAYS } from '../../coach/time.js';
 
@@ -44,40 +44,21 @@ export function whySheet(cardio) {
   openSheet({ title: 'Your cardio this week', subtitle: cardioText(rx), body: h('div', { class: 'stack-sm' }, lines), actions: [{ label: 'Close', kind: 'outline' }] });
 }
 
-function logger(ctx, { today, minutes, tap, walk }) {
-  const field = stepper({ value: tap ? tap.minutes : minutes, step: 5, min: 5, max: 180, unit: 'min', compact: true, label: walk ? 'Walk minutes' : 'Stairs minutes' });
-  return h('div', { class: 'stack-sm' },
-    field,
-    h('button', {
-      type: 'button', class: `btn ${tap ? 'outline' : 'primary'} block`,
-      onClick: async () => {
-        const v = field.getValue();
-        if (!(v > 0)) return;
-        await saveDaily(ctx.db, 'stairs', { localDate: today, tz: ctx.tz(), prefix: 'stairs', fields: { minutes: v } });
-        toast(`${walk ? 'Walk' : 'Stairs'} ${v} min logged`);
-        ctx.refresh();
-      },
-    }, tap ? `Update (${tap.minutes} min logged)` : walk ? 'Walk ✓' : 'Stairs ✓'));
-}
-
 // The cardio card. On a lift day it sits under the exercises; on an open day it's the main card.
 export function cardioCard(ctx, training, { openDay = false } = {}) {
   const cardio = training.cardio;
   if (!cardio) return null;
   const today = training.today;
   const t = cardio.today;
-  const tap = training.stairs.filter((s) => s.local_date === today).pop() || null;
   const todays = t ? t.done : cardio.extra || [];
-  const fromStrava = todays.some((i) => i.source === 'strava');
   const why = h('button', { type: 'button', class: 'link-btn', style: 'align-self:flex-start', onClick: () => whySheet(cardio) }, 'Why this cardio');
 
   if (!t) {
-    // no session planned today: a short line on a lift day; logging + the week on an open day
+    // no session planned today
     return h('section', { class: 'card stack-sm cardio-card', 'aria-label': 'Cardio' },
       h('div', { class: 'row' }, h('p', { class: 'label grow', style: 'margin:0' }, 'Cardio'), todays.length ? h('span', { class: 'badge up' }, 'Done') : null),
       h('div', { class: 'cardio-title' }, todays.length ? todays.map(itemText).join(' + ') : 'None planned today'),
       h('p', { class: 'muted xsmall', style: 'margin:0' }, `This week: ${cardioText(cardio.rx)}.`),
-      openDay && !fromStrava ? logger(ctx, { today, minutes: 30, tap, walk: false }) : null,
       weekTracker(cardio, today),
       why);
   }
@@ -92,17 +73,19 @@ export function cardioCard(ctx, training, { openDay = false } = {}) {
     t.kcal ? h('p', { class: 'muted xsmall', style: 'margin:0' }, `≈${t.kcal} kcal · already counted in your plan’s calories`) : null,
     t.note ? h('p', { class: 'small cardio-note', style: 'margin:0' }, t.note) : null,
     todays.length ? h('p', { class: 'small accent', style: 'margin:0' }, `Logged: ${todays.map(itemText).join(' + ')}`) : null,
-    fromStrava ? null : logger(ctx, { today, minutes: t.minutes, tap, walk: t.kind === 'walk' }),
+    t.status !== 'done' ? h('p', { class: 'muted xsmall', style: 'margin:0' }, 'Record it in Strava: it counts here after the next morning’s sync.') : null,
     weekTracker(cardio, today),
     why);
 }
 
 // Week tab: what the day's row says about cardio.
+// Week tab: the day's cardio line ("Cardio · 25 min stairs", "Cardio · 35 min run (Strava) ✓").
+// → { text, state: 'done' | 'missed' | 'planned' } or null.
 export function cardioMeta(cardio, date, today) {
   if (!cardio) return null;
   const items = cardio.week.items.filter((i) => i.local_date === date);
-  if (items.length) return `${items.map(itemText).join(' + ')} ✓`;
-  if (date < today) return cardio.rx.days.includes(isoWeekday(date)) ? 'cardio missed' : null;
-  if (date === today && cardio.today) return `+ ${todayTitle(cardio.today).replace(' · ', ', ')}`;
-  return cardio.rx.days.includes(isoWeekday(date)) ? `+ ${cardio.rx.minutes} min stairs` : null;
+  if (items.length) return { text: `Cardio · ${items.map(itemText).join(' + ')} ✓`, state: 'done' };
+  if (date < today) return cardio.rx.days.includes(isoWeekday(date)) ? { text: 'Cardio · missed', state: 'missed' } : null;
+  if (date === today && cardio.today) return { text: `Cardio · ${todayTitle(cardio.today).replace(' · ', ', ')}${cardio.today.makeup ? ' (make-up)' : ''}`, state: 'planned' };
+  return cardio.rx.days.includes(isoWeekday(date)) ? { text: `Cardio · ${cardio.rx.minutes} min stairs`, state: 'planned' } : null;
 }

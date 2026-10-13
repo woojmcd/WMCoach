@@ -472,7 +472,7 @@ try {
     await c.close();
   }
   {
-    step('Saturday: open day with the one-tap Stairs ✓');
+    step('Saturday: open day with the cardio reminder (recorded in Strava, nothing to log here)');
     const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: trained });
     const p = await c.newPage();
     watch(p);
@@ -480,8 +480,9 @@ try {
     await p.goto(`${url}#/log`);
     await p.getByText('Continue in Safari (testing only)').click();
     await p.locator('.title', { hasText: 'Open day' }).waitFor();
-    await p.getByRole('button', { name: 'Stairs ✓' }).click();
-    await p.locator('.toast.show', { hasText: 'Stairs 30 min logged' }).waitFor();
+    await p.locator('.cardio-card').waitFor();
+    assert.equal(await p.locator('.cardio-card .stepper').count(), 0, 'no cardio logging: Walter records it in Strava (2026-10-13)');
+    await p.getByRole('button', { name: 'Lift today instead' }).waitFor();
     await p.waitForTimeout(300);
     await shot(p, 'c09-open-day-stairs', S3);
     await c.close();
@@ -802,7 +803,7 @@ try {
   }
 
   const S7 = { stage: 'stage-7' };
-  step('Cardio: today\'s prescription with the lifts, heart rate, Stairs ✓, the week\'s tracker');
+  step('Cardio: today\'s prescription with the lifts, heart rate, the week\'s tracker; each day\'s cardio on its own line');
   {
     const tue = '2026-10-20';
     const rx = baseCardio('bulk');
@@ -837,24 +838,32 @@ try {
     await shot(p, 'g01-log-cardio', { ...S7, full: true });
     await card.scrollIntoViewIfNeeded();
     await card.screenshot({ path: STAGE === 'stage-7' ? `${OUT}g02-cardio-card.png` : `${tmp}/x.png` });
-    await card.getByRole('button', { name: 'Stairs ✓' }).click();
-    await toastText(p, 'Stairs 25 min logged');
-    await p.locator('.cardio-card.done .badge', { hasText: 'Done' }).waitFor();
-    assert.match(await p.locator('.cardio-card').textContent(), /This week: 2 of 2 sessions/);
-    await p.locator('.cardio-card').scrollIntoViewIfNeeded();
-    await p.locator('.cardio-card').screenshot({ path: STAGE === 'stage-7' ? `${OUT}g03-cardio-done.png` : `${tmp}/x.png` });
+    // a reminder only: cardio is recorded in Strava (Walter, 2026-10-13)
+    assert.equal(await card.locator('.stepper').count(), 0);
+    assert.match(text, /Record it in Strava: it counts here after the next morning’s sync\./);
+    // switching to another day's workout, as on open days
+    await p.getByRole('button', { name: 'Switch workout' }).click();
+    await p.locator('.sheet.show', { hasText: 'Which workout?' }).waitFor();
+    await p.locator('.sheet.show .item', { hasText: 'Upper Push #2' }).click();
+    await p.locator('.title', { hasText: 'Upper Push #2' }).waitFor();
+    assert.match(await p.locator('.switch-row').textContent(), /Today is Tue: doing Upper Push #2 instead\./);
+    await shot(p, 'h06-log-switched-workout', { stage: 'stage-8' });
+    await p.getByRole('button', { name: 'Switch workout' }).click();
+    await p.locator('.sheet.show .item', { hasText: 'Pull #1' }).first().click();
+    await p.locator('.title', { hasText: 'Pull #1' }).waitFor();
 
-    await p.locator('.toast.show').waitFor({ state: 'detached', timeout: 6000 }).catch(() => {});
     await tab(p, 'Week');
-    const wk = p.locator('section[aria-label="Cardio this week"]');
-    await wk.waitFor();
-    assert.match(await wk.textContent(), /2 × 25 min stairs \(Tue, Thu\)/);
-    assert.match(await p.locator('.day-row', { hasText: 'Thu' }).textContent(), /\+ 25 min stairs/);
-    assert.match(await p.locator('.day-row.today').textContent(), /25 min stairs ✓/);
-    assert.match(await p.locator('.day-row', { hasText: 'Mon' }).textContent(), /35 min run \(Strava\) ✓/);
+    // each day's cardio on its own line under the workout; no separate weekly box
+    assert.equal(await p.locator('section[aria-label="Cardio this week"]').count(), 0);
+    assert.equal(await p.locator('.day-row', { hasText: 'Thu' }).locator('.meta.cardio').textContent(), 'Cardio · 25 min stairs');
+    assert.equal(await p.locator('.day-row.today .meta.cardio').textContent(), 'Cardio · 25 min stairs, Zone 2');
+    assert.equal(await p.locator('.day-row', { hasText: 'Mon' }).locator('.meta.cardio').textContent(), 'Cardio · 35 min run (Strava) ✓');
+    assert.equal(await p.locator('.day-row', { hasText: 'Wed' }).locator('.meta.cardio').count(), 0, 'no cardio on legs day');
     await noHorizontalScroll(p, 'Week with cardio');
     await shot(p, 'g04-week-cardio', { ...S7, full: true });
-    await wk.getByRole('button', { name: 'Why this cardio' }).click();
+    await shot(p, 'h07-week-cardio-lines', { stage: 'stage-8', full: true });
+    await tab(p, 'Log');
+    await p.locator('.cardio-card').getByRole('button', { name: 'Why this cardio' }).click();
     await p.locator('.sheet.show', { hasText: 'Your cardio this week' }).waitFor();
     await p.waitForTimeout(300);
     await shot(p, 'g05-why-cardio', S7);

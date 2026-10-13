@@ -112,7 +112,9 @@ The new service worker installs in the background and waits. Walter sees "Update
   - `baseCardio`, `nextCardio` (the weekly step), `rxForWeek`, `cardioItems`, `cardioForDay`, `zone2`.
 - The weekly dose is stored on the plan record (`plans[].cardio`) and locked with the food. A carried plan keeps it unless the mode changed.
 - In a cut, cardio is the first lever: a stall adds a session (4 → 6 × 30) before carbs come down. That decision is still the week's one change.
-- `targets/today.json` → `cardio` holds today's session, the heart-rate range and the week's done items. The phone recomputes it offline from the week's Strava items in the latest targets plus local Stairs ✓ taps.
+- `targets/today.json` → `cardio` holds today's session, the heart-rate range and the week's done items. The phone recomputes it offline from the week's Strava items in the latest targets (plus any older Stairs ✓ taps).
+- Cardio is recorded in Strava only: the cardio card is a reminder with no logging controls (Walter, 2026-10-13). On the Week tab each day's cardio is its own line under the workout (`cardioMeta` → `{ text, state }`); there is no weekly cardio box.
+- Lift days have a **Switch workout** link under the title until the first set is logged (`chooseDay`).
 - Strava HR zones come from `get_athlete_zones` (routine step 3, saved as `zones` in `.coach/strava.json`) and are kept in `data/model/state.json` → `hr_zones`.
 
 ## Daily summary (stage 8, spec §6.6)

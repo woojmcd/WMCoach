@@ -680,3 +680,8 @@ body.resting .screen { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom)
 .summary-head .chev { flex: 0 0 auto; margin-top: 1px; color: var(--text-2); transform: rotate(90deg); transition: transform var(--dur) var(--ease); }
 .summary-head[aria-expanded="true"] .chev { transform: rotate(-90deg); }
 .summary-body[hidden] { display: none; }
+.day-row .meta.cardio { margin-top: 2px; }
+.day-row .meta.cardio.done { color: var(--accent); }
+.day-row .meta.cardio.missed { color: var(--text-3); }
+.switch-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: -4px 0 12px; }
+.switch-row .link-btn { padding: 0; margin-left: auto; white-space: nowrap; flex: 0 0 auto; }

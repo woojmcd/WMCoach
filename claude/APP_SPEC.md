@@ -168,7 +168,8 @@ Backoff      [ 55] [12 ]             ✓
 - If readiness modified a target, show a chip with the reason, e.g. "Held at 75: HRV low, 2 h ride yesterday."
 - Quick actions: swap exercise (from a per-exercise alternates list), add/skip a set, note.
 - "Finish session" saves the log, and the app immediately computes the baseline next-session targets on-device (§6.2), so progression works offline even if the daily run never comes.
-- On weekend days, the Log tab shows a one-tap **"Stairs ✓ (__ min)"** fallback for sessions that don't reach Strava.
+- Cardio is recorded in Strava only; the Log tab has no cardio logging (Walter, 2026-10-13). Older Stairs ✓ taps still count.
+- Lift days show **Switch workout** under the title until the first set is logged, to do another day's session (open days have "Lift today instead").
 - Every day, a cardio card shows the coach's cardio for today with the lifts (§6.5).
 
 ### 4.3 Body
@@ -287,7 +288,7 @@ Inputs: overnight HRV vs 7-day rolling baseline, resting HR vs 7-day baseline, s
 Every 6th week, or earlier when ≥ 3 main lifts (Flat DB Bench, Incline DB Bench, Hammer Pulldowns, Single Arm DB Rows, Smith Squat, Single Leg Press) show 2 consecutive sessions of rep drops. The deload halves the sets, keeps the loads, sets RIR ≥ 3, and turns failure finishers into RIR 2. The app announces it on the Week tab the Friday before.
 
 ### 6.5 Cardio prescription (Walter, 2026-10-09)
-The coach prescribes cardio as part of each day's workout. Strava and the Stairs ✓ tap record what he did. All of it is pure code in `coach/cardio.js`, shared by the routine and the phone.
+The coach prescribes cardio as part of each day's workout. Strava records what he did (the Stairs ✓ tap was removed on 2026-10-13; older taps still count). All of it is pure code in `coach/cardio.js`, shared by the routine and the phone.
 - **Weekly dose**, locked with the meal plan (`plans[].cardio`, set by the weekly step, §8.1):
 
   | Mode | Dose |
@@ -318,11 +319,11 @@ The coach prescribes cardio as part of each day's workout. Strava and the Stairs
   - After a long endurance session (§8.5 add-on): 20 min, optional.
 - **What counts:**
   - Strava cardio activities ≥ 15 min (rides, runs, swims, stairs, …).
-  - Stairs ✓ taps ≥ 15 min. A tap on a day with a Strava StairStepper session is the same session.
+  - Older Stairs ✓ taps ≥ 15 min (the tap was removed 2026-10-13). A tap on a day with a Strava StairStepper session is the same session.
 - **Where it shows:**
-  - Log tab: a cardio card under the exercises, with the dose, heart rate, readiness note, Stairs ✓ with the prescribed minutes, the week's tracker and "Why this cardio".
+  - Log tab: a cardio card under the exercises as the reminder at the end of the lift: the dose, heart rate, readiness note, the week's tracker and "Why this cardio". It has no logging controls.
   - Open days: the cardio card is the main card.
-  - Week tab: each day's row and preview, plus a "Cardio this week" card.
+  - Week tab: its own line under each day's workout ("Cardio · 25 min stairs", "Cardio · 35 min run (Strava) ✓", "Cardio · missed"), and in the day's preview. No separate weekly box (Walter, 2026-10-13).
 
 ### 6.6 Daily summary (Walter, 2026-10-13)
 Each morning the Week tab opens on **Yesterday · <date>**: an executive summary of the previous day and the focus for today. It's pure code in `coach/daily.js`, computed by the daily run into `targets/today.json` → `daily`, and recomputed when Health data is re-synced (§2b). The voice is the weekly review's (§10): the numbers first, no softening, always what went well, then one thing to do.
@@ -511,7 +512,7 @@ Walter fixes and changes the app over time in Claude Code. **No update may ever 
 | Exercise swaps for his gym/equipment | program as in §5 |
 | Height (for the body-fat estimate) | ask on first launch |
 | Apple Health read permission for Weight / Body Fat | ask Walter to enable; Shortcut works either way |
-| Stair-stepper workouts reaching Strava | verify in the first week; the "Stairs ✓" tap is the fallback |
+| Stair-stepper workouts reaching Strava | Walter records all cardio in Strava (2026-10-13) |
 | Step floor | 8,000/day |
 | Home timezone for backup schedules | America/Los_Angeles |
 | GitHub repo + fine-grained token, routine API token | created during setup |

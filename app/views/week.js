@@ -6,8 +6,7 @@ import { focusCheckin } from './body.js';
 import { checkinState, currentPhase, realPhases } from '../../coach/phase.js';
 import { weeklySummary, activeSummaryCheckin } from '../../coach/summary.js';
 import { header, note, sessionList, addonCard } from './common.js';
-import { cardioMeta, weekTracker, whySheet } from './cardio.js';
-import { cardioText } from '../../coach/cardio.js';
+import { cardioMeta } from './cardio.js';
 import { loadTraining, planFor, progressCount } from '../training.js';
 import { planItem } from './log.js';
 import { ensurePlans, planNotice } from '../meal-plans.js';
@@ -33,7 +32,7 @@ export async function render(screen, ctx) {
 
   const cardioLine = (date) => {
     const c = cardioMeta(training.cardio, date, today);
-    return c ? h('p', { class: 'small', style: 'margin:0 0 8px' }, `Cardio: ${c.replace(/^\+ /, '')}`) : null;
+    return c ? h('p', { class: 'small', style: 'margin:0 0 8px' }, c.text.replace(' · ', ': ')) : null;
   };
   const openDay = (date) => {
     const day = dayOf(date);
@@ -88,13 +87,13 @@ export async function render(screen, ctx) {
     } else if (day && day.exercises.length) {
       meta = `${day.exercises.length} exercises${day.est_min ? ` · ~${day.est_min} min` : ''}`;
     } else {
-      meta = cardioMeta(training.cardio, d, today) ? null : 'Rest, runs, rides, social';
+      meta = 'Rest, runs, rides, social';
     }
+    // cardio on its own line under the workout (Walter, 2026-10-13)
     const cm = cardioMeta(training.cardio, d, today);
-    meta = [meta, cm].filter(Boolean).join(' · ');
     return h('button', { type: 'button', class: `item day-row${d === today ? ' today' : ''}${logged.length ? ' logged' : ''}`, onClick: () => openDay(d) },
       h('span', { class: 'when' }, WEEKDAYS[isoWeekday(d) - 1]),
-      h('span', { class: 'grow' }, h('div', { class: 'name' }, day ? day.name : '—'), h('div', { class: 'meta' }, meta)),
+      h('span', { class: 'grow' }, h('div', { class: 'name' }, day ? day.name : '—'), h('div', { class: 'meta' }, meta), cm ? h('div', { class: `meta cardio ${cm.state}` }, cm.text) : null),
       logged.length && logged[logged.length - 1].status === 'finished' ? h('span', { class: 'accent' }, icon('check', { size: 18 })) : null);
   }));
 
@@ -126,20 +125,8 @@ export async function render(screen, ctx) {
     h('div', { class: 'stack' },
       strip,
       rows,
-      training.cardio ? cardioWeekCard(training.cardio, today) : null,
       ctx.program ? null : note('Program not loaded yet: connect once to fetch it.'),
       h('p', { class: 'faint xsmall center' }, `${tzCity(s.tz_current)} time · ${s.tz_mode === 'auto' ? 'follows iPhone' : 'set manually'}`)));
-}
-
-// ---- cardio this week (spec §6.5) ---------------------------------------------------------
-
-function cardioWeekCard(cardio, today) {
-  return h('section', { class: 'card stack-sm cardio-card', 'aria-label': 'Cardio this week' },
-    h('p', { class: 'label', style: 'margin:0' }, 'Cardio this week'),
-    h('div', { class: 'cardio-title' }, cardioText(cardio.rx)),
-    cardio.rx.change ? h('p', { class: 'small accent', style: 'margin:0' }, `New this week (was ${cardio.rx.change.from}).`) : null,
-    weekTracker(cardio, today),
-    h('button', { type: 'button', class: 'link-btn', style: 'align-self:flex-start', onClick: () => whySheet(cardio) }, 'Why this cardio'));
 }
 
 // ---- weekly executive summary ----------------------------------------------------------------
