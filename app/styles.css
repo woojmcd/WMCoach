@@ -50,11 +50,10 @@ html, body {
   overscroll-behavior: none;
 }
 
-body {
-  min-height: 100vh;
-  min-height: 100dvh;
-  overflow-x: hidden;
-}
+/* The page itself never scrolls: #app is the scroll container (Walter, 2026-10-13).
+   On iPhone home-screen apps, a scrolling page can be left shifted after the keyboard
+   closes, and the fixed tab bar and rest timer then float mid-screen until a relaunch. */
+html, body { height: 100%; overflow: hidden; }
 
 button, input, select, textarea { font: inherit; color: inherit; }
 button { -webkit-user-select: none; user-select: none; touch-action: manipulation; }
@@ -65,7 +64,14 @@ a { color: var(--accent); }
 
 /* ---- layout -------------------------------------------------------------- */
 
-#app { min-height: 100vh; min-height: 100dvh; }
+#app {
+  position: fixed;
+  inset: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: none;
+}
 
 .screen {
   padding: calc(var(--safe-top) + 12px) calc(var(--gutter) + var(--safe-right)) calc(var(--tabbar-h) + var(--safe-bottom) + 32px) calc(var(--gutter) + var(--safe-left));
@@ -660,3 +666,5 @@ body.resting .screen { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom)
 .cardio-week span.planned { border-color: var(--hairline); color: var(--text-2); }
 .cardio-week span.done { background: var(--accent-dim); color: var(--accent); border-color: transparent; }
 .cardio-week span.today { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.card.summary .focus.today { margin-top: 8px; background: transparent; border: 1px solid var(--hairline); }
+.card.summary .focus.today .label { color: var(--text-2); }

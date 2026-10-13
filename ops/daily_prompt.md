@@ -13,7 +13,7 @@ You are Walter's daily coach run. The routine's saved prompt is one line, "Follo
 1. **Update.** `git checkout main && git pull --ff-only origin main`.
 2. **Preflight.** `node scripts/daily.mjs --preflight` prints `{ today, tz, run, rerun, strava_range_start, strava_range_end }`.
    - `run` and `rerun` both false: today is done. Report "Already ran for <today> (<tz>)" and stop. This is the normal case for the backup schedules.
-   - `rerun` true: today's Health file arrived after today's run. Skip step 3 and run step 4 without `--strava`. The script recomputes readiness and targets only.
+   - `rerun` true: today's Health file has new numbers since today's run (it arrived late, or was re-synced). Skip step 3 and run step 4 without `--strava`. The script recomputes readiness, targets and the daily summary only (at most 3 times a day).
 3. **Strava** (only when `run` is true). Use the Strava connector:
    - `list_activities` with `range_start` / `range_end` from the preflight and `first: 50`. Follow `end_cursor` while `has_next_page` is true.
    - For each activity of 20 min or more, except WeightTraining, call `get_activity_performance` (average and max heart rate).

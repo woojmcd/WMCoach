@@ -9,13 +9,14 @@ import { parseWeightCsv, historyWeighins, historyPhases } from './seed.js';
 import { trendFromEntries, rateOverDays } from './trend.js';
 import { planDay, trainingCalendar } from './progression.js';
 import { dayForWeekday } from './program.js';
-import { readiness, normalizeHealth } from './readiness.js';
+import { readiness, normalizeHealth, hasRecovery } from './readiness.js';
 import { normalizeFetch, stravaPath, enduranceAddons, cardioByDate } from './strava.js';
 import { estimateTdee, planKcalByDate, intakeByDate } from './tdee.js';
 import {
   weeklyDecision, observeOnly, nextPlan, firstPlanForMode, planRecord, weeklyNotification, changeText,
 } from './weekly.js';
 import { mainLiftChanges } from './summary.js';
+import { dailySummary } from './daily.js';
 import { planWeekStart } from './meals.js';
 import { adherenceFromTaps, MODE_LABEL } from './phase.js';
 import {
@@ -28,6 +29,19 @@ const LOG_STORES = ['weighins', 'mode_changes', 'measurements', 'checkins', 'adh
 const json = (x) => `${JSON.stringify(x, null, 2)}\n`;
 const live = (xs) => xs.filter((x) => x && !x.deleted);
 const mean = (xs) => (xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null);
+
+// A Health file only counts once it carries recovery data (an early morning sync can
+// arrive before Oura has written last night). A re-sync with new numbers reruns
+// readiness, targets and the daily summary, up to MAX_HEALTH_RERUNS times a day.
+export const MAX_HEALTH_RERUNS = 3;
+const healthSig = (h) => (hasRecovery(h) ? JSON.stringify([h.hrv_ms, h.resting_hr, h.sleep_h, h.steps ?? null, h.weight_lb ?? null]) : null);
+function healthRerunDue(state, today, h) {
+  const sig = healthSig(h);
+  if (!sig) return false;
+  const seen = state.health_seen && state.health_seen.local_date === today ? state.health_seen.sig : null;
+  const n = state.health_reruns && state.health_reruns.local_date === today ? state.health_reruns.n : 0;
+  return sig !== seen && n < MAX_HEALTH_RERUNS;
+}
 
 // repo: { read(path) → string | null, list(prefix) → [path] }
 export function readRepo(repo) {
@@ -67,7 +81,7 @@ export function preflight({ repo, now = new Date() }) {
   const today = localDate(now, tz);
   const state = J('data/model/state.json') || {};
   const done = state.last_daily_run_local_date === today;
-  const rerun = done && state.health_missing_on === today && state.health_rerun_on !== today && Boolean(J(`data/health/${today}.json`));
+  const rerun = done && healthRerunDue(state, today, normalizeHealth(J(`data/health/${today}.json`)));
   const since = state.last_daily_run_local_date ? addDays(state.last_daily_run_local_date, -1) : addDays(today, -14);
   return { today, tz, run: !done, rerun, strava_range_start: `${since}T00:00:00`, strava_range_end: `${today}T23:59:59` };
 }
@@ -92,7 +106,7 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
   // ---- idempotency (spec §2b) ----
   let kind = 'daily';
   if (state.last_daily_run_local_date === today) {
-    if (state.health_missing_on === today && state.health_rerun_on !== today && health[today]) kind = 'health_rerun';
+    if (healthRerunDue(state, today, health[today])) kind = 'health_rerun';
     else return { status: 'skip', today, tz, writes: {}, notifications: [], report: [`Already ran for ${today} (${tz}).`], commitMessage: null };
   }
 
@@ -151,6 +165,15 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
     weightLb: last ? Math.round(last.trend * 10) / 10 : null,
     hr: zone2({ zones: state.hr_zones ? state.hr_zones.zones : null, activities }),
   });
+  // yesterday in review + today's focus (Walter, 2026-10-13)
+  const yesterday = addDays(today, -1);
+  const daily = dailySummary({
+    date: yesterday, today, program, sessions: live(log.sessions), programStart: cal.programStart, activities,
+    stairs: live(log.stairs), health, readiness: r, weighins: [...appWeighins, ...healthWeights], series,
+    taps: live(log.adherence), plans: allPlans, rx: rxForWeek(allPlans, yesterday, mode), hr: cardioToday.hr,
+    mode, units: settings.units || 'lb', stepFloor: settings.step_floor || 8000,
+    todayPlan: { day, planned, deload: cal.deload.isDeload, cardio: cardioToday },
+  });
   writes['data/targets/today.json'] = json({
     schema_version: ROUTINE_SCHEMA,
     local_date: today,
@@ -167,18 +190,22 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
     })),
     addons,
     cardio: cardioToday,
+    daily,
   });
   report.push(`Readiness ${r.status}: ${r.reason}.${day && day.exercises.length ? ` ${day.name}, week ${cal.week}${cal.deload.isDeload ? ' (deload)' : ''}.` : ' Open day.'}`);
   for (const a of addons) report.push(`Add-on today: +${a.kcal} kcal carbs (${a.reason}).`);
   report.push(cardioReport(cardioToday));
+  report.push(`Yesterday (${daily.label}): ${daily.headline} Focus: ${daily.focus}`);
 
   state.readiness_history = [...(state.readiness_history || []).filter((x) => x.local_date !== today), { local_date: today, status: r.status }].slice(-21);
+  state.health_seen = { local_date: today, sig: healthSig(health[today]) };
   if (kind === 'health_rerun') {
     state.health_rerun_on = today;
+    state.health_reruns = { local_date: today, n: (state.health_reruns && state.health_reruns.local_date === today ? state.health_reruns.n : 0) + 1 };
     writes['data/model/state.json'] = json(state);
-    return { status: 'rerun', today, tz, writes, notifications, report: [`Late Health data for ${today}: readiness and targets only.`, ...report], commitMessage: `daily ${today} (${tz}): readiness after late Health data` };
+    return { status: 'rerun', today, tz, writes, notifications, report: [`New Health data for ${today}: readiness, targets and the daily summary only.`, ...report], commitMessage: `daily ${today} (${tz}): readiness after late Health data` };
   }
-  if (!health[today]) state.health_missing_on = today;
+  if (!hasRecovery(health[today])) state.health_missing_on = today;
 
   // ---- model state (daily) ----
   state.trend = { ...(state.trend || {}), half_life_days: (state.trend && state.trend.half_life_days) || 7, last_local_date: last ? last.date : null, last_weight_lb: last ? Math.round(last.weight * 10) / 10 : null, trend_lb: last ? Math.round(last.trend * 10) / 10 : null, rate_14d_pct_bw_wk: rate ? Math.round(rate.pct_bw_per_wk * 100) / 100 : null };

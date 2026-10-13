@@ -2,7 +2,7 @@
 // measurements + check-in, trend graph, "On plan today?".
 import { h, icon, toast, openSheet, segmented, chips, stepper } from '../ui.js';
 import { header, sectionLabel, healthChip } from './common.js';
-import { remoteState, healthMissing } from '../remote.js';
+import { remoteState, healthMissing, healthShortcut } from '../remote.js';
 import { getAll, getMeta, put } from '../db.js';
 import { saveDaily, removeRecord, live } from '../records.js';
 import { newId } from '../seed.js';
@@ -97,7 +97,7 @@ export async function render(screen, ctx) {
   screen.append(
     modeCard(ctx, { phase, status, model, measurements }),
     sectionLabel('Weight'),
-    ...(healthMissing(remote, today) ? [h('div', { class: 'chip-row' }, healthChip(), h('span', { class: 'muted xsmall' }, 'Today’s Health data isn’t in yet.'))] : []),
+    ...(healthMissing(remote, today) ? [h('div', { class: 'chip-row' }, healthChip(healthShortcut(remote, today)), h('span', { class: 'muted xsmall' }, 'Today’s Health data isn’t in yet.'))] : []),
     weightCard(ctx, { weighins, today, tz, lastTrend }));
 
   // Entry point under Weight: a filled button while the check-in is due (Walter

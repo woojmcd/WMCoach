@@ -22,6 +22,10 @@ const num = (x) => {
   const v = Number(x.trim().replace(',', '.'));
   return Number.isFinite(v) ? v : null;
 };
+// A Health file only counts once it carries last night's recovery data: an early sync
+// can arrive before Oura has written the night (Walter, 2026-10-13).
+export const hasRecovery = (h) => Boolean(h && [h.hrv_ms, h.resting_hr, h.sleep_h].some(Number.isFinite));
+
 export function normalizeHealth(h) {
   if (!h || typeof h !== 'object') return null;
   return { ...h, hrv_ms: num(h.hrv_ms), resting_hr: num(h.resting_hr), sleep_h: num(h.sleep_h), steps: num(h.steps), weight_lb: num(h.weight_lb) };

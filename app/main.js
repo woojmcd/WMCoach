@@ -190,7 +190,7 @@ async function render({ keepScroll = false } = {}) {
     if (a.dataset.route === active) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   }
-  const y = window.scrollY;
+  const y = root.scrollTop;
   const screen = h('main', { class: 'screen' });
   screen.append(ctx.bannerSlot);
   renderBanners();
@@ -203,8 +203,24 @@ async function render({ keepScroll = false } = {}) {
   }
   if (seq !== renderSeq) return; // a newer render started meanwhile
   viewEl.replaceChildren(screen);
-  window.scrollTo(0, keepScroll ? y : 0);
+  root.scrollTo(0, keepScroll ? y : 0);
 }
+
+// The page never scrolls (#app does, see styles.css). iOS still shifts the page to bring a
+// focused input above the keyboard and can leave it there after the keyboard closes, which
+// strands the fixed tab bar and rest timer mid-screen. Put it back once no input is focused.
+const isTyping = () => {
+  const el = document.activeElement;
+  return Boolean(el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable));
+};
+function resetPageShift() {
+  if (isTyping()) return;
+  if (window.scrollY || window.scrollX || document.documentElement.scrollTop || document.body.scrollTop) window.scrollTo(0, 0);
+}
+document.addEventListener('focusout', () => setTimeout(resetPageShift, 60));
+window.addEventListener('scroll', resetPageShift, { passive: true });
+if (window.visualViewport) window.visualViewport.addEventListener('resize', () => setTimeout(resetPageShift, 60));
+document.addEventListener('visibilitychange', () => { if (!document.hidden) resetPageShift(); });
 
 async function loadProgram() {
   try {

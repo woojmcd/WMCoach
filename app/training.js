@@ -6,7 +6,7 @@ import { newId } from './seed.js';
 import { planDay, trainingCalendar, roundToIncrement } from '../coach/progression.js';
 import { dayForWeekday } from '../coach/program.js';
 import { isoWeekday, stamp } from '../coach/time.js';
-import { remoteState, todaysTargets, weekTargets, healthMissing } from './remote.js';
+import { remoteState, todaysTargets, weekTargets, healthMissing, healthShortcut } from './remote.js';
 import { cardioForDay, cardioItems, rxForWeek } from '../coach/cardio.js';
 import { weekDates } from '../coach/time.js';
 
@@ -25,7 +25,9 @@ export async function loadTraining(ctx) {
   const addons = targets ? targets.addons || [] : [];
   return {
     sessions, prefs, stairs, today, programStart, week, deload,
-    readiness, addons, healthMissing: healthMissing(remote, today),
+    readiness, addons, healthMissing: healthMissing(remote, today), healthUrl: healthShortcut(remote, today),
+    // yesterday in review + today's focus, from this morning's run (Walter, 2026-10-13)
+    daily: targets && targets.daily ? targets.daily : null,
     cardio: cardioOnPhone(ctx, { today, remote, targets, stairs, plans: live(plansAll), weighins: live(weighins), readiness, addons }),
   };
 }

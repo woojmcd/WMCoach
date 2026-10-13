@@ -48,8 +48,8 @@ export function sessionList(session, program) {
 }
 
 // Today's Health file isn't in the repo yet (spec §12): run the Shortcut by hand.
-export function healthChip() {
-  return h('a', { class: 'health-chip', href: SHORTCUT_URL }, icon('refresh', { size: 16 }), 'Sync Health');
+export function healthChip(href = SHORTCUT_URL) {
+  return h('a', { class: 'health-chip', href }, icon('refresh', { size: 16 }), 'Sync Health');
 }
 
 // Endurance add-on (spec §8.5): grab-and-go carbs, separate from the prepped meals.

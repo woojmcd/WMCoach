@@ -109,7 +109,7 @@ export async function render(screen, ctx) {
   const change = h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Change workout', onClick: () => chooseDay(ctx, today) }, icon('week'));
   screen.append(header({ label, title: day.name, right: change }));
 
-  if (training.healthMissing) screen.append(h('div', { class: 'chip-row' }, healthChip(), h('span', { class: 'muted xsmall' }, 'Today’s recovery data isn’t in yet.')));
+  if (training.healthMissing) screen.append(h('div', { class: 'chip-row' }, healthChip(training.healthUrl), h('span', { class: 'muted xsmall' }, 'Today’s recovery data isn’t in yet.')));
   for (const a of training.addons) screen.append(addonCard(a));
 
   // notices
@@ -439,7 +439,7 @@ function chooseDay(ctx, today) {
 
 async function renderOpenDay(screen, ctx, training) {
   const today = training.today;
-  if (training.healthMissing) screen.append(h('div', { class: 'chip-row' }, healthChip(), h('span', { class: 'muted xsmall' }, 'Today’s recovery data isn’t in yet.')));
+  if (training.healthMissing) screen.append(h('div', { class: 'chip-row' }, healthChip(training.healthUrl), h('span', { class: 'muted xsmall' }, 'Today’s recovery data isn’t in yet.')));
   screen.append(header({ label: `Today · ${WEEKDAYS[isoWeekday(today) - 1]} ${formatDayMonth(today)}`, title: 'Open day' }));
   for (const a of training.addons) screen.append(addonCard(a));
   screen.append(
