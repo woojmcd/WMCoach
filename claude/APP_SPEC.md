@@ -109,7 +109,7 @@ Everything that means "today", "this morning" or "Saturday" is in **Walter's cur
 - Install instructions on first launch in a browser tab: Safari → Share → Add to Home Screen. Explain that Safari-tab data and home-screen-app data are stored separately, so log only in the installed app.
 - **Mobile-first:** portrait, minimum width 320 pt, no horizontal scroll ever (tables become stacked cards; charts fit the container width), tap targets ≥ 44×44 pt, numeric inputs use `inputmode="decimal"`, steppers instead of the keyboard wherever possible.
 
-- **Scrolling:** the page itself never scrolls; only the app's content area does. On iPhone home-screen apps, a scrolling page can be left shifted after the keyboard closes, which strands the fixed tab bar mid-screen (seen 2026-10-12). The app also puts the page back if iOS shifts it. The tab bar always reaches the screen's bottom edge: if iOS ends the layout higher, the app measures the gap and fills it (Settings shows the numbers).
+- **Scrolling:** the page itself never scrolls; only the app's content area does. On iPhone home-screen apps, a scrolling page can be left shifted after the keyboard closes, which strands the fixed tab bar mid-screen (seen 2026-10-12). The app also puts the page back if iOS shifts it. If iOS ends the app above the screen's bottom edge, nothing can be drawn below that line. The tab bar then sits on the app's edge, whole, without the home-indicator padding (Settings → Screen shows the numbers).
 
 ### 3a. Visual design: minimalist, high-end, dark
 
