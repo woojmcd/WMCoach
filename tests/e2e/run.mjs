@@ -472,7 +472,7 @@ try {
     await c.close();
   }
   {
-    step('Saturday: open day with the one-tap Stairs ✓');
+    step('Saturday: open day with the cardio reminder (recorded in Strava, nothing to log here)');
     const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: trained });
     const p = await c.newPage();
     watch(p);
@@ -480,8 +480,9 @@ try {
     await p.goto(`${url}#/log`);
     await p.getByText('Continue in Safari (testing only)').click();
     await p.locator('.title', { hasText: 'Open day' }).waitFor();
-    await p.getByRole('button', { name: 'Stairs ✓' }).click();
-    await p.locator('.toast.show', { hasText: 'Stairs 30 min logged' }).waitFor();
+    await p.locator('.cardio-card').waitFor();
+    assert.equal(await p.locator('.cardio-card .stepper').count(), 0, 'no cardio logging: Walter records it in Strava (2026-10-13)');
+    await p.getByRole('button', { name: 'Lift today instead' }).waitFor();
     await p.waitForTimeout(300);
     await shot(p, 'c09-open-day-stairs', S3);
     await c.close();
@@ -576,10 +577,22 @@ try {
     await page.evaluate(() => document.getElementById('app').scrollTo(0, 0));
     await page.waitForTimeout(300);
     await shot(page, 'e01-week-review', { ...S5, full: true });
-    await review.getByRole('button', { name: 'Hide details' }).click();
-    assert.equal(await review.locator('.summary-points').isHidden(), true);
-    await review.getByRole('button', { name: 'Read the full review' }).click();
+    // a box that opens and closes from its header; it starts closed (Walter, 2026-10-13)
+    const head = review.locator('.summary-head');
+    assert.equal(await head.getAttribute('aria-expanded'), 'false');
+    assert.equal(await review.locator('.summary-body').isHidden(), true);
+    await shot(page, 'h04-week-review-closed', { stage: 'stage-8' });
+    await head.click();
     assert.equal(await review.locator('.summary-points').isVisible(), true);
+    assert.equal(await head.getAttribute('aria-expanded'), 'true');
+    await shot(page, 'h05-week-review-open', { stage: 'stage-8' });
+    await head.click();
+    assert.equal(await review.locator('.summary-body').isHidden(), true);
+    // this phone remembers how it was left
+    await head.click();
+    await tab(page, 'Log');
+    await tab(page, 'Week');
+    assert.equal(await page.locator('.card.summary:not(.daily) .summary-body').isVisible(), true, 'still open after switching tabs');
     await noHorizontalScroll(page, 'week review');
   }
   const afterReview = await context.storageState({ indexedDB: true });
@@ -790,7 +803,7 @@ try {
   }
 
   const S7 = { stage: 'stage-7' };
-  step('Cardio: today\'s prescription with the lifts, heart rate, Stairs ✓, the week\'s tracker');
+  step('Cardio: today\'s prescription with the lifts, heart rate, the week\'s tracker; each day\'s cardio on its own line');
   {
     const tue = '2026-10-20';
     const rx = baseCardio('bulk');
@@ -825,24 +838,32 @@ try {
     await shot(p, 'g01-log-cardio', { ...S7, full: true });
     await card.scrollIntoViewIfNeeded();
     await card.screenshot({ path: STAGE === 'stage-7' ? `${OUT}g02-cardio-card.png` : `${tmp}/x.png` });
-    await card.getByRole('button', { name: 'Stairs ✓' }).click();
-    await toastText(p, 'Stairs 25 min logged');
-    await p.locator('.cardio-card.done .badge', { hasText: 'Done' }).waitFor();
-    assert.match(await p.locator('.cardio-card').textContent(), /This week: 2 of 2 sessions/);
-    await p.locator('.cardio-card').scrollIntoViewIfNeeded();
-    await p.locator('.cardio-card').screenshot({ path: STAGE === 'stage-7' ? `${OUT}g03-cardio-done.png` : `${tmp}/x.png` });
+    // a reminder only: cardio is recorded in Strava (Walter, 2026-10-13)
+    assert.equal(await card.locator('.stepper').count(), 0);
+    assert.match(text, /Record it in Strava: it counts here after the next morning’s sync\./);
+    // switching to another day's workout, as on open days
+    await p.getByRole('button', { name: 'Switch workout' }).click();
+    await p.locator('.sheet.show', { hasText: 'Which workout?' }).waitFor();
+    await p.locator('.sheet.show .item', { hasText: 'Upper Push #2' }).click();
+    await p.locator('.title', { hasText: 'Upper Push #2' }).waitFor();
+    assert.match(await p.locator('.switch-row').textContent(), /Today is Tue: doing Upper Push #2 instead\./);
+    await shot(p, 'h06-log-switched-workout', { stage: 'stage-8' });
+    await p.getByRole('button', { name: 'Switch workout' }).click();
+    await p.locator('.sheet.show .item', { hasText: 'Pull #1' }).first().click();
+    await p.locator('.title', { hasText: 'Pull #1' }).waitFor();
 
-    await p.locator('.toast.show').waitFor({ state: 'detached', timeout: 6000 }).catch(() => {});
     await tab(p, 'Week');
-    const wk = p.locator('section[aria-label="Cardio this week"]');
-    await wk.waitFor();
-    assert.match(await wk.textContent(), /2 × 25 min stairs \(Tue, Thu\)/);
-    assert.match(await p.locator('.day-row', { hasText: 'Thu' }).textContent(), /\+ 25 min stairs/);
-    assert.match(await p.locator('.day-row.today').textContent(), /25 min stairs ✓/);
-    assert.match(await p.locator('.day-row', { hasText: 'Mon' }).textContent(), /35 min run \(Strava\) ✓/);
+    // each day's cardio on its own line under the workout; no separate weekly box
+    assert.equal(await p.locator('section[aria-label="Cardio this week"]').count(), 0);
+    assert.equal(await p.locator('.day-row', { hasText: 'Thu' }).locator('.meta.cardio').textContent(), 'Cardio · 25 min stairs');
+    assert.equal(await p.locator('.day-row.today .meta.cardio').textContent(), 'Cardio · 25 min stairs, Zone 2');
+    assert.equal(await p.locator('.day-row', { hasText: 'Mon' }).locator('.meta.cardio').textContent(), 'Cardio · 35 min run (Strava) ✓');
+    assert.equal(await p.locator('.day-row', { hasText: 'Wed' }).locator('.meta.cardio').count(), 0, 'no cardio on legs day');
     await noHorizontalScroll(p, 'Week with cardio');
     await shot(p, 'g04-week-cardio', { ...S7, full: true });
-    await wk.getByRole('button', { name: 'Why this cardio' }).click();
+    await shot(p, 'h07-week-cardio-lines', { stage: 'stage-8', full: true });
+    await tab(p, 'Log');
+    await p.locator('.cardio-card').getByRole('button', { name: 'Why this cardio' }).click();
     await p.locator('.sheet.show', { hasText: 'Your cardio this week' }).waitFor();
     await p.waitForTimeout(300);
     await shot(p, 'g05-why-cardio', S7);
@@ -895,13 +916,12 @@ try {
     assert.doesNotMatch(await card.locator('.headline').textContent(), /amber/, 'the short night is said once');
     assert.match(text, /Focus today/);
     assert.match(text, /Today.*Legs and abs/);
-    assert.equal(await card.locator('.summary-points').isHidden(), true, 'details fold by default');
+    assert.equal(await card.locator('.summary-points').isVisible(), true, 'the daily card is always fully open');
+    assert.equal(await card.getByRole('button').count(), 0, 'nothing to open or close');
     await noHorizontalScroll(p, 'Week with the daily summary');
     await p.waitForTimeout(2500);
     await shot(p, 'h01-week-daily-summary', S8);
-    await card.getByRole('button', { name: 'See the details' }).click();
-    await p.waitForTimeout(800); // a background pull may re-render the tab; the card stays open
-    await card.locator('.summary-points').waitFor();
+    await p.waitForTimeout(800); // a background pull may re-render the tab
     assert.match(await card.locator('.summary-points').textContent(), /Pull #1: 9 of 10 sets logged\. Beat last time on 5: Assisted Pullups 45 assist × 10 \(was 50 assist × 10\);.*; and 2 more\./);
     await card.screenshot({ path: STAGE === 'stage-8' ? `${OUT}h02-daily-details.png` : `${tmp}/x.png` });
     // scrolled to the very end, the tab bar stays on the bottom edge and the page itself hasn't moved
@@ -910,6 +930,15 @@ try {
     const bar = await p.evaluate(() => ({ bottom: Math.round(document.querySelector('.tabbar').getBoundingClientRect().bottom), h: window.innerHeight, page: window.scrollY, app: document.getElementById('app').scrollTop }));
     assert.ok(bar.app > 0, 'the content scrolled');
     assert.deepEqual([bar.bottom, bar.page], [bar.h, 0], 'tab bar on the bottom edge');
+    // when iOS ends the layout above the screen's edge (seen 2026-10-13, ~55 pt), the measured gap
+    // (--vp-gap) carries the tab bar and the scroll area down to the real bottom
+    const filled = await p.evaluate(() => {
+      document.documentElement.style.setProperty('--vp-gap', '55px');
+      const r = { bar: Math.round(document.querySelector('.tabbar').getBoundingClientRect().bottom), app: Math.round(document.getElementById('app').getBoundingClientRect().bottom), h: innerHeight };
+      document.documentElement.style.setProperty('--vp-gap', '0px');
+      return r;
+    });
+    assert.deepEqual([filled.bar, filled.app], [filled.h + 55, filled.h + 55]);
     // a page shift left behind by the keyboard (iOS) is put back once no input is focused
     const shifted = await p.evaluate(async () => {
       const de = document.documentElement;

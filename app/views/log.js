@@ -108,6 +108,14 @@ export async function render(screen, ctx) {
   const label = `Today · ${WEEKDAYS[isoWeekday(today) - 1]} ${formatDayMonth(today)} · ${training.week === 0 ? 'lead-in week' : `week ${training.week}`}`;
   const change = h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Change workout', onClick: () => chooseDay(ctx, today) }, icon('week'));
   screen.append(header({ label, title: day.name, right: change }));
+  // switching to another day's workout, as on open days (Walter, 2026-10-13); once a set is
+  // logged the session is under way, so the switch stays in the calendar icon only
+  if (session.status === 'draft') {
+    const other = day.dow !== isoWeekday(today) ? `Today is ${WEEKDAYS[isoWeekday(today) - 1]}: doing ${day.name} instead. ` : '';
+    screen.append(h('div', { class: 'switch-row' },
+      other ? h('span', { class: 'muted xsmall' }, other) : null,
+      h('button', { type: 'button', class: 'link-btn', onClick: () => chooseDay(ctx, today) }, 'Switch workout')));
+  }
 
   if (training.healthMissing) screen.append(h('div', { class: 'chip-row' }, healthChip(training.healthUrl), h('span', { class: 'muted xsmall' }, 'Today’s recovery data isn’t in yet.')));
   for (const a of training.addons) screen.append(addonCard(a));
@@ -444,7 +452,6 @@ async function renderOpenDay(screen, ctx, training) {
   for (const a of training.addons) screen.append(addonCard(a));
   screen.append(
     cardioCard(ctx, training, { openDay: true }),
-    h('p', { class: 'muted xsmall', style: 'margin:12px 0 0' }, 'Stairs ✓ is for sessions that don’t reach Strava. Runs, rides and swims come from Strava with the morning run.'),
     h('div', { class: 'center', style: 'margin-top:16px' },
       h('button', { type: 'button', class: 'link-btn', onClick: () => chooseDay(ctx, today) }, 'Lift today instead')));
 }

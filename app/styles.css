@@ -52,8 +52,12 @@ html, body {
 
 /* The page itself never scrolls: #app is the scroll container (Walter, 2026-10-13).
    On iPhone home-screen apps, a scrolling page can be left shifted after the keyboard
-   closes, and the fixed tab bar and rest timer then float mid-screen until a relaunch. */
-html, body { height: 100%; overflow: hidden; }
+   closes, and the fixed tab bar and rest timer then float mid-screen until a relaunch.
+   The body stays exactly one screen tall (not height:100% + overflow:hidden: with those,
+   iOS ended the layout ~55 pt above the screen bottom and the tab bar sat on that line).
+   --vp-gap: any gap iOS still leaves at the bottom, measured by fitScreen() in main.js;
+   everything pinned to the bottom extends down into it. */
+body { min-height: 100vh; min-height: 100dvh; overflow-x: hidden; }
 
 button, input, select, textarea { font: inherit; color: inherit; }
 button { -webkit-user-select: none; user-select: none; touch-action: manipulation; }
@@ -67,6 +71,7 @@ a { color: var(--accent); }
 #app {
   position: fixed;
   inset: 0;
+  bottom: calc(-1 * var(--vp-gap, 0px));
   overflow-x: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -288,7 +293,7 @@ h2.section { margin: 32px 0 12px; }
 
 .tabbar {
   position: fixed;
-  left: 0; right: 0; bottom: 0;
+  left: 0; right: 0; bottom: calc(-1 * var(--vp-gap, 0px));
   z-index: 20;
   display: flex;
   justify-content: space-around;
@@ -408,7 +413,7 @@ h2.section { margin: 32px 0 12px; }
 .sheet {
   position: fixed;
   z-index: 50;
-  left: 0; right: 0; bottom: 0;
+  left: 0; right: 0; bottom: calc(-1 * var(--vp-gap, 0px));
   max-height: calc(100dvh - var(--safe-top) - 24px);
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
@@ -538,7 +543,7 @@ textarea.input { min-height: 88px; padding: 12px 14px; resize: vertical; line-he
 .rest {
   position: fixed; z-index: 30;
   left: calc(12px + var(--safe-left)); right: calc(12px + var(--safe-right));
-  bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 10px);
+  bottom: calc(var(--tabbar-h) + var(--safe-bottom) + 10px - var(--vp-gap, 0px));
   display: flex; align-items: center; gap: 6px;
   padding: 6px 6px 6px 16px;
   border-radius: 18px;
@@ -668,3 +673,15 @@ body.resting .screen { padding-bottom: calc(var(--tabbar-h) + var(--safe-bottom)
 .cardio-week span.today { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
 .card.summary .focus.today { margin-top: 8px; background: transparent; border: 1px solid var(--hairline); }
 .card.summary .focus.today .label { color: var(--text-2); }
+/* Week in review opens and closes from its header */
+.summary-head { display: flex; align-items: flex-start; gap: 12px; width: 100%; padding: 0; margin: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; font: inherit; }
+.summary-head .label { display: block; }
+.summary-head .headline { display: block; margin: 8px 0 0; font-size: 17px; line-height: 1.45; color: var(--text); }
+.summary-head .chev { flex: 0 0 auto; margin-top: 1px; color: var(--text-2); transform: rotate(90deg); transition: transform var(--dur) var(--ease); }
+.summary-head[aria-expanded="true"] .chev { transform: rotate(-90deg); }
+.summary-body[hidden] { display: none; }
+.day-row .meta.cardio { margin-top: 2px; }
+.day-row .meta.cardio.done { color: var(--accent); }
+.day-row .meta.cardio.missed { color: var(--text-3); }
+.switch-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: -4px 0 12px; }
+.switch-row .link-btn { padding: 0; margin-left: auto; white-space: nowrap; flex: 0 0 auto; }

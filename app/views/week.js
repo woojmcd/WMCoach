@@ -6,8 +6,7 @@ import { focusCheckin } from './body.js';
 import { checkinState, currentPhase, realPhases } from '../../coach/phase.js';
 import { weeklySummary, activeSummaryCheckin } from '../../coach/summary.js';
 import { header, note, sessionList, addonCard } from './common.js';
-import { cardioMeta, weekTracker, whySheet } from './cardio.js';
-import { cardioText } from '../../coach/cardio.js';
+import { cardioMeta } from './cardio.js';
 import { loadTraining, planFor, progressCount } from '../training.js';
 import { planItem } from './log.js';
 import { ensurePlans, planNotice } from '../meal-plans.js';
@@ -17,7 +16,7 @@ import { dayForWeekday } from '../../coach/program.js';
 const OPEN_DAY = 'Rest, or runs, rides, swims and social sessions, read from Strava.';
 // Same values as the seeded model (brief §5); used only if the model record is missing.
 const DEFAULT_BANDS = { cut: { target: [-0.75, -0.5], slow_limit: -0.4, cap: -1.0 }, bulk: { target: [0.1, 0.2], cap: 0.35 }, maintenance: { target: [-0.1, 0.1] } };
-const ui = { summaryOpen: {}, dailyOpen: {} };
+const ui = { summaryOpen: {} };
 
 export async function render(screen, ctx) {
   const today = ctx.today();
@@ -33,7 +32,7 @@ export async function render(screen, ctx) {
 
   const cardioLine = (date) => {
     const c = cardioMeta(training.cardio, date, today);
-    return c ? h('p', { class: 'small', style: 'margin:0 0 8px' }, `Cardio: ${c.replace(/^\+ /, '')}`) : null;
+    return c ? h('p', { class: 'small', style: 'margin:0 0 8px' }, c.text.replace(' · ', ': ')) : null;
   };
   const openDay = (date) => {
     const day = dayOf(date);
@@ -88,13 +87,13 @@ export async function render(screen, ctx) {
     } else if (day && day.exercises.length) {
       meta = `${day.exercises.length} exercises${day.est_min ? ` · ~${day.est_min} min` : ''}`;
     } else {
-      meta = cardioMeta(training.cardio, d, today) ? null : 'Rest, runs, rides, social';
+      meta = 'Rest, runs, rides, social';
     }
+    // cardio on its own line under the workout (Walter, 2026-10-13)
     const cm = cardioMeta(training.cardio, d, today);
-    meta = [meta, cm].filter(Boolean).join(' · ');
     return h('button', { type: 'button', class: `item day-row${d === today ? ' today' : ''}${logged.length ? ' logged' : ''}`, onClick: () => openDay(d) },
       h('span', { class: 'when' }, WEEKDAYS[isoWeekday(d) - 1]),
-      h('span', { class: 'grow' }, h('div', { class: 'name' }, day ? day.name : '—'), h('div', { class: 'meta' }, meta)),
+      h('span', { class: 'grow' }, h('div', { class: 'name' }, day ? day.name : '—'), h('div', { class: 'meta' }, meta), cm ? h('div', { class: `meta cardio ${cm.state}` }, cm.text) : null),
       logged.length && logged[logged.length - 1].status === 'finished' ? h('span', { class: 'accent' }, icon('check', { size: 18 })) : null);
   }));
 
@@ -126,20 +125,8 @@ export async function render(screen, ctx) {
     h('div', { class: 'stack' },
       strip,
       rows,
-      training.cardio ? cardioWeekCard(training.cardio, today) : null,
       ctx.program ? null : note('Program not loaded yet: connect once to fetch it.'),
       h('p', { class: 'faint xsmall center' }, `${tzCity(s.tz_current)} time · ${s.tz_mode === 'auto' ? 'follows iPhone' : 'set manually'}`)));
-}
-
-// ---- cardio this week (spec §6.5) ---------------------------------------------------------
-
-function cardioWeekCard(cardio, today) {
-  return h('section', { class: 'card stack-sm cardio-card', 'aria-label': 'Cardio this week' },
-    h('p', { class: 'label', style: 'margin:0' }, 'Cardio this week'),
-    h('div', { class: 'cardio-title' }, cardioText(cardio.rx)),
-    cardio.rx.change ? h('p', { class: 'small accent', style: 'margin:0' }, `New this week (was ${cardio.rx.change.from}).`) : null,
-    weekTracker(cardio, today),
-    h('button', { type: 'button', class: 'link-btn', style: 'align-self:flex-start', onClick: () => whySheet(cardio) }, 'Why this cardio'));
 }
 
 // ---- weekly executive summary ----------------------------------------------------------------
@@ -159,53 +146,50 @@ async function buildSummary(ctx, { today, checkins, training, plans }) {
   });
 }
 
-// Yesterday in review + today's focus (the morning run's targets.daily). The headline,
-// focus and today's plan always show; the per-area details fold.
+// Yesterday in review + today's focus (the morning run's targets.daily). Always fully
+// open (Walter, 2026-10-13): the headline, focus, today's plan and every area.
+const pointList = (points) => h('div', { class: 'summary-points' },
+  points.map((p) => h('div', { class: 'summary-point' },
+    h('span', { class: `dot ${p.tone}`, 'aria-hidden': 'true' }),
+    h('div', { class: 'grow' }, h('div', { class: 'pt-title' }, p.title), h('p', {}, p.text)))));
+
 function dailyCard(d) {
-  const open = Boolean(ui.dailyOpen[d.date]);
-  const details = h('div', { class: 'summary-points', hidden: !open },
-    d.points.map((p) => h('div', { class: 'summary-point' },
-      h('span', { class: `dot ${p.tone}`, 'aria-hidden': 'true' }),
-      h('div', { class: 'grow' }, h('div', { class: 'pt-title' }, p.title), h('p', {}, p.text)))));
-  const toggle = h('button', { type: 'button', class: 'link-btn', 'aria-expanded': String(open) }, open ? 'Hide details' : 'See the details');
-  toggle.addEventListener('click', () => {
-    const now = details.hidden;
-    details.hidden = !now;
-    ui.dailyOpen[d.date] = now;
-    toggle.textContent = now ? 'Hide details' : 'See the details';
-    toggle.setAttribute('aria-expanded', String(now));
-  });
   return h('section', { class: `card summary daily ${d.tone}`, 'aria-label': 'Yesterday in review', style: 'margin-bottom:16px' },
     h('p', { class: 'label' }, `Yesterday · ${d.label}`),
     h('p', { class: 'headline' }, d.headline),
     h('div', { class: 'focus' }, h('span', { class: 'label' }, 'Focus today'), h('span', {}, d.focus)),
     d.today ? h('div', { class: 'focus today' }, h('span', { class: 'label' }, 'Today'), h('span', {}, d.today)) : null,
-    details,
-    toggle);
+    pointList(d.points));
 }
 
+
+// Week in review: a box that opens and closes with a tap anywhere on its header
+// (Walter, 2026-10-13). Starts closed; this phone remembers how each week's was left.
+const reviewKey = (week) => `wm.review.${week}`;
+function reviewOpen(week) {
+  if (week in ui.summaryOpen) return ui.summaryOpen[week];
+  try { return localStorage.getItem(reviewKey(week)) === 'open'; } catch { return false; }
+}
 function summaryCard(sum) {
-  // open on check-in day and the day after; later it folds to the headline (tap to read)
-  const open = ui.summaryOpen[sum.week_of] ?? sum.days_since <= 1;
+  let open = reviewOpen(sum.week_of);
   const range = sum.period.from.slice(5, 7) === sum.period.to.slice(5, 7)
     ? `${Number(sum.period.from.slice(8))}–${formatDayMonth(sum.period.to)}`
     : `${formatDayMonth(sum.period.from)} – ${formatDayMonth(sum.period.to)}`;
-  const details = h('div', { class: 'summary-points', hidden: !open },
-    sum.points.map((p) => h('div', { class: 'summary-point' },
-      h('span', { class: `dot ${p.tone}`, 'aria-hidden': 'true' }),
-      h('div', { class: 'grow' }, h('div', { class: 'pt-title' }, p.title), h('p', {}, p.text)))));
-  const toggle = h('button', { type: 'button', class: 'link-btn', 'aria-expanded': String(open) }, open ? 'Hide details' : 'Read the full review');
-  toggle.addEventListener('click', () => {
-    const now = details.hidden;
-    details.hidden = !now;
-    ui.summaryOpen[sum.week_of] = now;
-    toggle.textContent = now ? 'Hide details' : 'Read the full review';
-    toggle.setAttribute('aria-expanded', String(now));
-  });
-  return h('section', { class: `card summary ${sum.tone}`, 'aria-label': 'Week in review', style: 'margin-bottom:16px' },
-    h('p', { class: 'label' }, `Week in review · ${range}`),
-    h('p', { class: 'headline' }, sum.headline),
+  const id = `review-${sum.week_of}`;
+  const body = h('div', { class: 'summary-body', id, hidden: !open },
     h('div', { class: 'focus' }, h('span', { class: 'label' }, 'Focus'), h('span', {}, sum.focus)),
-    details,
-    toggle);
+    pointList(sum.points));
+  const head = h('button', { type: 'button', class: 'summary-head', 'aria-expanded': String(open), 'aria-controls': id },
+    h('span', { class: 'grow' },
+      h('span', { class: 'label' }, `Week in review · ${range}`),
+      h('span', { class: 'headline' }, sum.headline)),
+    h('span', { class: 'chev', 'aria-hidden': 'true' }, icon('chevron', { size: 18 })));
+  head.addEventListener('click', () => {
+    open = !open;
+    body.hidden = !open;
+    head.setAttribute('aria-expanded', String(open));
+    ui.summaryOpen[sum.week_of] = open;
+    try { localStorage.setItem(reviewKey(sum.week_of), open ? 'open' : 'closed'); } catch { /* private mode: this session only */ }
+  });
+  return h('section', { class: `card summary ${sum.tone}`, 'aria-label': 'Week in review', style: 'margin-bottom:16px' }, head, body);
 }

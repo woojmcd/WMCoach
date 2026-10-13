@@ -59,7 +59,9 @@ The new service worker installs in the background and waits. Walter sees "Update
 ## Layout (iPhone)
 - The page never scrolls: `#app` is a fixed, full-screen scroll container (`app/styles.css`). Use `root.scrollTo` / `scrollIntoView`, never `window.scrollTo`.
 - `resetPageShift()` in `app/main.js` puts the page back when iOS leaves it shifted after the keyboard closes. Before this, the fixed tab bar and rest timer could float mid-screen until a relaunch (Walter, 2026-10-13).
-- e2e checks that the page can't scroll and that the tab bar sits on the bottom edge when scrolled to the end.
+- Don't put `height: 100%` + `overflow: hidden` on html/body. With those, iOS ended the layout about 55 pt above the screen bottom, so the tab bar looked twice as thick (0.8.0). The body is `min-height: 100dvh`.
+- `--vp-gap` (`fitScreen()` in `main.js`, `screenGap()` in `app/layout.js`) is any gap iOS still leaves at the bottom of the full-screen app. The tab bar, rest timer, sheets and `#app` extend down into it. Settings → Screen shows iOS's numbers (screen · layout · gap).
+- e2e checks that the page can't scroll, that the tab bar sits on the bottom edge when scrolled to the end, and that a gap is filled.
 
 ## Records
 - Daily records (weigh-ins, measurements, check-ins, on-plan taps) are written with `saveDaily()` in `app/records.js`: saving again for a date edits that day's entry made in the same zone.
@@ -84,7 +86,8 @@ The new service worker installs in the background and waits. Walter sees "Update
 ## Week in review (weekly executive summary)
 - `weeklySummary()` in `coach/summary.js` (pure; the weekly routine reuses it and adds its macro decision). It reviews the 7 days ending on the check-in, in spec §10 order: adherence, weigh-ins, rate vs the mode's band, training (sessions, main lifts by best-set e1RM, increases, resets), waist vs limbs, biofeedback, then the plan. The headline names the first problem in that order, then the wins; "Focus" is one action.
 - Tone: state the number and what it means. Don't soften a miss (adherence 50 % is "too low to judge anything"), and always report what went well. Days before the first logged session are never "missed".
-- Shown from the check-in through the plan week after it (`summaryVisibleUntil`). Open on check-in day and the day after, folded to the headline later.
+- Shown from the check-in through the plan week after it (`summaryVisibleUntil`).
+- A box that opens and closes with a tap anywhere on its header (`.summary-head`), showing the title and headline when closed (Walter, 2026-10-13). It starts closed, and the phone remembers each week's state in `localStorage` (`wm.review.<week_of>`). The daily "Yesterday" card is always fully open.
 
 ## GitHub sync and notifications (stage 5)
 - `app/sync.js` (engine, works in Node) and `app/sync-ui.js` (queue, badge, Settings, Restore). The phone is the only writer of `data/log/`: monthly files per store (`data/log/<store>/YYYY-MM.json`), single files for phases, exercise prefs, foods and the synced meta (`settings.json`, `onboarding.json`, `push_subscription.json`). Seeded history (`source: "history"`) is not copied; Restore re-seeds it.
@@ -109,7 +112,9 @@ The new service worker installs in the background and waits. Walter sees "Update
   - `baseCardio`, `nextCardio` (the weekly step), `rxForWeek`, `cardioItems`, `cardioForDay`, `zone2`.
 - The weekly dose is stored on the plan record (`plans[].cardio`) and locked with the food. A carried plan keeps it unless the mode changed.
 - In a cut, cardio is the first lever: a stall adds a session (4 → 6 × 30) before carbs come down. That decision is still the week's one change.
-- `targets/today.json` → `cardio` holds today's session, the heart-rate range and the week's done items. The phone recomputes it offline from the week's Strava items in the latest targets plus local Stairs ✓ taps.
+- `targets/today.json` → `cardio` holds today's session, the heart-rate range and the week's done items. The phone recomputes it offline from the week's Strava items in the latest targets (plus any older Stairs ✓ taps).
+- Cardio is recorded in Strava only: the cardio card is a reminder with no logging controls (Walter, 2026-10-13). On the Week tab each day's cardio is its own line under the workout (`cardioMeta` → `{ text, state }`); there is no weekly cardio box.
+- Lift days have a **Switch workout** link under the title until the first set is logged (`chooseDay`).
 - Strava HR zones come from `get_athlete_zones` (routine step 3, saved as `zones` in `.coach/strava.json`) and are kept in `data/model/state.json` → `hr_zones`.
 
 ## Daily summary (stage 8, spec §6.6)
