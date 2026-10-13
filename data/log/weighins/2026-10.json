@@ -11,6 +11,16 @@
       "weight_lb": 175.2,
       "source": "app",
       "updated_utc": "2026-10-09T16:19:36.712Z"
+    },
+    {
+      "id": "w-15504c3b-09e2-43e0-9a7a-1f1f40ebfeff",
+      "local_date": "2026-10-13",
+      "utc": "2026-10-13T15:17:38.466Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 175.8,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-10-13T15:17:38.466Z"
     }
   ]
 }
