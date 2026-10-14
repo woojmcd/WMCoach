@@ -124,6 +124,7 @@ The new service worker installs in the background and waits. Walter sees "Update
 - `dailySummary()` in `coach/daily.js` is pure. The daily run puts it in `targets/today.json` → `daily`, and the Week tab shows it as "Yesterday · <date>" (`dailyCard` in `app/views/week.js`).
   - Yesterday's training, cardio, food tap and weigh-in come from the log and Strava.
   - Last night (sleep, resting HR) and yesterday's steps come from this morning's Health file.
+- Points order (Walter, 2026-10-13): last night, weight, training, cardio, food. The cardio point always ends with today's 3-mile pace: `runBaseline()` + `runPaceToday()` in `coach/cardio.js`. Strava run pace zones are kept in `state.run_zones`.
 - Health re-syncs (§2b):
   - A Health file only counts with recovery data: `hasRecovery()` in `coach/readiness.js`.
   - New numbers since the run rerun readiness, targets and the summary, up to `MAX_HEALTH_RERUNS` (3) a day. The run tracks this in `state.health_seen` and `state.health_reruns`.

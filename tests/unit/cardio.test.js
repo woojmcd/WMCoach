@@ -4,6 +4,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   baseCardio, cardioText, nextCardio, rxForWeek, cardioItems, cardioForDay, parseHrZones, zone2, CUT_LADDER, itemText,
+  parseRunZones, runBaseline, runPaceToday,
 } from '../../coach/cardio.js';
 
 test('base dose by mode: bulk 2 × 25 (Tue, Thu), maintenance 3 × 30, cut 4 × 30', () => {
@@ -136,4 +137,29 @@ test('heart rate: Strava zone 2 from get_athlete_zones, else 60–70 % of his hi
   assert.equal(parseHrZones({ run_zones: mcp.run_zones, power_zones: mcp.power_zones }), null, 'never mistakes pace or power zones for heart rate');
   assert.deepEqual(zone2({ activities: [{ max_hr: 181 }, { max_hr: 176 }, { max_hr: 170 }] }), { lo: 109, hi: 127, source: 'estimate', max_hr: 181 });
   assert.equal(zone2({ activities: [{ max_hr: 181 }] }), null, 'too few sessions to estimate');
+});
+
+test('3-mile pace: baseline from his recent 3-mile road runs, else Strava pace zones; adjusted for readiness', () => {
+  // his Strava runs on 2026-10-13: a 3-mile trail run and a 3-mile road run
+  const runs = [
+    { type: 'TrailRun', local_date: '2026-09-25', distance_km: 4.84, duration_s: 1619 },
+    { type: 'Run', local_date: '2026-10-09', distance_km: 4.85, duration_s: 1380 },
+    { type: 'Run', local_date: '2026-10-10', distance_km: 10, duration_s: 3000 }, // a 10 k doesn't count
+  ];
+  const b = runBaseline({ activities: runs, date: '2026-10-13' });
+  assert.deepEqual([b.s_per_mi, b.source, b.n], [458, 'runs', 1], 'road runs first: 7:38/mi');
+  assert.equal(runBaseline({ activities: runs.slice(0, 1), date: '2026-10-13' }).s_per_mi, 538, 'trail only if no road run');
+  assert.equal(runBaseline({ activities: runs, date: '2027-03-01' }), null, 'older than 90 days');
+  const zones = parseRunZones({ run_zones: [{ min: 0, max: 2.784 }, { min: 2.784, max: 3.234 }, { min: 3.234, max: 3.602 }, { min: 3.602, max: 3.848 }, { min: 3.848, max: 4.093 }, { min: 4.093 }] });
+  assert.deepEqual(zones[5], { min: 4.093, max: -1 });
+  assert.deepEqual([runBaseline({ runZones: zones }).s_per_mi, runBaseline({ runZones: zones }).source], [471, 'zones'], 'tempo-zone midpoint: 7:51/mi');
+
+  const hr = { lo: 126, hi: 156 };
+  assert.equal(runPaceToday({ baseline: b, readiness: { status: 'green', missing: false } }).text, '3-mile pace today: steady, 7:28–7:48/mi (about 22:54). Readiness green. Baseline 7:38/mi from your last 3-mile run.');
+  const amber = runPaceToday({ baseline: b, readiness: { status: 'amber', reason: '5.4 h sleep', missing: false }, hr });
+  assert.deepEqual([amber.kind, amber.lo, amber.hi], ['easy', 518, 548]);
+  assert.match(amber.text, /^3-mile pace today: easy, 8:38–9:08\/mi \(about 26:39\), heart rate 126–156\. Readiness amber \(5\.4 h sleep\)\./);
+  assert.match(runPaceToday({ baseline: b, readiness: { status: 'red', reason: 'resting HR up', missing: false } }).text, /^3-mile run: not today\. Readiness red \(resting HR up\): an easy 20–30 min walk instead\.$/);
+  assert.match(runPaceToday({ baseline: b, readiness: { status: 'green', missing: true } }).text, /Readiness not in yet\./, 'no Health data yet: the steady pace, flagged');
+  assert.match(runPaceToday({ baseline: null }).text, /^3-mile pace: no baseline yet/);
 });
