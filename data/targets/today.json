@@ -2,7 +2,7 @@
   "schema_version": 1,
   "local_date": "2026-10-14",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-14T19:09:23.407Z",
+  "generated_utc": "2026-10-14T19:22:32.926Z",
   "readiness": {
     "status": "green",
     "flags": [],
@@ -10,7 +10,7 @@
     "missing": false,
     "travel": null,
     "hrv_ms": null,
-    "resting_hr": 63,
+    "resting_hr": 70,
     "sleep_h": 7.14166666666667,
     "baseline": {
       "hrv_ms": null,
@@ -388,6 +388,18 @@
     "today": "Legs and abs: 4 to calibrate (log the weight you use).",
     "points": [
       {
+        "key": "recovery",
+        "tone": "good",
+        "title": "Last night",
+        "text": "7.1 h sleep. Resting HR 70 (your average builds over the first few nights). 2,960 steps yesterday. Readiness green."
+      },
+      {
+        "key": "weight",
+        "tone": "good",
+        "title": "Weight",
+        "text": "175.8 lb. Trend 175.4 lb. 2 of the last 7 days: keep going daily."
+      },
+      {
         "key": "training",
         "tone": "good",
         "title": "Training",
@@ -397,26 +409,19 @@
         "key": "cardio",
         "tone": "warn",
         "title": "Cardio",
-        "text": "Prescribed 25 min easy stairs: not done. Week so far: 0 of 2 sessions. It moves to the next free day."
+        "text": "Prescribed 25 min easy stairs: not done. Week so far: 0 of 2 sessions. It moves to the next free day. 3-mile pace today: steady, 7:28–7:48/mi (about 22:54). Readiness green. Baseline 7:38/mi from your last 3-mile run."
       },
       {
         "key": "food",
         "tone": "warn",
         "title": "Food",
         "text": "Off plan. That day is left out of the expenditure estimate, so the macros learn nothing from it. If you meant to tap something else, change it on the Body tab."
-      },
-      {
-        "key": "weight",
-        "tone": "good",
-        "title": "Weight",
-        "text": "175.8 lb. Trend 175.4 lb. 2 of the last 7 days: keep going daily."
-      },
-      {
-        "key": "recovery",
-        "tone": "good",
-        "title": "Last night",
-        "text": "7.1 h sleep. Resting HR 63 (your average builds over the first few nights). 2,960 steps yesterday. Readiness green."
       }
-    ]
+    ],
+    "pace": {
+      "kind": "steady",
+      "lo": 448,
+      "hi": 468
+    }
   }
 }
