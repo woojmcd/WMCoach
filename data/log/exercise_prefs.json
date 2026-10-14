@@ -43,6 +43,30 @@
       "increment_lb": 5,
       "alternates": [],
       "updated_utc": "2026-10-13T00:38:51.001Z"
+    },
+    {
+      "id": "tue-cable-bar-curls",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-14T01:22:58.683Z"
+    },
+    {
+      "id": "tue-hammer-pulldowns",
+      "increment_lb": 5,
+      "alternates": [],
+      "updated_utc": "2026-10-14T01:07:56.362Z"
+    },
+    {
+      "id": "tue-reverse-cable-curls",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-14T01:22:53.062Z"
+    },
+    {
+      "id": "tue-reverse-db-flyes",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-14T01:15:49.226Z"
     }
   ]
 }
