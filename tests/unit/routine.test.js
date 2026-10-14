@@ -149,9 +149,9 @@ test('daily summary: yesterday reviewed in today\'s targets, with today\'s focus
   const t = J(repo, 'data/targets/today.json');
   assert.equal(t.daily.date, '2026-10-11');
   assert.equal(t.daily.label, 'Sun 11 Oct');
-  assert.deepEqual(t.daily.points.map((p) => p.key), ['cardio', 'food', 'weight', 'recovery'], 'Sunday: an open day, so no training to judge');
-  assert.match(t.daily.points[0].text, /^Prescribed 25 min easy stairs: not done\. Week so far: 0 of 2 sessions\. The week ended 2 sessions short\.$/, 'two behind by Sunday: a make-up was due');
-  assert.equal(t.daily.points[1].tone, 'good', 'on plan');
+  assert.deepEqual(t.daily.points.map((p) => p.key), ['recovery', 'weight', 'cardio', 'food'], 'Sunday: an open day, so no training to judge');
+  assert.match(t.daily.points[2].text, /^Prescribed 25 min easy stairs: not done\. Week so far: 0 of 2 sessions\. The week ended 2 sessions short\. 3-mile pace: no baseline yet\./, 'two behind by Sunday: a make-up was due');
+  assert.equal(t.daily.points[3].tone, 'good', 'on plan');
   assert.match(t.daily.today, /^Push #1: \d+ to calibrate \(log the weight you use\)\./, 'first week: calibration sessions');
   assert.match(t.daily.headline, /^No recovery data|^Good day|On plan|weighed in/);
 });

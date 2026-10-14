@@ -238,3 +238,64 @@ export function plannedOn(rx, date) {
   return Boolean(rx && rx.days.includes(isoWeekday(date)));
 }
 
+
+// ---- 3-mile pace (Walter, 2026-10-13) ------------------------------------------------------
+// A daily baseline for a 3-mile run, set from his own recent 3-mile Strava runs (road first),
+// else Strava's run pace zones, then adjusted for this morning's readiness:
+// green → steady at baseline · amber → easy (60–90 s/mi slower, Zone 2 HR) · red → walk.
+export const MILE_KM = 1.609344;
+export const PACE_MILES = 3;
+const ROAD_RUNS = new Set(['Run', 'VirtualRun']);
+const RUNS = new Set(['Run', 'VirtualRun', 'TrailRun']);
+
+// Strava's get_athlete_zones run pace zones ({ min, max } in m/s, the top one open).
+export function parseRunZones(x) {
+  const z = x && (x.run_zones || (x.running && x.running.zones) || null);
+  if (!Array.isArray(z) || z.length < 4 || !z.every((r) => r && Number.isFinite(Number(r.min)))) return null;
+  return z.map((r) => ({ min: Number(r.min), max: Number.isFinite(Number(r.max)) && r.max !== null ? Number(r.max) : -1 }));
+}
+
+const secPerMile = (a) => (a.duration_s || 0) / ((a.distance_km || 0) / MILE_KM);
+export const paceText = (s) => `${Math.floor(Math.round(s) / 60)}:${String(Math.round(s) % 60).padStart(2, '0')}`;
+const timeText = (s) => paceText(s * PACE_MILES);
+const median = (xs) => { const v = [...xs].sort((a, b) => a - b); const m = Math.floor(v.length / 2); return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2; };
+
+// → { s_per_mi, source: 'runs' | 'zones', n, text } or null
+export function runBaseline({ activities = [], runZones = null, date = '9999-12-31', days = 90 } = {}) {
+  const from = new Date(Date.parse(`${date}T00:00:00Z`) - days * 86400000).toISOString().slice(0, 10);
+  const threeMile = activities.filter((a) => a && RUNS.has(a.type) && a.local_date >= from && a.local_date <= date
+    && a.distance_km >= 2.5 * MILE_KM && a.distance_km <= 3.5 * MILE_KM && a.duration_s > 0)
+    .sort((a, b) => (a.local_date < b.local_date ? -1 : 1));
+  const road = threeMile.filter((a) => ROAD_RUNS.has(a.type));
+  const use = (road.length ? road : threeMile).slice(-5);
+  if (use.length) {
+    const s = median(use.map(secPerMile));
+    return { s_per_mi: Math.round(s), source: 'runs', n: use.length, text: `your last ${use.length === 1 ? '3-mile run' : `${use.length} 3-mile runs`}${road.length ? '' : ' (trail)'}` };
+  }
+  if (runZones && runZones.length >= 3 && runZones[2].max > runZones[2].min) {
+    // Strava's tempo zone (zone 3) midpoint, from its pace estimate
+    const mps = (runZones[2].min + runZones[2].max) / 2;
+    return { s_per_mi: Math.round((MILE_KM * 1000) / mps), source: 'zones', n: 0, text: 'your Strava pace zones' };
+  }
+  return null;
+}
+
+// Today's 3-mile recommendation. → { kind: 'steady' | 'easy' | 'walk' | null, lo, hi, text }
+export function runPaceToday({ baseline = null, readiness = null, hr = null } = {}) {
+  const status = readiness && !readiness.missing ? readiness.status : 'green';
+  if (status === 'red') {
+    return { kind: 'walk', lo: null, hi: null, text: `3-mile run: not today. Readiness red${readiness.reason ? ` (${readiness.reason})` : ''}: an easy 20–30 min walk instead.` };
+  }
+  if (!baseline) {
+    return { kind: null, lo: null, hi: null, text: '3-mile pace: no baseline yet. Record a 3-mile run on Strava and it sets one.' };
+  }
+  const b = baseline.s_per_mi;
+  const from = `Baseline ${paceText(b)}/mi from ${baseline.text}.`;
+  if (status === 'amber') {
+    const lo = b + 60; const hi = b + 90;
+    const hrText = hr ? `, heart rate ${hr.lo}–${hr.hi}` : '';
+    return { kind: 'easy', lo, hi, text: `3-mile pace today: easy, ${paceText(lo)}–${paceText(hi)}/mi (about ${timeText((lo + hi) / 2)})${hrText}. Readiness amber${readiness.reason ? ` (${readiness.reason})` : ''}. ${from}` };
+  }
+  const lo = b - 10; const hi = b + 10;
+  return { kind: 'steady', lo, hi, text: `3-mile pace today: steady, ${paceText(lo)}–${paceText(hi)}/mi (about ${timeText(b)}). Readiness ${readiness && !readiness.missing ? 'green' : 'not in yet'}. ${from}` };
+}

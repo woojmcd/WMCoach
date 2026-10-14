@@ -20,7 +20,7 @@ import { dailySummary } from './daily.js';
 import { planWeekStart } from './meals.js';
 import { adherenceFromTaps, MODE_LABEL } from './phase.js';
 import {
-  baseCardio, nextCardio, rxForWeek, cardioItems, cardioForDay, parseHrZones, zone2, cardioText,
+  baseCardio, nextCardio, rxForWeek, cardioItems, cardioForDay, parseHrZones, parseRunZones, zone2, cardioText,
 } from './cardio.js';
 
 export const ROUTINE_SCHEMA = 1;
@@ -144,6 +144,8 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
   // ---- heart-rate zones from Strava (spec §6.5), kept in the model ----
   const zonesFetched = kind === 'daily' && stravaFetched && !Array.isArray(stravaFetched) ? parseHrZones(stravaFetched.zones) : null;
   if (zonesFetched) state.hr_zones = { zones: zonesFetched, updated_local_date: today };
+  const runZonesFetched = kind === 'daily' && stravaFetched && !Array.isArray(stravaFetched) ? parseRunZones(stravaFetched.zones) : null;
+  if (runZonesFetched) state.run_zones = { zones: runZonesFetched, updated_local_date: today };
 
   // ---- readiness + today's targets (spec §6.3, §6.2) ----
   const day = program ? dayForWeekday(program, isoWeekday(today)) : null;
@@ -171,6 +173,7 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
     date: yesterday, today, program, sessions: live(log.sessions), programStart: cal.programStart, activities,
     stairs: live(log.stairs), health, readiness: r, weighins: [...appWeighins, ...healthWeights], series,
     taps: live(log.adherence), plans: allPlans, rx: rxForWeek(allPlans, yesterday, mode), hr: cardioToday.hr,
+    runZones: state.run_zones ? state.run_zones.zones : null,
     mode, units: settings.units || 'lb', stepFloor: settings.step_floor || 8000,
     todayPlan: { day, planned, deload: cal.deload.isDeload, cardio: cardioToday },
   });

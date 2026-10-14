@@ -328,7 +328,9 @@ The coach prescribes cardio as part of each day's workout. Strava records what h
 ### 6.6 Daily summary (Walter, 2026-10-13)
 Each morning the Week tab opens on **Yesterday · <date>**: an executive summary of the previous day and the focus for today. It's pure code in `coach/daily.js`, computed by the daily run into `targets/today.json` → `daily`, and recomputed when Health data is re-synced (§2b). The voice is the weekly review's (§10): the numbers first, no softening, always what went well, then one thing to do.
 - **Always fully open** (Walter, 2026-10-13). By contrast, the Week in review is a box that opens and closes with a tap on its header; it starts closed and the phone remembers how each week's was left.
-- **Yesterday, by area** (each with a good / warn / bad dot):
+- **Yesterday, by area** (each with a good / warn / bad dot), in this order (Walter, 2026-10-13): last night, weight, training, cardio, food. The cardio area always ends with **today's 3-mile pace**:
+  - Baseline: the median pace of his last 3-mile Strava runs (2.5–3.5 mi, last 90 days, up to 5, road runs before trail). Without one, the midpoint of Strava's tempo pace zone (`get_athlete_zones` run zones, kept in `state.run_zones`).
+  - Readiness green: steady, baseline ± 10 s/mi. Amber: easy, baseline + 60–90 s/mi, at the Zone 2 heart rate. Red: no run, an easy 20–30 min walk.
 
   | Area | What it says |
   |---|---|

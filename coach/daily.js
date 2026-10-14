@@ -9,7 +9,7 @@
 import { addDays, isoWeekday, weekDates, formatDayMonth, WEEKDAYS } from './time.js';
 import { historyFor } from './progression.js';
 import { dayForWeekday } from './program.js';
-import { cardioItems, cardioForDay, itemText } from './cardio.js';
+import { cardioItems, cardioForDay, itemText, runBaseline, runPaceToday } from './cardio.js';
 import { planKcalByDate } from './tdee.js';
 
 export const DAILY_SCHEMA = 1;
@@ -268,10 +268,15 @@ function verdict({ training, cardio, food, weight, recovery, readiness, todayCar
 export function dailySummary({
   date, today = addDays(date, 1), program = null, sessions = [], programStart = null, activities = [], stairs = [],
   health = {}, readiness = null, weighins = [], series = [], taps = [], plans = [], rx = null, hr = null,
-  mode = 'bulk', units = 'lb', stepFloor = 8000, todayPlan = {},
+  runZones = null, mode = 'bulk', units = 'lb', stepFloor = 8000, todayPlan = {},
 }) {
   const training = trainingDay({ date, program, sessions, activities, programStart });
   const cardio = cardioDay({ date, rx, activities, stairs, hr });
+  // today's 3-mile pace from his baseline and this morning's readiness (Walter, 2026-10-13)
+  const pace = runPaceToday({ baseline: runBaseline({ activities, runZones, date }), readiness, hr });
+  const cardioPoint = cardio
+    ? { ...cardio.point, text: `${cardio.point.text} ${pace.text}` }
+    : { key: 'cardio', tone: 'info', title: 'Cardio', text: `Nothing prescribed or done. ${pace.text}` };
   const food = foodDay({ date, taps, plans });
   const weight = weightDay({ date, weighins, series, units });
   const recovery = recoveryNight({ health: health[today] || null, readiness, mode, stepFloor });
@@ -284,6 +289,8 @@ export function dailySummary({
     headline: v.headline,
     focus: v.focus,
     today: todayLine({ ...todayPlan, readiness }),
-    points: [training && training.point, cardio && cardio.point, food.point, weight.point, recovery.point].filter(Boolean),
+    // order (Walter, 2026-10-13): last night first, then weight, training, cardio, food
+    points: [recovery.point, weight.point, training && training.point, cardioPoint, food.point].filter(Boolean),
+    pace: { kind: pace.kind, lo: pace.lo, hi: pace.hi },
   };
 }

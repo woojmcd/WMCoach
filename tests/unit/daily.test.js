@@ -113,7 +113,9 @@ test('headline and focus: the first problem first, then what went well; a clean 
   assert.equal(good.tone, 'good');
   assert.equal(good.headline, 'Good day: every set logged, on plan, weighed in.');
   assert.equal(good.label, 'Mon 12 Oct');
-  assert.deepEqual(good.points.map((p) => p.key), ['training', 'food', 'weight', 'recovery']);
+  // Walter's order (2026-10-13): last night, weight, training, cardio, food
+  assert.deepEqual(good.points.map((p) => p.key), ['recovery', 'weight', 'training', 'cardio', 'food']);
+  assert.match(good.points[3].text, /^Nothing prescribed or done\. 3-mile pace: no baseline yet\./);
 
   const rough = dailySummary({ ...base, taps: [{ local_date: '2026-10-12', status: 'off' }], weighins: [], health: { '2026-10-13': { sleep_h: 5.2 } } });
   assert.equal(rough.tone, 'warn');
