@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20590206077",
+  "name": "Evening Weight Training",
+  "type": "WeightTraining",
+  "start_local": "2026-10-14T18:24:59",
+  "local_date": "2026-10-14",
+  "duration_s": 2863,
+  "elapsed_s": 2863,
+  "distance_km": 0,
+  "elevation_m": 0,
+  "avg_hr": null,
+  "max_hr": null,
+  "hr_zones_s": null,
+  "relative_effort": 8,
+  "kcal": 319,
+  "location": null,
+  "source": "strava"
+}
