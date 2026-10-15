@@ -2084,8 +2084,8 @@
       "tz": "America/Los_Angeles",
       "utc": "2026-10-14T18:44:55.227Z",
       "started_utc": "2026-10-14T18:44:55.227Z",
-      "finished_utc": null,
-      "status": "in_progress",
+      "finished_utc": "2026-10-15T02:10:05.229Z",
+      "status": "finished",
       "day_dow": 3,
       "day_name": "Legs and abs",
       "program_id": "TRAIN-CUT26",
@@ -2122,13 +2122,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": 0,
-              "reps": null,
-              "rir": 1,
+              "load": 25,
+              "reps": 14,
+              "rir": 0,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T01:26:36.626Z"
             },
             {
               "kind": "amrap",
@@ -2144,13 +2144,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": 0,
-              "reps": null,
-              "rir": 1,
+              "load": 25,
+              "reps": 13,
+              "rir": 0,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T01:29:21.589Z"
             },
             {
               "kind": "amrap",
@@ -2166,13 +2166,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": 0,
-              "reps": null,
-              "rir": 1,
+              "load": 25,
+              "reps": 12,
+              "rir": 0,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T01:32:04.265Z"
             }
           ]
         },
@@ -2206,13 +2206,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": null,
-              "reps": 12,
-              "rir": 2,
+              "load": 130,
+              "reps": 18,
+              "rir": 4,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T01:34:41.610Z"
             },
             {
               "kind": "work",
@@ -2228,13 +2228,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": null,
-              "reps": 12,
-              "rir": 2,
+              "load": 135,
+              "reps": 20,
+              "rir": 3,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T01:38:40.670Z"
             },
             {
               "kind": "work",
@@ -2250,13 +2250,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": null,
-              "reps": 12,
+              "load": 140,
+              "reps": 22,
               "rir": 2,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T01:41:33.370Z"
             }
           ]
         },
@@ -2290,13 +2290,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": null,
+              "load": 90,
               "reps": 10,
               "rir": 2,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T01:46:09.110Z"
             },
             {
               "kind": "work",
@@ -2312,13 +2312,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": null,
-              "reps": 10,
+              "load": 90,
+              "reps": 13,
               "rir": 2,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T01:50:32.991Z"
             },
             {
               "kind": "work",
@@ -2334,13 +2334,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": null,
-              "reps": 10,
+              "load": 90,
+              "reps": 11,
               "rir": 2,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T01:53:56.118Z"
             }
           ]
         },
@@ -2374,13 +2374,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": null,
-              "reps": 8,
-              "rir": 2,
+              "load": 90,
+              "reps": 12,
+              "rir": 4,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T01:57:33.920Z"
             },
             {
               "kind": "work",
@@ -2396,13 +2396,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": null,
-              "reps": 8,
-              "rir": 2,
+              "load": 140,
+              "reps": 10,
+              "rir": 3,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T02:00:05.392Z"
             }
           ]
         },
@@ -2436,13 +2436,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": 20,
-              "reps": 8,
-              "rir": 1,
+              "load": 115,
+              "reps": 11,
+              "rir": 2,
               "seconds": null,
               "done": true,
               "skipped": false,
-              "utc": "2026-10-14T18:44:55.227Z"
+              "utc": "2026-10-15T02:03:38.849Z"
             },
             {
               "kind": "top",
@@ -2458,13 +2458,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": 20,
-              "reps": 8,
-              "rir": 2,
+              "load": 115,
+              "reps": 10,
+              "rir": 1,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T02:06:04.609Z"
             },
             {
               "kind": "backoff",
@@ -2480,13 +2480,13 @@
                 "seconds": null,
                 "amrap": false
               },
-              "load": 10,
-              "reps": 12,
-              "rir": 2,
+              "load": 115,
+              "reps": 9,
+              "rir": 1,
               "seconds": null,
-              "done": false,
+              "done": true,
               "skipped": false,
-              "utc": null
+              "utc": "2026-10-15T02:08:50.552Z"
             }
           ]
         },
@@ -2525,7 +2525,7 @@
               "rir": 1,
               "seconds": null,
               "done": false,
-              "skipped": false,
+              "skipped": true,
               "utc": null
             },
             {
@@ -2651,7 +2651,7 @@
         }
       ],
       "note": null,
-      "updated_utc": "2026-10-14T18:44:55.227Z"
+      "updated_utc": "2026-10-15T02:10:05.229Z"
     }
   ]
 }

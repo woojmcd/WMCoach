@@ -67,6 +67,30 @@
       "increment_lb": 2.5,
       "alternates": [],
       "updated_utc": "2026-10-14T01:15:49.226Z"
+    },
+    {
+      "id": "wed-bb-squats",
+      "increment_lb": 5,
+      "alternates": [],
+      "updated_utc": "2026-10-15T01:35:06.308Z"
+    },
+    {
+      "id": "wed-machine-adductors",
+      "increment_lb": 5,
+      "alternates": [],
+      "updated_utc": "2026-10-15T01:34:52.990Z"
+    },
+    {
+      "id": "wed-seated-hamstring-curls",
+      "increment_lb": 5,
+      "alternates": [],
+      "updated_utc": "2026-10-15T01:35:12.698Z"
+    },
+    {
+      "id": "wed-single-leg-press",
+      "increment_lb": 5,
+      "alternates": [],
+      "updated_utc": "2026-10-15T01:35:16.921Z"
     }
   ]
 }
