@@ -45,10 +45,34 @@
       "updated_utc": "2026-10-13T00:38:24.657Z"
     },
     {
+      "id": "thu-incline-db-skullcrushers",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-15T22:25:19.800Z"
+    },
+    {
       "id": "thu-pec-deck-flyes",
       "increment_lb": 5,
       "alternates": [],
       "updated_utc": "2026-10-15T21:33:31.198Z"
+    },
+    {
+      "id": "thu-seated-lateral-db-raises",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-15T22:04:47.016Z"
+    },
+    {
+      "id": "thu-single-arm-cable-pushdowns",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-15T22:05:06.754Z"
+    },
+    {
+      "id": "thu-standing-lateral-db-raises",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-15T22:04:51.903Z"
     },
     {
       "id": "tue-assisted-pullups",
