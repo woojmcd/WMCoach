@@ -972,6 +972,13 @@ try {
     assert.equal(await chip.getAttribute('href'), 'shortcuts://run-shortcut?name=WMCoach%20Health%20Resync');
     await p.waitForTimeout(300);
     await shot(p, 'h03-log-resync-chip', S8);
+    // Body: "On plan today?" first, the phase selector last (Walter, 2026-10-15)
+    await tab(p, 'Body');
+    const labels = await p.locator('.screen h2.label.section').allTextContents();
+    assert.equal(labels[0], 'On plan today?');
+    assert.equal(labels[labels.length - 1], 'Phase');
+    await p.waitForTimeout(300);
+    await shot(p, 'h08-body-on-plan-first', S8);
     await c.close();
   }
 

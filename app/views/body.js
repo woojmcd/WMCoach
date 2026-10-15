@@ -1,5 +1,5 @@
-// Body tab (spec §4.3), top to bottom: mode switch, daily weight, Friday
-// measurements + check-in, trend graph, "On plan today?".
+// Body tab (spec §4.3), top to bottom: "On plan today?", weight, measurements + check-in,
+// trend graph, then the phase (mode) selector.
 import { h, icon, toast, openSheet, segmented, chips, stepper } from '../ui.js';
 import { header, sectionLabel, healthChip } from './common.js';
 import { remoteState, healthMissing, healthShortcut } from '../remote.js';
@@ -94,8 +94,9 @@ export async function render(screen, ctx) {
   }
   if (banners.childElementCount) screen.append(banners);
 
+  // "On plan today?" first, so it's tapped every day; the phase selector last (Walter, 2026-10-15)
   screen.append(
-    modeCard(ctx, { phase, status, model, measurements }),
+    sectionLabel('On plan today?'), onPlanCard(ctx, { taps, today, tz }),
     sectionLabel('Weight'),
     ...(healthMissing(remote, today) ? [h('div', { class: 'chip-row' }, healthChip(healthShortcut(remote, today)), h('span', { class: 'muted xsmall' }, 'Today’s Health data isn’t in yet.'))] : []),
     weightCard(ctx, { weighins, today, tz, lastTrend }));
@@ -119,7 +120,7 @@ export async function render(screen, ctx) {
   }
 
   screen.append(sectionLabel('Trend'), trendCard(ctx, { series, phases, measurements, rate, bands, today, lastTrend }));
-  screen.append(sectionLabel('On plan today?'), onPlanCard(ctx, { taps, today, tz }));
+  screen.append(sectionLabel('Phase'), modeCard(ctx, { phase, status, model, measurements }));
   if (ui.focusCheckin) {
     ui.focusCheckin = false;
     setTimeout(scrollToCheckin, 60); // after the shell has placed this screen

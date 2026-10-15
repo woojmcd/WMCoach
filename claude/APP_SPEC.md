@@ -173,8 +173,8 @@ Backoff      [ 55] [12 ]             ✓
 - Every day, a cardio card shows the coach's cardio for today with the lifts (§6.5).
 
 ### 4.3 Body
-Top to bottom:
-1. **Mode switch** (segmented): Cut | Maintenance | Bulk. **Starts on Bulk.** Changing it requires a confirm sheet. It is saved with a timestamp to `data/log/` and takes effect on the next prep day (§8.3). Shows the current phase length and its end condition.
+Top to bottom (order changed 2026-10-15: "On plan today?" first so it's tapped daily, the phase selector last):
+1. A daily **"On plan today?"** tap: Yes / Partial / Off (optional kcal estimate). This feeds the adherence gate.
 2. **Daily weight** entry: one field defaulting to today (local date); can backdate for missed days; morning fasted, after the bathroom.
 3. **Weekly measurements card** (appears on check-in day, Friday; collapses once logged): waist, neck, chest, arm, thigh (§9), each entered twice and averaged automatically. Placeholders show last week's values.
 4. **Weekly check-in form** (Friday, same card): adherence this week (auto-filled from daily on-plan taps, editable), biofeedback 1–5 for hunger, energy, sleep, stress and digestion, and an optional note.
@@ -184,7 +184,7 @@ Top to bottom:
    - A rate badge (current %BW/wk) next to the target band for the current mode.
    - Range toggles: 4 wk / 12 wk / all.
    - An overlay selector: none / waist / body-fat estimate, plotted on a secondary axis.
-6. A daily **"On plan today?"** tap: Yes / Partial / Off (optional kcal estimate). This feeds the adherence gate.
+6. **Mode switch** (segmented): Cut | Maintenance | Bulk. **Starts on Bulk.** Changing it requires a confirm sheet. It is saved with a timestamp to `data/log/` and takes effect on the next prep day (§8.3). Shows the current phase length and its end condition.
 
 ### 4.4 Meals
 - **This week's plan** (`current.json`) in Walter's format (meals → foods → cooked weights), with daily and weekly macros. Carb-cycle mode shows MP1/MP2 by day.
