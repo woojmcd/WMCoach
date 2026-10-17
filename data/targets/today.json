@@ -2,15 +2,20 @@
   "schema_version": 1,
   "local_date": "2026-10-17",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-17T15:58:39.868Z",
+  "generated_utc": "2026-10-17T16:15:16.068Z",
   "readiness": {
-    "status": "green",
-    "flags": [],
-    "reason": "recovery normal",
+    "status": "amber",
+    "flags": [
+      {
+        "key": "rhr",
+        "text": "resting HR up (74 vs 63)"
+      }
+    ],
+    "reason": "resting HR up (74 vs 63)",
     "missing": false,
     "travel": null,
     "hrv_ms": null,
-    "resting_hr": 68,
+    "resting_hr": 74,
     "sleep_h": 14.325,
     "baseline": {
       "hrv_ms": null,
@@ -93,7 +98,7 @@
     "date": "2026-10-16",
     "label": "Fri 16 Oct",
     "tone": "bad",
-    "headline": "Upper Pull #2 wasn’t logged. Good: cardio done, on plan, weighed in.",
+    "headline": "Upper Pull #2 wasn’t logged. Also: readiness is amber (resting HR up (74 vs 63)). Good: cardio done, on plan, weighed in.",
     "focus": "Log every set today as you go: the next targets come only from the logbook.",
     "today": "Open day.",
     "points": [
@@ -101,7 +106,7 @@
         "key": "recovery",
         "tone": "warn",
         "title": "Last night",
-        "text": "14.3 h sleep. Resting HR 68 (+5 vs your 63 average: a sign of fatigue or something coming on). 8,943 steps yesterday. Readiness green."
+        "text": "14.3 h sleep. Resting HR 74 (+11 vs your 63 average: a sign of fatigue or something coming on). 8,943 steps yesterday. Readiness amber (resting HR up (74 vs 63))."
       },
       {
         "key": "weight",
@@ -119,7 +124,7 @@
         "key": "cardio",
         "tone": "good",
         "title": "Cardio",
-        "text": "Prescribed 25 min make-up cardio: done. 22 min run (Strava). Average HR 174: above your Zone 2 (126–156), so a hard session rather than easy cardio. Week so far: 2 of 2 sessions. 3-mile pace today: steady, 7:28–7:48/mi (about 22:54). Readiness green. Baseline 7:38/mi from your last 3 3-mile runs."
+        "text": "Prescribed 25 min make-up cardio: done. 22 min run (Strava). Average HR 174: above your Zone 2 (126–156), so a hard session rather than easy cardio. Week so far: 2 of 2 sessions. 3-mile pace today: easy, 8:38–9:08/mi (about 26:39), heart rate 126–156. Readiness amber (resting HR up (74 vs 63)). Baseline 7:38/mi from your last 3 3-mile runs."
       },
       {
         "key": "food",
@@ -129,9 +134,9 @@
       }
     ],
     "pace": {
-      "kind": "steady",
-      "lo": 448,
-      "hi": 468
+      "kind": "easy",
+      "lo": 518,
+      "hi": 548
     }
   }
 }

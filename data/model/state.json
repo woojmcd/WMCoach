@@ -196,7 +196,7 @@
     },
     {
       "local_date": "2026-10-17",
-      "status": "green"
+      "status": "amber"
     }
   ],
   "health_missing_on": "2026-10-14",
@@ -250,11 +250,11 @@
   ],
   "health_seen": {
     "local_date": "2026-10-17",
-    "sig": "[null,68,14.325,8943,null]"
+    "sig": "[null,74,14.325,8943,null]"
   },
   "health_reruns": {
     "local_date": "2026-10-17",
-    "n": 1
+    "n": 2
   },
   "run_zones": {
     "zones": [
