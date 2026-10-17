@@ -2,7 +2,7 @@
   "schema_version": 1,
   "local_date": "2026-10-17",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-17T15:06:16.723Z",
+  "generated_utc": "2026-10-17T15:58:39.868Z",
   "readiness": {
     "status": "green",
     "flags": [],
@@ -10,7 +10,7 @@
     "missing": false,
     "travel": null,
     "hrv_ms": null,
-    "resting_hr": 61,
+    "resting_hr": 68,
     "sleep_h": 14.325,
     "baseline": {
       "hrv_ms": null,
@@ -93,15 +93,15 @@
     "date": "2026-10-16",
     "label": "Fri 16 Oct",
     "tone": "bad",
-    "headline": "Upper Pull #2 wasn’t logged. Also: food wasn’t logged. Good: cardio done, weighed in, 14.3 h sleep.",
+    "headline": "Upper Pull #2 wasn’t logged. Good: cardio done, on plan, weighed in.",
     "focus": "Log every set today as you go: the next targets come only from the logbook.",
     "today": "Open day.",
     "points": [
       {
         "key": "recovery",
-        "tone": "good",
+        "tone": "warn",
         "title": "Last night",
-        "text": "14.3 h sleep. Resting HR 61 (−2 vs your 63 average). 8,943 steps yesterday. Readiness green."
+        "text": "14.3 h sleep. Resting HR 68 (+5 vs your 63 average: a sign of fatigue or something coming on). 8,943 steps yesterday. Readiness green."
       },
       {
         "key": "weight",
@@ -123,9 +123,9 @@
       },
       {
         "key": "food",
-        "tone": "warn",
+        "tone": "good",
         "title": "Food",
-        "text": "Not logged. Tap “On plan” on the Body tab every day; without it the coach can’t tell a plan that isn’t working from a plan that wasn’t followed."
+        "text": "On plan (2,492 kcal)."
       }
     ],
     "pace": {
