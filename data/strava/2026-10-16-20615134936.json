@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20615134936",
+  "name": "Afternoon Run",
+  "type": "Run",
+  "start_local": "2026-10-16T17:47:44",
+  "local_date": "2026-10-16",
+  "duration_s": 1347,
+  "elapsed_s": 1347,
+  "distance_km": 4.84,
+  "elevation_m": 1,
+  "avg_hr": 174,
+  "max_hr": 179,
+  "hr_zones_s": null,
+  "relative_effort": 73,
+  "kcal": 363,
+  "location": "San Diego, California",
+  "source": "strava"
+}

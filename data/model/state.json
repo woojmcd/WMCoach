@@ -86,26 +86,26 @@
   },
   "trend": {
     "half_life_days": 7,
-    "last_local_date": "2026-10-15",
+    "last_local_date": "2026-10-17",
     "last_weight_lb": 175.4,
-    "trend_lb": 175.4,
-    "rate_14d_pct_bw_wk": null
+    "trend_lb": 175.3,
+    "rate_14d_pct_bw_wk": 0.05
   },
   "tdee": {
     "method": "prior",
-    "local_date": "2026-10-10",
-    "trend_lb": 175.2,
-    "prior_kcal": 2380,
+    "local_date": "2026-10-17",
+    "trend_lb": 175.3,
+    "prior_kcal": 2408,
     "observed_kcal": null,
     "weight_on_observed": 0,
-    "estimate_kcal": 2380,
-    "base_kcal": 2313,
-    "cardio_kcal": 68,
-    "weighins_in_window": 1,
-    "days_learned": 2,
+    "estimate_kcal": 2408,
+    "base_kcal": 2314,
+    "cardio_kcal": 94,
+    "weighins_in_window": 4,
+    "days_learned": 6,
     "rate_lb_wk": null,
     "clamped": false,
-    "updated_local_date": "2026-10-10"
+    "updated_local_date": "2026-10-17"
   },
   "phase_history": [
     {
@@ -159,8 +159,8 @@
     }
   ],
   "progression": {},
-  "last_daily_run_local_date": "2026-10-16",
-  "last_weekly_run_week": "2026-10-11",
+  "last_daily_run_local_date": "2026-10-17",
+  "last_weekly_run_week": "2026-10-18",
   "readiness_history": [
     {
       "local_date": "2026-10-09",
@@ -193,10 +193,14 @@
     {
       "local_date": "2026-10-16",
       "status": "green"
+    },
+    {
+      "local_date": "2026-10-17",
+      "status": "green"
     }
   ],
   "health_missing_on": "2026-10-14",
-  "last_daily_run_utc": "2026-10-16T14:00:41.370Z",
+  "last_daily_run_utc": "2026-10-17T15:06:16.723Z",
   "last_daily_run_tz": "America/Los_Angeles",
   "health_rerun_on": "2026-10-14",
   "hr_zones": {
@@ -222,9 +226,18 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-10-16"
+    "updated_local_date": "2026-10-17"
   },
   "weekly_history": [
+    {
+      "week_start": "2026-10-18",
+      "local_date": "2026-10-17",
+      "rate_pct": 0.05,
+      "change": 0,
+      "kcal": 2492,
+      "cardio_min": 50,
+      "stopped_at": "adherence"
+    },
     {
       "week_start": "2026-10-11",
       "local_date": "2026-10-10",
@@ -236,8 +249,8 @@
     }
   ],
   "health_seen": {
-    "local_date": "2026-10-16",
-    "sig": "[null,64,null,2559,null]"
+    "local_date": "2026-10-17",
+    "sig": "[null,61,14.325,8943,null]"
   },
   "health_reruns": {
     "local_date": "2026-10-14",
@@ -247,29 +260,29 @@
     "zones": [
       {
         "min": 0,
-        "max": 2.784
+        "max": 2.797
       },
       {
-        "min": 2.784,
-        "max": 3.234
+        "min": 2.797,
+        "max": 3.249
       },
       {
-        "min": 3.234,
-        "max": 3.602
+        "min": 3.249,
+        "max": 3.619
       },
       {
-        "min": 3.602,
-        "max": 3.848
+        "min": 3.619,
+        "max": 3.866
       },
       {
-        "min": 3.848,
-        "max": 4.093
+        "min": 3.866,
+        "max": 4.113
       },
       {
-        "min": 4.093,
+        "min": 4.113,
         "max": -1
       }
     ],
-    "updated_local_date": "2026-10-16"
+    "updated_local_date": "2026-10-17"
   }
 }

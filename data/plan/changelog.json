@@ -15,6 +15,21 @@
       "stopped_at": "adherence",
       "cardio": "2 × 25 min stairs (Tue, Thu)",
       "cardio_changed": false
+    },
+    {
+      "week_start": "2026-10-18",
+      "local_date": "2026-10-17",
+      "generated_utc": "2026-10-17T15:06:16.723Z",
+      "mode": "bulk",
+      "changed": false,
+      "kcal_from": 2492,
+      "kcal_to": 2492,
+      "delta": 0,
+      "what": "",
+      "reason": "No macro change: adherence 0 % (under 90 %); observe-only start: 6 more days and 5 more weigh-ins before the first change.",
+      "stopped_at": "adherence",
+      "cardio": "2 × 25 min stairs (Tue, Thu)",
+      "cardio_changed": false
     }
   ]
 }
