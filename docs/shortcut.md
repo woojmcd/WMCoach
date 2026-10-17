@@ -112,5 +112,6 @@ Shortcuts → **Automation** → **+** → **Create Personal Automation**. Set e
 
 ## When something's off
 - **The Sync Health chip stays:** open Oura so it syncs last night to Health, then tap the chip (or run the Resync copy). If step 13 fails, the GitHub token has expired: make a new one and paste it in steps 3 and 13 of both Shortcuts.
+- **Sleep reads about double (e.g. 14 h):** the Shortcut ran while Oura was still writing the night and caught it twice. The coach ignores any sleep over 12 h and shows the **Sync Health** chip; wait a few minutes, then tap it (or run the Resync copy).
 - **"Protected health data is inaccessible":** the phone was locked. The App-opened trigger covers it.
 - **Travel:** nothing to change. The Shortcut uses the phone's clock and zone, so it runs in your morning wherever you are.

@@ -180,6 +180,9 @@ export function recoveryNight({ health = null, readiness = null, mode = 'bulk', 
     const short = h.sleep_h < SLEEP_SHORT_H;
     if (short) tone = 'warn';
     parts.push(`${h.sleep_h.toFixed(1)} h sleep${short ? ', under 6 h' : h.sleep_h >= SLEEP_GOOD_H ? '' : ', a bit short of 7'}.`);
+  } else if (Number.isFinite(h.sleep_unsettled)) {
+    tone = 'warn';
+    parts.push(`Sleep read ${h.sleep_unsettled.toFixed(1)} h, which means the sync ran while Oura was still writing the night: run WMCoach Health Resync.`);
   }
   if (Number.isFinite(h.resting_hr)) {
     const b = readiness && readiness.baseline ? readiness.baseline.resting_hr : null;

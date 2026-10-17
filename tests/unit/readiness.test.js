@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { readiness, baselines, travelShift, normalizeHealth } from '../../coach/readiness.js';
+import { readiness, baselines, travelShift, normalizeHealth, healthSettled, hasRecovery } from '../../coach/readiness.js';
 import { planDay } from '../../coach/progression.js';
 import { addDays } from '../../coach/time.js';
 
@@ -81,4 +81,15 @@ test('Health files from the Shortcut: numeric strings and decimal commas count, 
   assert.deepEqual(normalizeHealth({ date: '2026-10-14', hrv_ms: '62,5', resting_hr: 52, sleep_h: '7.25', steps: '', weight_lb: null }),
     { date: '2026-10-14', hrv_ms: 62.5, resting_hr: 52, sleep_h: 7.25, steps: null, weight_lb: null });
   assert.equal(normalizeHealth(null), null);
+});
+
+test('a double-counted night (14.3 h, 2026-10-17) is dropped as unsettled: the file is not in yet', () => {
+  const h = normalizeHealth({ date: '2026-10-17', hrv_ms: '', resting_hr: '61', sleep_h: '14.325', steps: '8943' });
+  assert.equal(h.sleep_h, null);
+  assert.equal(h.sleep_unsettled, 14.325);
+  assert.equal(hasRecovery(h), true, 'resting HR still counts');
+  assert.equal(healthSettled(h), false, 'but the phone shows Sync Health');
+  assert.equal(healthSettled(normalizeHealth({ resting_hr: 61, sleep_h: '7.2' })), true);
+  assert.equal(healthSettled(normalizeHealth({ resting_hr: 61, sleep_h: 12 })), true, '12 h is possible');
+  assert.equal(readiness({ health: { '2026-10-17': h }, today: '2026-10-17' }).status, 'green');
 });

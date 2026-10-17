@@ -129,6 +129,7 @@ The new service worker installs in the background and waits. Walter sees "Update
 - Points order (Walter, 2026-10-13): last night, weight, training, cardio, food. The cardio point always ends with today's 3-mile pace: `runBaseline()` + `runPaceToday()` in `coach/cardio.js`. Strava run pace zones are kept in `state.run_zones`.
 - Health re-syncs (§2b):
   - A Health file only counts with recovery data: `hasRecovery()` in `coach/readiness.js`.
+  - Sleep over `MAX_SLEEP_H` (12 h) is a night counted twice by a sync during Oura's write (2026-10-17): `normalizeHealth()` drops it as `sleep_unsettled`, and `healthSettled()` is false, so the chip shows and the summary asks for a re-sync.
   - New numbers since the run rerun readiness, targets and the summary, up to `MAX_HEALTH_RERUNS` (3) a day. The run tracks this in `state.health_seen` and `state.health_reruns`.
   - The phone reads today's file to show the Sync Health chip, and opens the "WMCoach Health Resync" Shortcut when the file exists.
 - What the Shortcut can read (`docs/shortcut.md`): Oura gives sleep and overnight heart rate, but not HRV or resting HR. So:
