@@ -3,10 +3,46 @@
   "store": "exercise_prefs",
   "records": [
     {
+      "id": "fri-cable-ab-crunches",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-17T18:58:18.830Z"
+    },
+    {
+      "id": "fri-cable-lat-pullovers",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-17T18:19:21.822Z"
+    },
+    {
+      "id": "fri-hammer-rope-curls",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-17T18:50:21.285Z"
+    },
+    {
+      "id": "fri-incline-db-curls",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-17T18:50:25.137Z"
+    },
+    {
       "id": "fri-reverse-pec-deck-flyes",
       "increment_lb": 5,
       "alternates": [],
       "updated_utc": "2026-10-15T21:33:15.595Z"
+    },
+    {
+      "id": "fri-single-arm-cable-pulldowns",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-17T18:40:19.779Z"
+    },
+    {
+      "id": "fri-single-arm-db-rows",
+      "increment_lb": null,
+      "alternates": [],
+      "updated_utc": "2026-10-17T18:40:15.686Z"
     },
     {
       "id": "mon-cable-ab-crunches",
