@@ -44,6 +44,7 @@ const SHELL_FILES = [
   "app/views/week.js",
   "app/views/log.js",
   "app/views/body.js",
+  "app/views/day-log.js",
   "app/views/meals.js",
   "app/views/history.js",
   "app/views/settings.js",

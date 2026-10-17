@@ -7,6 +7,7 @@ import { checkinState, currentPhase, realPhases } from '../../coach/phase.js';
 import { weeklySummary, activeSummaryCheckin } from '../../coach/summary.js';
 import { header, note, sessionList, addonCard } from './common.js';
 import { cardioMeta } from './cardio.js';
+import { weightEntry, onPlanEntry, dayLogMeta } from './day-log.js';
 import { loadTraining, planFor, progressCount } from '../training.js';
 import { planItem } from './log.js';
 import { ensurePlans, planNotice } from '../meal-plans.js';
@@ -20,7 +21,9 @@ const ui = { open: {} };
 
 export async function render(screen, ctx) {
   const today = ctx.today();
-  const [checkins, training, plans] = await Promise.all([getAll(ctx.db, 'checkins'), loadTraining(ctx), ensurePlans(ctx).catch(() => null)]);
+  const [checkins, training, plans, weighins, taps] = await Promise.all([
+    getAll(ctx.db, 'checkins'), loadTraining(ctx), ensurePlans(ctx).catch(() => null), getAll(ctx.db, 'weighins'), getAll(ctx.db, 'adherence'),
+  ]);
   const notice = plans ? planNotice(plans) : null;
   const ci = checkinState(today, ctx.settings.checkin_day, live(checkins));
   const summary = await buildSummary(ctx, { today, checkins: live(checkins), training, plans });
@@ -34,6 +37,14 @@ export async function render(screen, ctx) {
     const c = cardioMeta(training.cardio, date, today);
     return c ? h('p', { class: 'small', style: 'margin:0 0 8px' }, c.text.replace(' · ', ': ')) : null;
   };
+  // Weight and "On plan?" for any day up to today, with the Body tab's controls, so a
+  // forgotten day can be filled in or fixed later (Walter, 2026-10-17).
+  const logSection = (date) => (date > today ? null : h('div', { class: 'stack day-log', 'aria-label': 'Weight and food' },
+    h('p', { class: 'label', style: 'margin:0' }, 'Weight'),
+    weightEntry(ctx, { date, weighins, today, hint: 'The morning’s fasted weigh-in, if you took one.', onSaved: () => ctx.refresh() }),
+    h('p', { class: 'label', style: 'margin:8px 0 0' }, 'On plan?'),
+    onPlanEntry(ctx, { date, taps, today, onSaved: () => ctx.refresh() })));
+  const sheetBody = (date, ...rest) => h('div', { class: 'stack' }, logSection(date), ...rest);
   const openDay = (date) => {
     const day = dayOf(date);
     const logged = sessionsOn(date);
@@ -42,22 +53,22 @@ export async function render(screen, ctx) {
     const title = `${WEEKDAYS[isoWeekday(date) - 1]} ${formatDayMonth(date)}`;
     if (logged.length) {
       const sx = logged[logged.length - 1];
-      openSheet({ title: `${title} · ${sx.day_name}`, subtitle: sx.status === 'finished' ? 'Logged' : 'In progress', body: h('div', {}, cardioLine(date), sessionList(sx, ctx.program)), actions: [{ label: 'Close', kind: 'outline' }] });
+      openSheet({ title: `${title} · ${sx.day_name}`, subtitle: sx.status === 'finished' ? 'Logged' : 'In progress', body: sheetBody(date, cardioLine(date), sessionList(sx, ctx.program)), actions: [{ label: 'Close', kind: 'outline' }] });
       return;
     }
     if (!day || !day.exercises.length) {
-      openSheet({ title: `${title} · Open day`, subtitle: stairs && !cardioLine(date) ? `Stairs ${stairs.minutes} min logged.` : OPEN_DAY, body: cardioLine(date), actions: [{ label: 'Close', kind: 'outline' }] });
+      openSheet({ title: `${title} · Open day`, subtitle: stairs && !cardioLine(date) ? `Stairs ${stairs.minutes} min logged.` : OPEN_DAY, body: sheetBody(date, cardioLine(date)), actions: [{ label: 'Close', kind: 'outline' }] });
       return;
     }
     if (date < today) {
-      openSheet({ title: `${title} · ${day.name}`, subtitle: 'No session logged.', body: cardioLine(date), actions: [{ label: 'Close', kind: 'outline' }] });
+      openSheet({ title: `${title} · ${day.name}`, subtitle: 'No session logged.', body: sheetBody(date, cardioLine(date)), actions: [{ label: 'Close', kind: 'outline' }] });
       return;
     }
     const plan = planFor(ctx, training, day);
     openSheet({
       title: `${title} · ${day.name}`,
       subtitle: `Preview: targets from your last sessions${day.est_min ? ` · ~${day.est_min} min` : ''}.`,
-      body: h('div', {}, cardioLine(date), h('div', { class: 'list' }, plan.map(planItem))),
+      body: sheetBody(date, cardioLine(date), h('div', { class: 'list' }, plan.map(planItem))),
       actions: [{ label: 'Close', kind: 'outline' }],
     });
   };
@@ -91,9 +102,11 @@ export async function render(screen, ctx) {
     }
     // cardio on its own line under the workout (Walter, 2026-10-13)
     const cm = cardioMeta(training.cardio, d, today);
+    const lm = dayLogMeta(ctx, { date: d, weighins, taps, today });
     return h('button', { type: 'button', class: `item day-row${d === today ? ' today' : ''}${logged.length ? ' logged' : ''}`, onClick: () => openDay(d) },
       h('span', { class: 'when' }, WEEKDAYS[isoWeekday(d) - 1]),
-      h('span', { class: 'grow' }, h('div', { class: 'name' }, day ? day.name : '—'), h('div', { class: 'meta' }, meta), cm ? h('div', { class: `meta cardio ${cm.state}` }, cm.text) : null),
+      h('span', { class: 'grow' }, h('div', { class: 'name' }, day ? day.name : '—'), h('div', { class: 'meta' }, meta), cm ? h('div', { class: `meta cardio ${cm.state}` }, cm.text) : null,
+        lm ? h('div', { class: `meta daylog${lm.complete ? '' : ' missing'}` }, lm.text) : null),
       logged.length && logged[logged.length - 1].status === 'finished' ? h('span', { class: 'accent' }, icon('check', { size: 18 })) : null);
   }));
 

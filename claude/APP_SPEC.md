@@ -147,6 +147,7 @@ Dark only (no light theme). The feel is a premium instrument: quiet, precise, lo
 ### 4.1 Week
 - Mon–Sun strip for the current week in local time; today highlighted. Mon–Fri show the session name (Push #1, Pull #1, Legs and abs, Upper Push #2, Upper Pull #2); Sat/Sun show "Open: cardio / social" plus any Strava activity logged.
 - Tap a day to open that day's workout (logging view for today; read-only for past days; preview of targets for future days).
+- Every day up to today also shows its weight and food ("176.0 lb · On plan", or "No weigh-in · Food not logged" in amber), and its sheet opens with the Body tab's weight and "On plan?" inputs, so a forgotten day can be filled in or corrected later. Saving again edits that day's entry (Walter, 2026-10-17).
 - A banner area for plan notices (see §8.4).
 
 ### 4.2 Log (today's session)

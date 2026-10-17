@@ -69,6 +69,7 @@ The new service worker installs in the background and waits. Walter sees "Update
 ## Records
 - Daily records (weigh-ins, measurements, check-ins, on-plan taps) are written with `saveDaily()` in `app/records.js`: saving again for a date edits that day's entry made in the same zone.
 - Nothing is hard-deleted in the app. `removeRecord()` leaves a tombstone (`deleted: true`, `deleted_utc`) so sync and a newer-wins merge can't resurrect it. Read with `live()`.
+- The weigh-in and "On plan?" inputs live in `app/views/day-log.js`, shared by the Body tab (today) and the Week tab's day sheets (any day up to today), so a forgotten day can be filled in later (Walter, 2026-10-17). An earlier day edits the entry it already has, in that entry's zone.
 - Mode switches never change the current week: they're saved to `mode_changes` and `settings.pending_mode`, and `applyPendingMode()` (`coach/phase.js`) makes them take effect on-device on the next prep day.
 
 ## Training (stage 3)
