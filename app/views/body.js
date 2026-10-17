@@ -1,5 +1,5 @@
-// Body tab (spec §4.3), top to bottom: mode switch, daily weight, Friday
-// measurements + check-in, trend graph, "On plan today?".
+// Body tab (spec §4.3), top to bottom: "On plan today?", weight, measurements + check-in,
+// trend graph, then the phase (mode) selector.
 import { h, icon, toast, openSheet, segmented, chips, stepper } from '../ui.js';
 import { header, sectionLabel, healthChip } from './common.js';
 import { remoteState, healthMissing, healthShortcut } from '../remote.js';
@@ -7,6 +7,7 @@ import { getAll, getMeta, put } from '../db.js';
 import { saveDaily, removeRecord, live } from '../records.js';
 import { newId } from '../seed.js';
 import { exportFlow } from '../import-flow.js';
+import { dayText, weightEntry, onPlanEntry } from './day-log.js';
 import { trendChart } from '../chart.js';
 import { trendFromEntries, rateOverDays, rateStatus } from '../../coach/trend.js';
 import { SITES, siteAverages, navyBodyFat } from '../../coach/body.js';
@@ -44,11 +45,6 @@ function setPref(key, value) {
   try { window.localStorage.setItem(key, value); } catch { /* private mode */ }
 }
 
-const dayText = (date, today) => {
-  if (date === today) return 'Today';
-  if (date === addDays(today, -1)) return 'Yesterday';
-  return `${WEEKDAYS[isoWeekday(date) - 1]} ${formatDayMonth(date)}`;
-};
 const signed = (v, d = 2) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(d)}`;
 
 export async function render(screen, ctx) {
@@ -94,11 +90,12 @@ export async function render(screen, ctx) {
   }
   if (banners.childElementCount) screen.append(banners);
 
+  // "On plan today?" first, so it's tapped every day; the phase selector last (Walter, 2026-10-15)
   screen.append(
-    modeCard(ctx, { phase, status, model, measurements }),
+    sectionLabel('On plan today?'), onPlanCard(ctx, { taps, today }),
     sectionLabel('Weight'),
     ...(healthMissing(remote, today) ? [h('div', { class: 'chip-row' }, healthChip(healthShortcut(remote, today)), h('span', { class: 'muted xsmall' }, 'Today’s Health data isn’t in yet.'))] : []),
-    weightCard(ctx, { weighins, today, tz, lastTrend }));
+    weightCard(ctx, { weighins, today, lastTrend }));
 
   // Entry point under Weight: a filled button while the check-in is due (Walter
   // asked for it to look like the weight Update button), a gold link otherwise.
@@ -119,7 +116,7 @@ export async function render(screen, ctx) {
   }
 
   screen.append(sectionLabel('Trend'), trendCard(ctx, { series, phases, measurements, rate, bands, today, lastTrend }));
-  screen.append(sectionLabel('On plan today?'), onPlanCard(ctx, { taps, today, tz }));
+  screen.append(sectionLabel('Phase'), modeCard(ctx, { phase, status, model, measurements }));
   if (ui.focusCheckin) {
     ui.focusCheckin = false;
     setTimeout(scrollToCheckin, 60); // after the shell has placed this screen
@@ -217,46 +214,26 @@ function confirmModeChange(ctx, to, { measurements }) {
 
 // ---- 2. daily weight ----------------------------------------------------------------------
 
-function weightCard(ctx, { weighins, today, tz, lastTrend }) {
+function weightCard(ctx, { weighins, today, lastTrend }) {
   const date = ui.weightDate;
-  const forDate = weighins.filter((w) => w.local_date === date && w.source !== 'history');
-  const existing = forDate.find((w) => w.tz === tz) || null;
-  const latest = [...weighins].sort((a, b) => (a.local_date < b.local_date ? -1 : 1)).pop();
-  let value = existing ? Number(ctx.fmtWeight(existing.weight_lb)) : null;
-  const field = stepper({
-    value, step: ctx.settings.units === 'kg' ? 0.1 : 0.2, min: 40, max: 400, decimals: 1, unit: ctx.unitLabel(),
-    placeholder: latest ? ctx.fmtWeight(latest.weight_lb) : '', label: 'Weight', onChange: (v) => { value = v; },
-  });
   const dateInput = h('input', { type: 'date', max: today, value: date, 'aria-label': 'Weigh-in date' });
   dateInput.addEventListener('change', () => {
     if (dateInput.value && dateInput.value <= today) { ui.weightDate = dateInput.value; ctx.refresh(); }
   });
   const card = h('div', { class: 'card stack' });
-  const save = h('button', {
-    type: 'button', class: 'btn primary block',
-    onClick: async () => {
-      const v = field.getValue();
-      if (!(v > 0)) { toast('Enter a weight first'); return; }
-      const lb = Math.round(ctx.toLb(v) * 10) / 10;
-      const { edited } = await saveDaily(ctx.db, 'weighins', {
-        localDate: date, tz, prefix: 'w', editable: (r) => r.source === 'app',
-        fields: { weight_lb: lb, source: 'app', backdated: date !== today },
-      });
-      card.classList.add('confirm-pop');
-      toast(`${edited ? 'Updated' : 'Logged'} ${ctx.fmtWeight(lb)} ${ctx.unitLabel()} · ${dayText(date, today)}`);
-      ui.weightDate = today; // a backdated entry is a one-off; come back to today
-      setTimeout(() => ctx.refresh(), 220);
-    },
-  }, existing ? 'Update' : 'Log weight');
   card.append(
     h('div', { class: 'row between' },
       h('label', { class: 'date-chip' }, icon('week', { size: 16 }), dayText(date, today), dateInput),
       lastTrend ? h('span', { class: 'muted xsmall num' }, `Trend ${ctx.fmtWeight(lastTrend.trend)} ${ctx.unitLabel()}`) : null),
-    field,
-    save,
-    h('p', { class: 'muted xsmall', style: 'margin:0' }, existing
-      ? `Logged ${ctx.fmtWeight(existing.weight_lb)} ${ctx.unitLabel()}${date === today ? ' this morning' : ''}. Change it and tap Update.`
-      : 'Morning, fasted, after the bathroom. Missed a day? Tap the date to backdate.'));
+    weightEntry(ctx, {
+      date, weighins, today,
+      hint: 'Morning, fasted, after the bathroom. Missed a day? Tap the date, or the day on the Week tab.',
+      onSaved: () => {
+        card.classList.add('confirm-pop');
+        ui.weightDate = today; // a backdated entry is a one-off; come back to today
+        setTimeout(() => ctx.refresh(), 220);
+      },
+    }));
   return card;
 }
 
@@ -477,26 +454,7 @@ function editWeighin(ctx, w) {
 
 // ---- 6. on plan today ------------------------------------------------------------------------
 
-function onPlanCard(ctx, { taps, today, tz }) {
-  const mine = taps.filter((t) => t.local_date === today).sort((a, b) => ((a.updated_utc || '') < (b.updated_utc || '') ? 1 : -1));
-  const current = mine.find((t) => t.tz === tz) || mine[0] || null;
-  let kcal = current && current.kcal ? current.kcal : null;
-  let picked = current ? current.status : null;
-  const save = async (status) => {
-    await saveDaily(ctx.db, 'adherence', { localDate: today, tz, prefix: 'plan', fields: { status, kcal: status === 'yes' ? null : kcal } });
-  };
-  const kcalField = stepper({
-    value: kcal, step: 50, min: 0, max: 8000, unit: 'kcal', compact: true, label: 'Estimated kcal today', placeholder: '2400',
-    onChange: async (v) => { kcal = v; if (picked) await save(picked); },
-  });
-  const kcalWrap = h('div', { class: 'stack-sm', style: picked && picked !== 'yes' ? '' : 'display:none' },
-    h('span', { class: 'label' }, 'Estimated kcal (optional)'), kcalField);
-  const seg = segmented([{ value: 'yes', label: 'Yes' }, { value: 'partial', label: 'Partial' }, { value: 'off', label: 'Off' }], picked, async (v) => {
-    picked = v;
-    await save(v);
-    kcalWrap.style.display = v === 'yes' ? 'none' : '';
-    toast(v === 'yes' ? 'On plan today' : v === 'partial' ? 'Partly on plan today' : 'Off plan today: not used for the TDEE estimate');
-  }, { label: 'On plan today' });
-  return h('div', { class: 'card stack' }, seg, kcalWrap,
-    h('p', { class: 'muted xsmall', style: 'margin:0' }, 'Feeds the weekly adherence check: macros change only on weeks at 90 % or better.'));
+function onPlanCard(ctx, { taps, today }) {
+  return h('div', { class: 'card stack' }, onPlanEntry(ctx, { date: today, taps, today }),
+    h('p', { class: 'muted xsmall', style: 'margin:0' }, 'Feeds the weekly adherence check: macros change only on weeks at 90 % or better. Missed a day? Tap it on the Week tab.'));
 }

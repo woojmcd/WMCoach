@@ -147,6 +147,7 @@ Dark only (no light theme). The feel is a premium instrument: quiet, precise, lo
 ### 4.1 Week
 - Mon–Sun strip for the current week in local time; today highlighted. Mon–Fri show the session name (Push #1, Pull #1, Legs and abs, Upper Push #2, Upper Pull #2); Sat/Sun show "Open: cardio / social" plus any Strava activity logged.
 - Tap a day to open that day's workout (logging view for today; read-only for past days; preview of targets for future days).
+- Every day up to today also shows its weight and food ("176.0 lb · On plan", or "No weigh-in · Food not logged" in amber), and its sheet opens with the Body tab's weight and "On plan?" inputs, so a forgotten day can be filled in or corrected later. Saving again edits that day's entry (Walter, 2026-10-17).
 - A banner area for plan notices (see §8.4).
 
 ### 4.2 Log (today's session)
@@ -173,8 +174,8 @@ Backoff      [ 55] [12 ]             ✓
 - Every day, a cardio card shows the coach's cardio for today with the lifts (§6.5).
 
 ### 4.3 Body
-Top to bottom:
-1. **Mode switch** (segmented): Cut | Maintenance | Bulk. **Starts on Bulk.** Changing it requires a confirm sheet. It is saved with a timestamp to `data/log/` and takes effect on the next prep day (§8.3). Shows the current phase length and its end condition.
+Top to bottom (order changed 2026-10-15: "On plan today?" first so it's tapped daily, the phase selector last):
+1. A daily **"On plan today?"** tap: Yes / Partial / Off (optional kcal estimate). This feeds the adherence gate.
 2. **Daily weight** entry: one field defaulting to today (local date); can backdate for missed days; morning fasted, after the bathroom.
 3. **Weekly measurements card** (appears on check-in day, Friday; collapses once logged): waist, neck, chest, arm, thigh (§9), each entered twice and averaged automatically. Placeholders show last week's values.
 4. **Weekly check-in form** (Friday, same card): adherence this week (auto-filled from daily on-plan taps, editable), biofeedback 1–5 for hunger, energy, sleep, stress and digestion, and an optional note.
@@ -184,7 +185,7 @@ Top to bottom:
    - A rate badge (current %BW/wk) next to the target band for the current mode.
    - Range toggles: 4 wk / 12 wk / all.
    - An overlay selector: none / waist / body-fat estimate, plotted on a secondary axis.
-6. A daily **"On plan today?"** tap: Yes / Partial / Off (optional kcal estimate). This feeds the adherence gate.
+6. **Mode switch** (segmented): Cut | Maintenance | Bulk. **Starts on Bulk.** Changing it requires a confirm sheet. It is saved with a timestamp to `data/log/` and takes effect on the next prep day (§8.3). Shows the current phase length and its end condition.
 
 ### 4.4 Meals
 - **This week's plan** (`current.json`) in Walter's format (meals → foods → cooked weights), with daily and weekly macros. Carb-cycle mode shows MP1/MP2 by day.
@@ -327,7 +328,7 @@ The coach prescribes cardio as part of each day's workout. Strava records what h
 
 ### 6.6 Daily summary (Walter, 2026-10-13)
 Each morning the Week tab opens on **Yesterday · <date>**: an executive summary of the previous day and the focus for today. It's pure code in `coach/daily.js`, computed by the daily run into `targets/today.json` → `daily`, and recomputed when Health data is re-synced (§2b). The voice is the weekly review's (§10): the numbers first, no softening, always what went well, then one thing to do.
-- **Always fully open** (Walter, 2026-10-13). By contrast, the Week in review is a box that opens and closes with a tap on its header; it starts closed and the phone remembers how each week's was left.
+- **A box like the Week in review** (Walter, 2026-10-14): the title and headline show; a tap anywhere on them opens the focus, today's plan and the details. It starts closed, and the phone remembers how each day's was left.
 - **Yesterday, by area** (each with a good / warn / bad dot), in this order (Walter, 2026-10-13): last night, weight, training, cardio, food. The cardio area always ends with **today's 3-mile pace**:
   - Baseline: the median pace of his last 3-mile Strava runs (2.5–3.5 mi, last 90 days, up to 5, road runs before trail). Without one, the midpoint of Strava's tempo pace zone (`get_athlete_zones` run zones, kept in `state.run_zones`).
   - Readiness green: steady, baseline ± 10 s/mi. Amber: easy, baseline + 60–90 s/mi, at the Zone 2 heart rate. Red: no run, an easy 20–30 min walk.

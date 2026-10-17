@@ -916,12 +916,21 @@ try {
     assert.doesNotMatch(await card.locator('.headline').textContent(), /amber/, 'the short night is said once');
     assert.match(text, /Focus today/);
     assert.match(text, /Today.*Legs and abs/);
-    assert.equal(await card.locator('.summary-points').isVisible(), true, 'the daily card is always fully open');
-    assert.equal(await card.getByRole('button').count(), 0, 'nothing to open or close');
+    // a box like Week in review (Walter, 2026-10-14): title + headline, tap to open; starts closed
+    const dhead = card.locator('.summary-head');
+    assert.equal(await dhead.getAttribute('aria-expanded'), 'false');
+    assert.equal(await card.locator('.summary-body').isHidden(), true);
     await noHorizontalScroll(p, 'Week with the daily summary');
     await p.waitForTimeout(2500);
     await shot(p, 'h01-week-daily-summary', S8);
     await p.waitForTimeout(800); // a background pull may re-render the tab
+    await dhead.click();
+    assert.equal(await card.locator('.summary-points').isVisible(), true);
+    assert.deepEqual(await card.locator('.pt-title').allTextContents(), ['Last night', 'Weight', 'Training', 'Cardio', 'Food']);
+    // remembered when the tab is rebuilt
+    await tab(p, 'Body');
+    await tab(p, 'Week');
+    assert.equal(await p.locator('section[aria-label="Yesterday in review"] .summary-body').isVisible(), true, 'still open after switching tabs');
     assert.match(await card.locator('.summary-points').textContent(), /Pull #1: 9 of 10 sets logged\. Beat last time on 5: Assisted Pullups 45 assist × 10 \(was 50 assist × 10\);.*; and 2 more\./);
     await card.screenshot({ path: STAGE === 'stage-8' ? `${OUT}h02-daily-details.png` : `${tmp}/x.png` });
     // scrolled to the very end, the tab bar stays on the bottom edge and the page itself hasn't moved
@@ -963,6 +972,50 @@ try {
     assert.equal(await chip.getAttribute('href'), 'shortcuts://run-shortcut?name=WMCoach%20Health%20Resync');
     await p.waitForTimeout(300);
     await shot(p, 'h03-log-resync-chip', S8);
+    // Body: "On plan today?" first, the phase selector last (Walter, 2026-10-15)
+    await tab(p, 'Body');
+    const labels = await p.locator('.screen h2.label.section').allTextContents();
+    assert.equal(labels[0], 'On plan today?');
+    assert.equal(labels[labels.length - 1], 'Phase');
+    await p.waitForTimeout(300);
+    await shot(p, 'h08-body-on-plan-first', S8);
+    // Week: any day up to today opens with the Body tab's weight and "On plan?" inputs, so a
+    // forgotten day can be filled in or fixed later (Walter, 2026-10-17)
+    const store = (s) => p.evaluate((name) => new Promise((resolve) => {
+      indexedDB.open('wmcoach').onsuccess = (e) => { e.target.result.transaction(name).objectStore(name).getAll().onsuccess = (r) => resolve(r.target.result.filter((x) => !x.deleted)); };
+    }), s);
+    await tab(p, 'Week');
+    const mon = p.locator('.day-row').first();
+    assert.match(await mon.locator('.meta.daylog').textContent(), /No weigh-in · Food not logged/);
+    assert.equal(await p.locator('.day-row').last().locator('.meta.daylog').count(), 0, 'nothing to log for a future day');
+    await mon.click();
+    const sheet = p.locator('.sheet');
+    await sheet.getByRole('button', { name: 'Log weight' }).waitFor();
+    await sheet.getByLabel('Weight', { exact: true }).fill('176.2');
+    await sheet.getByLabel('Weight', { exact: true }).press('Enter');
+    await sheet.getByRole('button', { name: 'Log weight' }).click();
+    await toastText(p, 'Logged 176.2 lb · Mon 19 Oct');
+    await sheet.getByRole('button', { name: 'Partial', exact: true }).click();
+    await toastText(p, 'Partly on plan on Mon 19 Oct');
+    await sheet.getByRole('button', { name: 'Update', exact: true }).waitFor();
+    await p.waitForTimeout(300);
+    await shot(p, 'h09-week-day-log', S8);
+    let w = (await store('weighins')).filter((x) => x.local_date === '2026-10-19');
+    assert.deepEqual(w.map((x) => [x.weight_lb, x.backdated, x.source]), [[176.2, true, 'app']]);
+    assert.deepEqual((await store('adherence')).filter((x) => x.local_date === '2026-10-19').map((x) => x.status), ['partial']);
+    // a second save edits that day's entry
+    await sheet.getByLabel('Weight', { exact: true }).fill('176.0');
+    await sheet.getByLabel('Weight', { exact: true }).press('Enter');
+    await sheet.getByRole('button', { name: 'Update', exact: true }).click();
+    await toastText(p, 'Updated 176.0 lb · Mon 19 Oct');
+    await sheet.getByRole('button', { name: 'Yes', exact: true }).click();
+    await toastText(p, 'On plan on Mon 19 Oct');
+    w = (await store('weighins')).filter((x) => x.local_date === '2026-10-19');
+    assert.deepEqual(w.map((x) => x.weight_lb), [176]);
+    assert.deepEqual((await store('adherence')).filter((x) => x.local_date === '2026-10-19').map((x) => x.status), ['yes']);
+    await p.keyboard.press('Escape');
+    await p.waitForTimeout(300);
+    assert.equal((await mon.locator('.meta.daylog').textContent()).trim(), '176.0 lb · On plan');
     await c.close();
   }
 

@@ -69,6 +69,7 @@ The new service worker installs in the background and waits. Walter sees "Update
 ## Records
 - Daily records (weigh-ins, measurements, check-ins, on-plan taps) are written with `saveDaily()` in `app/records.js`: saving again for a date edits that day's entry made in the same zone.
 - Nothing is hard-deleted in the app. `removeRecord()` leaves a tombstone (`deleted: true`, `deleted_utc`) so sync and a newer-wins merge can't resurrect it. Read with `live()`.
+- The weigh-in and "On plan?" inputs live in `app/views/day-log.js`, shared by the Body tab (today) and the Week tab's day sheets (any day up to today), so a forgotten day can be filled in later (Walter, 2026-10-17). An earlier day edits the entry it already has, in that entry's zone.
 - Mode switches never change the current week: they're saved to `mode_changes` and `settings.pending_mode`, and `applyPendingMode()` (`coach/phase.js`) makes them take effect on-device on the next prep day.
 
 ## Training (stage 3)
@@ -90,7 +91,8 @@ The new service worker installs in the background and waits. Walter sees "Update
 - `weeklySummary()` in `coach/summary.js` (pure; the weekly routine reuses it and adds its macro decision). It reviews the 7 days ending on the check-in, in spec §10 order: adherence, weigh-ins, rate vs the mode's band, training (sessions, main lifts by best-set e1RM, increases, resets), waist vs limbs, biofeedback, then the plan. The headline names the first problem in that order, then the wins; "Focus" is one action.
 - Tone: state the number and what it means. Don't soften a miss (adherence 50 % is "too low to judge anything"), and always report what went well. Days before the first logged session are never "missed".
 - Shown from the check-in through the plan week after it (`summaryVisibleUntil`).
-- A box that opens and closes with a tap anywhere on its header (`.summary-head`), showing the title and headline when closed (Walter, 2026-10-13). It starts closed, and the phone remembers each week's state in `localStorage` (`wm.review.<week_of>`). The daily "Yesterday" card is always fully open.
+- A box that opens and closes with a tap anywhere on its header (`.summary-head`), showing the title and headline when closed (Walter, 2026-10-13). It starts closed, and the phone remembers each week's state in `localStorage` (`wm.review.<week_of>`).
+- The daily "Yesterday" card is the same kind of box (Walter, 2026-10-14). Both use `reviewBox()` in `app/views/week.js`; the Yesterday state is kept under `wm.daily.<date>`.
 
 ## GitHub sync and notifications (stage 5)
 - `app/sync.js` (engine, works in Node) and `app/sync-ui.js` (queue, badge, Settings, Restore). The phone is the only writer of `data/log/`: monthly files per store (`data/log/<store>/YYYY-MM.json`), single files for phases, exercise prefs, foods and the synced meta (`settings.json`, `onboarding.json`, `push_subscription.json`). Seeded history (`source: "history"`) is not copied; Restore re-seeds it.
