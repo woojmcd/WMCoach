@@ -26,10 +26,22 @@ const num = (x) => {
 // can arrive before Oura has written the night (Walter, 2026-10-13).
 export const hasRecovery = (h) => Boolean(h && [h.hrv_ms, h.resting_hr, h.sleep_h].some(Number.isFinite));
 
+// More sleep than this from one overnight window isn't a real night: a sync that ran while
+// Oura was still writing counted the night twice (14.3 h for 7.2 h on 2026-10-17). It's
+// dropped and kept as sleep_unsettled, so the night counts as not in yet and the phone
+// shows the Sync Health chip; the re-sync's real number then reruns the day (spec §2b).
+export const MAX_SLEEP_H = 12;
+
 export function normalizeHealth(h) {
   if (!h || typeof h !== 'object') return null;
-  return { ...h, hrv_ms: num(h.hrv_ms), resting_hr: num(h.resting_hr), sleep_h: num(h.sleep_h), steps: num(h.steps), weight_lb: num(h.weight_lb) };
+  const sleep = num(h.sleep_h);
+  const out = { ...h, hrv_ms: num(h.hrv_ms), resting_hr: num(h.resting_hr), sleep_h: sleep, steps: num(h.steps), weight_lb: num(h.weight_lb) };
+  if (sleep !== null && sleep > MAX_SLEEP_H) { out.sleep_h = null; out.sleep_unsettled = sleep; }
+  return out;
 }
+
+// Today's Health file is settled: it has recovery data and no implausible sleep.
+export const healthSettled = (h) => hasRecovery(h) && !(h && h.sleep_unsettled);
 
 // healthByDate: { 'YYYY-MM-DD': { hrv_ms, resting_hr, sleep_h, steps } } (data/health/)
 export function baselines(healthByDate, today, days = 7) {
