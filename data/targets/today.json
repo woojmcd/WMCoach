@@ -1,29 +1,17 @@
 {
   "schema_version": 1,
-  "local_date": "2026-10-17",
+  "local_date": "2026-10-18",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-17T16:15:16.068Z",
+  "generated_utc": "2026-10-18T17:08:10.949Z",
   "readiness": {
-    "status": "amber",
-    "flags": [
-      {
-        "key": "rhr",
-        "text": "resting HR up (74 vs 63)"
-      }
-    ],
-    "reason": "resting HR up (74 vs 63)",
-    "missing": false,
-    "travel": null,
-    "hrv_ms": null,
-    "resting_hr": 74,
-    "sleep_h": 14.325,
-    "baseline": {
-      "hrv_ms": null,
-      "resting_hr": 63
-    }
+    "status": "green",
+    "flags": [],
+    "reason": "no recovery data",
+    "missing": true,
+    "travel": null
   },
   "day": {
-    "dow": 6,
+    "dow": 7,
     "name": "Open: cardio / social",
     "rest_day": true
   },
@@ -36,7 +24,7 @@
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-10-17",
+    "date": "2026-10-18",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -95,36 +83,36 @@
   },
   "daily": {
     "schema_version": 1,
-    "date": "2026-10-16",
-    "label": "Fri 16 Oct",
-    "tone": "bad",
-    "headline": "Upper Pull #2 wasn’t logged. Also: readiness is amber (resting HR up (74 vs 63)). Good: cardio done, on plan, weighed in.",
-    "focus": "Log every set today as you go: the next targets come only from the logbook.",
+    "date": "2026-10-17",
+    "label": "Sat 17 Oct",
+    "tone": "good",
+    "headline": "Good day: every set logged, 1 lift beat last time, on plan.",
+    "focus": "Same again today: hit the plan and beat the logbook.",
     "today": "Open day.",
     "points": [
       {
         "key": "recovery",
         "tone": "warn",
-        "title": "Last night",
-        "text": "14.3 h sleep. Resting HR 74 (+11 vs your 63 average: a sign of fatigue or something coming on). 8,943 steps yesterday. Readiness amber (resting HR up (74 vs 63))."
+        "title": "Recovery",
+        "text": "No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health."
       },
       {
         "key": "weight",
         "tone": "good",
         "title": "Weight",
-        "text": "174.4 lb. Trend 175.3 lb (+0.1 lb in a week). 3 of the last 7 days: keep going daily."
+        "text": "175.4 lb. Trend 175.3 lb (+0.1 lb in a week). 4 of the last 7 days: keep going daily."
       },
       {
         "key": "training",
-        "tone": "bad",
+        "tone": "good",
         "title": "Training",
-        "text": "Upper Pull #2 wasn’t logged. If you trained, it doesn’t count until it’s in the app; if you skipped it, move it to the weekend rather than lose it."
+        "text": "Upper Pull #2: 24 of 24 sets logged. Beat last time on 1: Reverse Pec Deck Flyes 100×12 (was 100×10). 6 baselines set (first time logged): next time they get real targets."
       },
       {
         "key": "cardio",
-        "tone": "good",
+        "tone": "info",
         "title": "Cardio",
-        "text": "Prescribed 25 min make-up cardio: done. 22 min run (Strava). Average HR 174: above your Zone 2 (126–156), so a hard session rather than easy cardio. Week so far: 2 of 2 sessions. 3-mile pace today: easy, 8:38–9:08/mi (about 26:39), heart rate 126–156. Readiness amber (resting HR up (74 vs 63)). Baseline 7:38/mi from your last 3 3-mile runs."
+        "text": "Nothing prescribed or done. 3-mile pace today: steady, 7:28–7:48/mi (about 22:54). Readiness not in yet. Baseline 7:38/mi from your last 3 3-mile runs."
       },
       {
         "key": "food",
@@ -134,9 +122,9 @@
       }
     ],
     "pace": {
-      "kind": "easy",
-      "lo": 518,
-      "hi": 548
+      "kind": "steady",
+      "lo": 448,
+      "hi": 468
     }
   }
 }
