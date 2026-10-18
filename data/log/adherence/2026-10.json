@@ -53,9 +53,18 @@
       "local_date": "2026-10-17",
       "utc": "2026-10-17T15:05:31.680Z",
       "tz": "America/Los_Angeles",
-      "status": "yes",
+      "status": "partial",
       "kcal": null,
-      "updated_utc": "2026-10-17T15:05:31.680Z"
+      "updated_utc": "2026-10-18T23:22:17.520Z"
+    },
+    {
+      "id": "plan-baf6fd99-99e9-4bed-9160-19f52f6b44a9",
+      "local_date": "2026-10-18",
+      "utc": "2026-10-18T23:22:11.329Z",
+      "tz": "America/Los_Angeles",
+      "status": "partial",
+      "kcal": null,
+      "updated_utc": "2026-10-18T23:22:11.329Z"
     }
   ]
 }
