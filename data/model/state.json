@@ -200,13 +200,13 @@
     },
     {
       "local_date": "2026-10-18",
-      "status": "green"
+      "status": "amber"
     }
   ],
   "health_missing_on": "2026-10-18",
   "last_daily_run_utc": "2026-10-18T17:08:10.949Z",
   "last_daily_run_tz": "America/Los_Angeles",
-  "health_rerun_on": "2026-10-17",
+  "health_rerun_on": "2026-10-18",
   "hr_zones": {
     "zones": [
       {
@@ -254,11 +254,11 @@
   ],
   "health_seen": {
     "local_date": "2026-10-18",
-    "sig": null
+    "sig": "[null,87,null,4177,null]"
   },
   "health_reruns": {
-    "local_date": "2026-10-17",
-    "n": 2
+    "local_date": "2026-10-18",
+    "n": 1
   },
   "run_zones": {
     "zones": [

@@ -2,13 +2,25 @@
   "schema_version": 1,
   "local_date": "2026-10-18",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-18T17:08:10.949Z",
+  "generated_utc": "2026-10-18T23:22:13.788Z",
   "readiness": {
-    "status": "green",
-    "flags": [],
-    "reason": "no recovery data",
-    "missing": true,
-    "travel": null
+    "status": "amber",
+    "flags": [
+      {
+        "key": "rhr",
+        "text": "resting HR up (87 vs 65)"
+      }
+    ],
+    "reason": "resting HR up (87 vs 65)",
+    "missing": false,
+    "travel": null,
+    "hrv_ms": null,
+    "resting_hr": 87,
+    "sleep_h": null,
+    "baseline": {
+      "hrv_ms": null,
+      "resting_hr": 65
+    }
   },
   "day": {
     "dow": 7,
@@ -85,16 +97,16 @@
     "schema_version": 1,
     "date": "2026-10-17",
     "label": "Sat 17 Oct",
-    "tone": "good",
-    "headline": "Good day: every set logged, 1 lift beat last time, on plan.",
-    "focus": "Same again today: hit the plan and beat the logbook.",
+    "tone": "warn",
+    "headline": "Readiness is amber (resting HR up (87 vs 65)). Good: every set logged, 1 lift beat last time, on plan.",
+    "focus": "Loads are held today: beat the reps, not the weight, and keep cardio truly easy.",
     "today": "Open day.",
     "points": [
       {
         "key": "recovery",
         "tone": "warn",
-        "title": "Recovery",
-        "text": "No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health."
+        "title": "Last night",
+        "text": "Resting HR 87 (+22 vs your 65 average: a sign of fatigue or something coming on). 4,177 steps yesterday. Readiness amber (resting HR up (87 vs 65))."
       },
       {
         "key": "weight",
@@ -112,7 +124,7 @@
         "key": "cardio",
         "tone": "info",
         "title": "Cardio",
-        "text": "Nothing prescribed or done. 3-mile pace today: steady, 7:28–7:48/mi (about 22:54). Readiness not in yet. Baseline 7:38/mi from your last 3 3-mile runs."
+        "text": "Nothing prescribed or done. 3-mile pace today: easy, 8:38–9:08/mi (about 26:39), heart rate 126–156. Readiness amber (resting HR up (87 vs 65)). Baseline 7:38/mi from your last 3 3-mile runs."
       },
       {
         "key": "food",
@@ -122,9 +134,9 @@
       }
     ],
     "pace": {
-      "kind": "steady",
-      "lo": 448,
-      "hi": 468
+      "kind": "easy",
+      "lo": 518,
+      "hi": 548
     }
   }
 }
