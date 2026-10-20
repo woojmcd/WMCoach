@@ -86,10 +86,10 @@
   },
   "trend": {
     "half_life_days": 7,
-    "last_local_date": "2026-10-17",
-    "last_weight_lb": 175.4,
-    "trend_lb": 175.3,
-    "rate_14d_pct_bw_wk": 0.05
+    "last_local_date": "2026-10-19",
+    "last_weight_lb": 177.8,
+    "trend_lb": 175.8,
+    "rate_14d_pct_bw_wk": 0.15
   },
   "tdee": {
     "method": "prior",
@@ -159,7 +159,7 @@
     }
   ],
   "progression": {},
-  "last_daily_run_local_date": "2026-10-17",
+  "last_daily_run_local_date": "2026-10-19",
   "last_weekly_run_week": "2026-10-18",
   "readiness_history": [
     {
@@ -196,13 +196,21 @@
     },
     {
       "local_date": "2026-10-17",
+      "status": "amber"
+    },
+    {
+      "local_date": "2026-10-18",
+      "status": "amber"
+    },
+    {
+      "local_date": "2026-10-19",
       "status": "green"
     }
   ],
-  "health_missing_on": "2026-10-14",
-  "last_daily_run_utc": "2026-10-17T15:06:16.723Z",
+  "health_missing_on": "2026-10-18",
+  "last_daily_run_utc": "2026-10-19T15:43:01.578Z",
   "last_daily_run_tz": "America/Los_Angeles",
-  "health_rerun_on": "2026-10-14",
+  "health_rerun_on": "2026-10-18",
   "hr_zones": {
     "zones": [
       {
@@ -226,7 +234,7 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-10-17"
+    "updated_local_date": "2026-10-19"
   },
   "weekly_history": [
     {
@@ -249,40 +257,40 @@
     }
   ],
   "health_seen": {
-    "local_date": "2026-10-17",
-    "sig": "[null,61,14.325,8943,null]"
+    "local_date": "2026-10-19",
+    "sig": "[null,63,14.3416666666667,2907,null]"
   },
   "health_reruns": {
-    "local_date": "2026-10-14",
-    "n": 2
+    "local_date": "2026-10-18",
+    "n": 1
   },
   "run_zones": {
     "zones": [
       {
         "min": 0,
-        "max": 2.797
+        "max": 2.793
       },
       {
-        "min": 2.797,
-        "max": 3.249
+        "min": 2.793,
+        "max": 3.245
       },
       {
-        "min": 3.249,
-        "max": 3.619
+        "min": 3.245,
+        "max": 3.614
       },
       {
-        "min": 3.619,
-        "max": 3.866
+        "min": 3.614,
+        "max": 3.861
       },
       {
-        "min": 3.866,
-        "max": 4.113
+        "min": 3.861,
+        "max": 4.107
       },
       {
-        "min": 4.113,
+        "min": 4.107,
         "max": -1
       }
     ],
-    "updated_local_date": "2026-10-17"
+    "updated_local_date": "2026-10-19"
   }
 }

@@ -53,9 +53,36 @@
       "local_date": "2026-10-17",
       "utc": "2026-10-17T15:05:31.680Z",
       "tz": "America/Los_Angeles",
+      "status": "partial",
+      "kcal": null,
+      "updated_utc": "2026-10-18T23:22:17.520Z"
+    },
+    {
+      "id": "plan-baf6fd99-99e9-4bed-9160-19f52f6b44a9",
+      "local_date": "2026-10-18",
+      "utc": "2026-10-18T23:22:11.329Z",
+      "tz": "America/Los_Angeles",
+      "status": "partial",
+      "kcal": null,
+      "updated_utc": "2026-10-18T23:22:11.329Z"
+    },
+    {
+      "id": "plan-24370729-557e-4fb9-a915-b6b5f828ddae",
+      "local_date": "2026-10-19",
+      "utc": "2026-10-19T15:42:28.163Z",
+      "tz": "America/Los_Angeles",
       "status": "yes",
       "kcal": null,
-      "updated_utc": "2026-10-17T15:05:31.680Z"
+      "updated_utc": "2026-10-19T15:42:28.163Z"
+    },
+    {
+      "id": "plan-20a98823-5061-4214-a1d9-fa7d103efe7c",
+      "local_date": "2026-10-20",
+      "utc": "2026-10-20T15:33:33.217Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-10-20T15:33:33.217Z"
     }
   ]
 }

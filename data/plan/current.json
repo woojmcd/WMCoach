@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "2026-10-11",
-  "week_start": "2026-10-11",
-  "week_end": "2026-10-17",
+  "id": "2026-10-18",
+  "week_start": "2026-10-18",
+  "week_end": "2026-10-24",
   "mode": "bulk",
   "plan": {
     "structure": "single",
@@ -150,15 +150,15 @@
       "F": 52.7,
       "kcal": 2492
     },
-    "id": "BULK-2026-10-11",
+    "id": "BULK-2026-10-18",
     "phase": "Bulk",
-    "start": "2026-10-11",
+    "start": "2026-10-18",
     "based_on": "CUT26-V4",
     "carb_steps": 1,
     "coach_note": "Week 1 of the bulk: CUT26-V4's high-carb day (MP2), +1 carb step to fit 2488 kcal."
   },
   "source": "routine",
-  "based_on": "2026-10-04",
+  "based_on": "2026-10-11",
   "changes": {
     "structure": null,
     "items": [],
@@ -172,17 +172,17 @@
   "decision": {
     "change": 0,
     "stoppedAt": "adherence",
-    "reason": "adherence not logged; observe-only start: 13 more days and 9 more weigh-ins before the first change",
+    "reason": "adherence 0 % (under 90 %); observe-only start: 6 more days and 5 more weigh-ins before the first change",
     "checks": [
       {
         "key": "adherence",
         "ok": false,
-        "text": "adherence not logged; observe-only start: 13 more days and 9 more weigh-ins before the first change"
+        "text": "adherence 0 % (under 90 %); observe-only start: 6 more days and 5 more weigh-ins before the first change"
       }
     ]
   },
   "notes": [],
-  "reason": "No macro change: adherence not logged; observe-only start: 13 more days and 9 more weigh-ins before the first change.",
+  "reason": "No macro change: adherence 0 % (under 90 %); observe-only start: 6 more days and 5 more weigh-ins before the first change.",
   "cardio": {
     "schema_version": 1,
     "mode": "bulk",
@@ -198,8 +198,8 @@
     "reason": "Bulk: two easy sessions a week for heart health, recovery and appetite. Their calories count in your expenditure, so the food covers them and you keep gaining.",
     "change": null
   },
-  "generated_utc": "2026-10-10T14:00:29.619Z",
-  "generated_local_date": "2026-10-10",
-  "created_utc": "2026-10-10T14:00:29.619Z",
-  "updated_utc": "2026-10-11T17:08:47.331Z"
+  "generated_utc": "2026-10-17T15:06:16.723Z",
+  "generated_local_date": "2026-10-17",
+  "created_utc": "2026-10-17T15:06:16.723Z",
+  "updated_utc": "2026-10-18T17:08:10.949Z"
 }
