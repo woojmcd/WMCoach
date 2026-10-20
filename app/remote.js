@@ -10,7 +10,7 @@ import { GitHub } from './sync.js';
 import { weekDates } from '../coach/time.js';
 import { normalizeHealth, healthSettled } from '../coach/readiness.js';
 // Bumped when what makes today's Health file "complete" changes, so a cached answer is rechecked.
-const HEALTH_RULE = 2;
+const HEALTH_RULE = 3;
 
 const PULL_EVERY_MS = 5 * 60 * 1000;
 const FILES = ['data/targets/today.json', 'data/plan/current.json', 'data/plan/next.json'];

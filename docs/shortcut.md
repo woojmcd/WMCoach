@@ -29,6 +29,8 @@ Shortcuts app → **+** → name it exactly **`WMCoach Health`**. The app's **Sy
 
 Oura writes sleep and overnight heart rate to Apple Health, but not HRV or resting heart rate (checked 2026-10-13). So resting HR is your lowest overnight heart rate (Oura's own definition), and HRV stays blank, which the coach treats as "no data".
 
+Oura sends a night to Apple Health when its app opens and syncs. Until then Health has no sleep, and the coach treats the file as not in yet (Sync Health chip). So the best trigger is closing Oura in the morning (see **Triggers**).
+
 The **"in the last 1 day"** filter counts from midnight at the start of *yesterday*, not 24 hours, so it would mix in the night before. Every step below uses a fixed window instead.
 
 6. **Windows.**
@@ -36,14 +38,18 @@ The **"in the last 1 day"** filter counts from midnight at the start of *yesterd
    - **Adjust Date**: *Get Start of Day* (today at midnight).
    - **Adjust Date**: *Subtract 6 hours* from that. Rename it **Sleep Window** (yesterday at 6 PM).
    - **Adjust Date**: *Subtract 1 day* from today at midnight. Rename it **Yesterday Start**.
-7. **Resting HR.** **Find Health Samples** where (all): *Type is Heart Rate*, *Source is Oura*, *Start Date is after* **Sleep Window**.
-   - Then **Calculate Statistics**: *Minimum*. This is **RHR**.
-8. **Sleep = time in bed − time awake.** Leave the Source filter off here: with it, Oura's sleep isn't found.
-   - **Find Health Samples** where (all): *Type is Sleep Analysis*, *Start Date is after* **Sleep Window**, *Value is In Bed*. Then **Get Details**: *Duration*. Then **Calculate Statistics**: *Sum*.
-   - The same again with *Value is Awake*.
-   - **Calculate**: In Bed Sum − Awake Sum. Then **Calculate**: ÷ 3600. That's **Sleep** (hours).
-   - Don't add up Core + Deep + REM instead: Oura writes some of those windows twice, and the sum reads about 45 minutes high. In Bed − Awake lands within about 10 minutes of Oura's number.
-   - "Value is Asleep" finds nothing: Oura labels every piece Core, Deep or REM.
+7. **Sleep samples.** The coach works out sleep from the samples themselves (2026-10-20). Oura rewrites a night in Health two or three times, so the same stretch is often there more than once. Sums inside the Shortcut came out double (14.3 h for a 7.2 h night), and the coach can count each stretch once.
+   - **Find Health Samples** where (all): *Type is Sleep Analysis*, *Start Date is after* **Sleep Window**. No Value or Source filter. Tap **Show More** and check **Limit** is **off**.
+   - **Repeat with Each** item in Health Samples:
+     - **Text**: `Repeat Item`'s **Start Date**, then `|`, then `Repeat Item`'s **End Date**, then `|`, then `Repeat Item`'s **Value**. To pick each one, tap the Repeat Item variable and choose the property; for both dates set **Date Format** to **ISO 8601**. One line looks like `2026-10-20T00:23:30-07:00|2026-10-20T07:46:30-07:00|In Bed`.
+     - **Add to Variable**: name it **Sleep Rows**.
+   - **End Repeat.** Then **Combine Text**: **Sleep Rows**, with **New Lines**. Rename the result **Sleep Samples**.
+8. **Heart rate samples.** Resting HR is the lowest heart rate *inside the night*, like Oura's "lowest heart rate".
+   - **Find Health Samples** where (all): *Type is Heart Rate*, *Source is Oura*, *Start Date is after* **Sleep Window**. **Limit off.** With a limit on, it sees only the latest readings. That's the likely reason the old step sent 61–87 for nights whose lowest was 52–58.
+   - **Repeat with Each**: **Text** = `Repeat Item`'s **Start Date** (ISO 8601), `|`, `Repeat Item`'s **Value**. **Add to Variable** **HR Rows**.
+   - **End Repeat.** **Combine Text**: **HR Rows**, with **New Lines**. Rename it **HR Samples**.
+   - The old **RHR** and **Sleep** steps (Calculate Statistics, In Bed − Awake) can go. If they stay, the coach ignores them whenever the samples are there.
+
 9. **Steps (yesterday).** **Find Health Samples** where (all): *Type is Steps*, *Source is* your iPhone, *Start Date is after* **Yesterday Start**, *Start Date is before* today at midnight.
    - Then **Calculate Statistics**: *Sum*. That's **Steps**.
    - Without the Source filter, the iPhone, Oura and Garmin are all added up and it reads about 35 % high. The iPhone alone comes within a few percent of the Health app's total.
@@ -52,12 +58,12 @@ The **"in the last 1 day"** filter counts from midnight at the start of *yesterd
 
 **2. Build the file.**
 
-11. **Dictionary** with these keys. Set each value's type to **Number**, except `date` and `tz` (Text):
+11. **Dictionary** with these keys. Set each value's type to **Number**, except `date`, `tz`, `sleep_samples` and `hr_samples` (Text):
     - `date` = Today
     - `tz` = Zone
-    - `hrv_ms` = HRV
-    - `resting_hr` = RHR
-    - `sleep_h` = Sleep
+    - `hrv_ms` = HRV (blank: Oura doesn't share it)
+    - `sleep_samples` (**Text**) = Sleep Samples
+    - `hr_samples` (**Text**) = HR Samples
     - `steps` = Steps
     - `weight_lb` = Weight
 
@@ -101,17 +107,21 @@ The morning Shortcut stops once today's file exists. That's on purpose, so every
 
 When today's file is missing or has no sleep or heart-rate data, the app shows a **Sync Health** chip on the Log and Body tabs. It opens the Resync copy when today's file exists, and the main Shortcut when it doesn't. A re-sync with new numbers makes the next coach run redo today's readiness, targets and daily summary, up to 3 times a day.
 
+After changing the morning Shortcut, delete the old **WMCoach Health Resync** and make it again from the new one (the three steps above), so both send the samples.
+
 ## Triggers
 Shortcuts → **Automation** → **+** → **Create Personal Automation**. Set every automation to **Run Immediately** and turn **Notify When Run** off.
 
 | Trigger | Set up | Why |
 |---|---|---|
+| **App → Oura → Is Closed** | Oura only. Best one. | Checking Oura makes it send last night to Health; closing it is the moment the data is there. |
 | **App → Is Opened** | Pick 1–3 apps you open every morning (e.g. Messages, Mail, Strava). | The phone is unlocked by definition, so this is the reliable one. Step 0 makes repeats harmless. |
 | **Time of Day** | Daily, about 07:15 (just after you're usually up). | A second chance. It works only if the phone happens to be unlocked; when it fails, nothing breaks. |
 | **Manual** | Nothing to set up. | When today's file is missing, the app's Log and Body tabs show a **Sync Health** chip that runs this Shortcut. |
 
 ## When something's off
 - **The Sync Health chip stays:** open Oura so it syncs last night to Health, then tap the chip (or run the Resync copy). If step 13 fails, the GitHub token has expired: make a new one and paste it in steps 3 and 13 of both Shortcuts.
-- **Sleep reads about double (e.g. 14 h):** the Shortcut ran while Oura was still writing the night and caught it twice. The coach ignores any sleep over 12 h and shows the **Sync Health** chip; wait a few minutes, then tap it (or run the Resync copy).
+- **Sleep reads about double (e.g. 14 h):** the old In Bed − Awake sums counted a night Oura had written twice. Steps 7–8 above fix it; until then the coach ignores any sleep over 12 h and shows the **Sync Health** chip.
+- **No sleep, odd resting HR:** Oura hadn't sent the night to Health yet. Open Oura, wait for it to sync, then tap **Sync Health**.
 - **"Protected health data is inaccessible":** the phone was locked. The App-opened trigger covers it.
 - **Travel:** nothing to change. The Shortcut uses the phone's clock and zone, so it runs in your morning wherever you are.

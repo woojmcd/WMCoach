@@ -83,7 +83,7 @@ Everything that means "today", "this morning" or "Saturday" is in **Walter's cur
   - Primary: the iOS Shortcut fires the routine's API trigger right after its Health commit, on Walter's first unlocked use of the phone each morning (§12). Automations follow the phone's clock, so this happens in his morning wherever he is.
   - Backup: two schedule triggers (e.g. 10:07 and 18:07 in his home zone, America/Los_Angeles). These cover a day the Shortcut didn't run. They must not be earlier than his usual wake time, or they would claim the day before the Health data arrives.
   - Every run is **idempotent**: it reads the current zone from `settings.json`, computes Walter's local date, and exits early if `last_daily_run_local_date` already equals it. Backup runs do nothing on normal days.
-  - Exception: when today's Health file has **new numbers** since the day's run (it arrived late, or was re-synced), the next fire recomputes **readiness, today's targets and the daily summary only** (no plan or model changes), at most 3 times a day. A file without sleep, resting HR or HRV counts as missing: an early sync can come before Oura has written the night (Walter, 2026-10-13). A sync right after waking can also catch the night twice (14.3 h for 7.2 h on 2026-10-17), so sleep over 12 h is dropped as unsettled: readiness uses the rest, the daily summary says to re-sync, and the chip shows until the real number arrives. The phone shows the Sync Health chip for a missing, empty or unsettled file; it opens the "WMCoach Health Resync" Shortcut when the file exists (§12).
+  - Exception: when today's Health file has **new numbers** since the day's run (it arrived late, or was re-synced), the next fire recomputes **readiness, today's targets and the daily summary only** (no plan or model changes), at most 3 times a day. A file without sleep, resting HR or HRV counts as missing: an early sync can come before Oura has written the night (Walter, 2026-10-13). A sync right after waking can also catch the night twice (14.3 h for 7.2 h on 2026-10-17), so sleep over 12 h is dropped as unsettled. Since 2026-10-20 the Shortcut sends the raw sleep and heart-rate samples (`sleep_samples`, `hr_samples`) and the coach computes sleep (asleep stages minus Awake, each stretch counted once, inside the main In Bed window) and resting HR (the lowest heart rate inside that window). A file with no sleep means Oura hasn't sent the night yet, so its resting HR is ignored too. For any remaining case: readiness uses the rest, the daily summary says to re-sync, and the chip shows until the real number arrives. The phone shows the Sync Health chip for a missing, empty or unsettled file; it opens the "WMCoach Health Resync" Shortcut when the file exists (§12).
 - **Weekly step:** runs inside the daily run when the local weekday is the day before prep day (default Saturday) and `last_weekly_run_week` isn't this week. Missing Saturday entirely (e.g. no signal) → the first run on prep day does it, before the swap.
 - **Readiness baselines** use nightly values regardless of zone. On the first 2 nights after a shift of ≥ 3 h, flag "travel" and cap readiness at Amber instead of Red: jet lag skews HRV and sleep, and the data isn't telling us about training fatigue.
 - **Travel mode** (§4.4) is separate from the timezone and is still a manual toggle.
@@ -147,6 +147,7 @@ Dark only (no light theme). The feel is a premium instrument: quiet, precise, lo
 ### 4.1 Week
 - Mon–Sun strip for the current week in local time; today highlighted. Mon–Fri show the session name (Push #1, Pull #1, Legs and abs, Upper Push #2, Upper Pull #2); Sat/Sun show "Open: cardio / social" plus any Strava activity logged.
 - Tap a day to open that day's workout (logging view for today; read-only for past days; preview of targets for future days).
+- A workout done on another day (Log tab → **Switch workout** / **Lift today instead**) counts for its own day: the day's row says "Moved · done Sat", and the Week in review counts it done ("Moved: Upper Pull #2 to Sat."), matched by program day within the 7-day window (Walter, 2026-10-20).
 - Every day up to today also shows its weight and food ("176.0 lb · On plan", or "No weigh-in · Food not logged" in amber), and its sheet opens with the Body tab's weight and "On plan?" inputs, so a forgotten day can be filled in or corrected later. Saving again edits that day's entry (Walter, 2026-10-17).
 - A banner area for plan notices (see §8.4).
 
@@ -177,7 +178,7 @@ Backoff      [ 55] [12 ]             ✓
 Top to bottom (order changed 2026-10-15: "On plan today?" first so it's tapped daily, the phase selector last):
 1. A daily **"On plan today?"** tap: Yes / Partial / Off (optional kcal estimate). This feeds the adherence gate.
 2. **Daily weight** entry: one field defaulting to today (local date); can backdate for missed days; morning fasted, after the bathroom.
-3. **Weekly measurements card** (appears on check-in day, Friday; collapses once logged): waist, neck, chest, arm, thigh (§9), each entered twice and averaged automatically. Placeholders show last week's values.
+3. **Weekly measurements card** (appears on check-in day, Friday; collapses once logged): waist, neck, chest, arm, thigh (§9), one tape reading each (Walter, 2026-10-20; older entries hold two, averaged). Placeholders show last week's values.
 4. **Weekly check-in form** (Friday, same card): adherence this week (auto-filled from daily on-plan taps, editable), biofeedback 1–5 for hunger, energy, sleep, stress and digestion, and an optional note.
 5. **Trend graph:**
    - Faint raw weigh-in dots with the EWMA trend line on top (half-life 7 d).
@@ -420,7 +421,7 @@ On a day with a ride > 2 h or a long run (or the day after, if it was late): add
 | Arm | mid upper arm, relaxed, same side each week |
 | Thigh | midway between hip crease and top of kneecap, same side |
 
-**Protocol:** Friday morning, fasted, after the weigh-in, before training. Tape snug, not compressing. Two readings per site, averaged by the app.
+**Protocol:** Friday morning, fasted, after the weigh-in, before training. Tape snug, not compressing. One reading per site (Walter, 2026-10-20).
 
 **Body-fat estimate:** US Navy circumference formula (men: waist, neck, height). Display it as a trend only (±3–4 % absolute error). Smart-scale body-fat readings from Health are also trend-only and never trigger a change.
 

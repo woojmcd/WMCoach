@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { readiness, baselines, travelShift, normalizeHealth, healthSettled, hasRecovery } from '../../coach/readiness.js';
+import { readiness, baselines, travelShift, normalizeHealth, healthSettled, hasRecovery, sleepFromSamples, restingFromSamples } from '../../coach/readiness.js';
 import { planDay } from '../../coach/progression.js';
 import { addDays } from '../../coach/time.js';
 
@@ -92,4 +92,43 @@ test('a double-counted night (14.3 h, 2026-10-17) is dropped as unsettled: the f
   assert.equal(healthSettled(normalizeHealth({ resting_hr: 61, sleep_h: '7.2' })), true);
   assert.equal(healthSettled(normalizeHealth({ resting_hr: 61, sleep_h: 12 })), true, '12 h is possible');
   assert.equal(readiness({ health: { '2026-10-17': h }, today: '2026-10-17' }).status, 'green');
+});
+
+// Shortcut rows: "<start ISO>|<end ISO>|<value>" and "<start ISO>|<bpm>" (Walter, 2026-10-20)
+const row = (a, b, v) => `${a}-07:00|${b}-07:00|${v}`;
+const night17 = [
+  row('2026-10-16T23:25:00', '2026-10-17T08:02:30', 'In Bed'),
+  row('2026-10-16T23:25:00', '2026-10-16T23:29:00', 'Awake'),
+  row('2026-10-16T23:29:00', '2026-10-17T07:13:30', 'Core'),
+  row('2026-10-17T07:13:30', '2026-10-17T08:02:30', 'Awake'),
+];
+
+test('sleep from raw samples: overlapping rewrites count once, Awake is taken out', () => {
+  const once = sleepFromSamples(night17.join('\n'));
+  assert.equal(once.sleep_h, 7.74);
+  // Oura wrote the same night twice: the same answer, where sums gave double (14.3 h)
+  assert.equal(sleepFromSamples([...night17, ...night17].join('\n')).sleep_h, 7.74);
+  // the real Oct 18→19 night from Health: 136 samples, several revisions on top of each other
+  const real = sleepFromSamples(readFileSync(new URL('../fixtures/health-sleep-2026-10-19.txt', import.meta.url), 'utf8'));
+  assert.equal(real.sleep_h, 6.15, 'in bed 8.7 h, 2.6 h awake (one 83-min stretch)');
+  assert.equal(sleepFromSamples(''), null);
+  assert.equal(sleepFromSamples('2026-10-17T09:00:00-07:00|2026-10-17T09:10:00-07:00|Awake'), null);
+});
+
+test('resting HR = the lowest heart rate inside the night, not the day', () => {
+  const { window } = sleepFromSamples(night17.join('\n'));
+  const hr = ['2026-10-16T19:10:00-07:00|52', '2026-10-17T03:40:00-07:00|56 count/min', '2026-10-17T05:00:00-07:00|58', '2026-10-17T10:00:00-07:00|74'].join('\n');
+  assert.equal(restingFromSamples(hr, window), 56, 'the 52 at 7 PM is before bed');
+  assert.equal(restingFromSamples(hr, null), null);
+  const h = normalizeHealth({ date: '2026-10-17', sleep_h: '14.325', resting_hr: '74', sleep_samples: night17.join('\n'), hr_samples: hr, steps: '8943' });
+  assert.deepEqual([h.sleep_h, h.resting_hr, h.steps, 'sleep_samples' in h], [7.74, 56, 8943, false], 'the samples win over the Shortcut’s own sums');
+  assert.equal(healthSettled(h), true);
+});
+
+test('no sleep in the file: the night isn’t in Health yet, so its "resting HR" waits too', () => {
+  const h = normalizeHealth({ date: '2026-10-18', hrv_ms: '', steps: '4177', sleep_h: '', resting_hr: '87' });
+  assert.deepEqual([h.resting_hr, h.resting_hr_unsettled, hasRecovery(h), healthSettled(h)], [null, 87, false, false]);
+  assert.equal(readiness({ today: '2026-10-18', health: { '2026-10-18': h } }).reason, 'no recovery data');
+  const empty = normalizeHealth({ resting_hr: '87', sleep_samples: '2026-10-18T10:00:00-07:00|2026-10-18T10:05:00-07:00|Awake', hr_samples: '2026-10-18T10:00:00-07:00|87' });
+  assert.deepEqual([empty.sleep_h, empty.resting_hr], [null, null]);
 });

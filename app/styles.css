@@ -518,7 +518,7 @@ h2.section { margin: 32px 0 12px; }
 .rate .val { font-size: 17px; font-variant-numeric: tabular-nums; }
 .rate .band { font-size: 12px; color: var(--text-2); font-variant-numeric: tabular-nums; }
 
-.site-row { display: grid; grid-template-columns: minmax(0, 1fr) 72px 72px 56px; gap: 8px; align-items: center; min-height: 52px; }
+.site-row { display: grid; grid-template-columns: minmax(0, 1fr) 96px; gap: 8px; align-items: center; min-height: 52px; }
 .site-row .input { min-height: 44px; padding: 0 8px; text-align: center; font-variant-numeric: tabular-nums; }
 .site-row .avg { text-align: right; font-variant-numeric: tabular-nums; color: var(--text); }
 .site-row .site { font-size: 15px; }
