@@ -86,10 +86,10 @@
   },
   "trend": {
     "half_life_days": 7,
-    "last_local_date": "2026-10-20",
-    "last_weight_lb": 175.8,
+    "last_local_date": "2026-10-21",
+    "last_weight_lb": 176.4,
     "trend_lb": 175.8,
-    "rate_14d_pct_bw_wk": 0.19
+    "rate_14d_pct_bw_wk": 0.21
   },
   "tdee": {
     "method": "prior",
@@ -159,7 +159,7 @@
     }
   ],
   "progression": {},
-  "last_daily_run_local_date": "2026-10-20",
+  "last_daily_run_local_date": "2026-10-21",
   "last_weekly_run_week": "2026-10-18",
   "readiness_history": [
     {
@@ -209,10 +209,14 @@
     {
       "local_date": "2026-10-20",
       "status": "green"
+    },
+    {
+      "local_date": "2026-10-21",
+      "status": "green"
     }
   ],
   "health_missing_on": "2026-10-20",
-  "last_daily_run_utc": "2026-10-20T17:09:21.360Z",
+  "last_daily_run_utc": "2026-10-21T15:39:29.227Z",
   "last_daily_run_tz": "America/Los_Angeles",
   "health_rerun_on": "2026-10-18",
   "hr_zones": {
@@ -238,7 +242,7 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-10-20"
+    "updated_local_date": "2026-10-21"
   },
   "weekly_history": [
     {
@@ -261,8 +265,8 @@
     }
   ],
   "health_seen": {
-    "local_date": "2026-10-20",
-    "sig": null
+    "local_date": "2026-10-21",
+    "sig": "[null,61,7.65,7312,null]"
   },
   "health_reruns": {
     "local_date": "2026-10-18",
@@ -272,29 +276,29 @@
     "zones": [
       {
         "min": 0,
-        "max": 2.789
+        "max": 2.793
       },
       {
-        "min": 2.789,
-        "max": 3.24
+        "min": 2.793,
+        "max": 3.245
       },
       {
-        "min": 3.24,
-        "max": 3.609
+        "min": 3.245,
+        "max": 3.614
       },
       {
-        "min": 3.609,
-        "max": 3.856
+        "min": 3.614,
+        "max": 3.861
       },
       {
-        "min": 3.856,
-        "max": 4.102
+        "min": 3.861,
+        "max": 4.107
       },
       {
-        "min": 4.102,
+        "min": 4.107,
         "max": -1
       }
     ],
-    "updated_local_date": "2026-10-20"
+    "updated_local_date": "2026-10-21"
   }
 }
