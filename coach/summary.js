@@ -180,6 +180,8 @@ function trainingPoint({ sessions, program, period, today }) {
   if (!plannedN && !doneCount) return { point: null, lifts };
   const of = Math.max(plannedN, doneCount);
   parts.push(`${doneCount} of ${of} session${of === 1 ? '' : 's'}.`);
+  const travel = planned.filter((p) => p.done && p.session.travel);
+  if (travel.length) parts.push(`Travel workout${travel.length === 1 ? '' : 's'}: ${travel.map((m) => m.day.name).join(', ')} (done with comparable lifts; strength is judged on gym days).`);
   if (moved.length) parts.push(`Moved: ${moved.map((m) => `${m.day.name} to ${WEEKDAYS[isoWeekday(m.session.local_date) - 1]}`).join(', ')}.`);
   if (missed.length) parts.push(`Missed ${missed.map((m) => `${WEEKDAYS[isoWeekday(m.date) - 1]} (${m.day.name})`).join(', ')}. Every missed session is progress you don’t get back.`);
   const fmt = (l) => `${l.name} ${l.prev.load}×${l.prev.reps} → ${l.cur.load}×${l.cur.reps}`;

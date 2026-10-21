@@ -10,9 +10,10 @@ import {
 import { startRest, stopRest, unlockAudio, keepAwake } from '../timer.js';
 import { targetFor, historyFor, RIR_CHIPS } from '../../coach/progression.js';
 import { dayForWeekday, slug } from '../../coach/program.js';
+import { travelExercise, travelMovement } from '../../coach/travel.js';
 import { isoWeekday, formatDayMonth, WEEKDAYS } from '../../coach/time.js';
 
-const ui = { dayDow: null, active: null, date: null };
+const ui = { dayDow: null, active: null, date: null, travel: false };
 
 const KIND_LABEL = { work: 'Set', top: 'Top', backoff: 'Backoff', amrap: 'Set', timed: 'Set' };
 
@@ -89,32 +90,41 @@ export async function render(screen, ctx) {
   const training = await loadTraining(ctx);
   ctx.training = training;
   const today = training.today;
-  if (ui.date !== today) { ui.date = today; ui.dayDow = null; ui.active = null; }
+  if (ui.date !== today) { ui.date = today; ui.dayDow = null; ui.active = null; ui.travel = false; }
   const todays = training.sessions.filter((s) => s.local_date === today);
   const dow = ui.dayDow ?? (todays.length ? todays[todays.length - 1].day_dow : isoWeekday(today));
   const day = dayForWeekday(ctx.program, dow);
-  const pidx = programIndex(ctx.program);
+  const gymIdx = programIndex(ctx.program);
 
   if (!day.exercises.length) {
     ctx.setActiveSession(null);
     return renderOpenDay(screen, ctx, training);
   }
 
-  let session = todays.filter((s) => s.day_dow === dow).pop() || draftSession(ctx, training, day);
+  let session = todays.filter((s) => s.day_dow === dow).pop() || draftSession(ctx, training, day, new Date(), { travel: ui.travel });
+  // a travel session's lifts: the travel version of each slot (coach/travel.js)
+  const pidx = session.travel
+    ? { ...gymIdx, ...Object.fromEntries(session.exercises.map((e) => [e.slot_id, travelExercise(gymIdx[e.slot_id], e.name)])) }
+    : gymIdx;
   ctx.setActiveSession(session.status === 'in_progress' ? session : null);
   keepAwake(session.status === 'in_progress');
 
   const prog = progressCount(session);
   const label = `Today · ${WEEKDAYS[isoWeekday(today) - 1]} ${formatDayMonth(today)} · ${training.week === 0 ? 'lead-in week' : `week ${training.week}`}`;
   const change = h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Change workout', onClick: () => chooseDay(ctx, today) }, icon('week'));
-  screen.append(header({ label, title: day.name, right: change }));
+  screen.append(header({ label: session.travel ? `${label} · travel` : label, title: day.name, right: change }));
   // switching to another day's workout, as on open days (Walter, 2026-10-13); once a set is
   // logged the session is under way, so the switch stays in the calendar icon only
   if (session.status === 'draft') {
     const other = day.dow !== isoWeekday(today) ? `Today is ${WEEKDAYS[isoWeekday(today) - 1]}: doing ${day.name} instead. ` : '';
     screen.append(h('div', { class: 'switch-row' },
       other ? h('span', { class: 'muted xsmall' }, other) : null,
-      h('button', { type: 'button', class: 'link-btn', onClick: () => chooseDay(ctx, today) }, 'Switch workout')));
+      h('button', { type: 'button', class: 'link-btn', onClick: () => chooseDay(ctx, today) }, 'Switch workout'),
+      // travelling: the same day with comparable free-weight lifts (Walter, 2026-10-20)
+      h('button', {
+        type: 'button', class: 'link-btn', 'aria-pressed': String(Boolean(session.travel)),
+        onClick: () => { ui.travel = !session.travel; ui.active = null; ctx.refresh(); },
+      }, session.travel ? 'Back to the gym version' : 'Travel workout')));
   }
 
   if (training.healthMissing) screen.append(h('div', { class: 'chip-row' }, healthChip(training.healthUrl), h('span', { class: 'muted xsmall' }, 'Today’s recovery data isn’t in yet.')));
@@ -127,6 +137,7 @@ export async function render(screen, ctx) {
     if (rd.status === 'amber') notices.push(['Readiness: amber', `${cap(rd.reason)}. Loads held today; beating a held target still counts as progress.`]);
     if (rd.status === 'red') notices.push(['Readiness: red', `${cap(rd.reason)}. Same loads, one set fewer per exercise.`]);
   }
+  if (session.travel && session.status !== 'finished') notices.push(['Travel workout', 'Comparable dumbbell and bodyweight lifts, same sets and effort. They progress from your last travel workout; your gym targets stay where they are. Swap any lift (•••) to fit what’s there.']);
   if (session.deload) notices.push(['Deload week', 'Half the sets, same loads, RIR 3+; finishers stop 2 short of failure.']);
   if (ctx.settings.lifted_less_since_may && training.week <= 2 && !session.deload) notices.push(['Easing back in', training.week <= 1 ? 'One rep further from failure (RIR +1), no load increases this week.' : 'One rep further from failure (RIR +1) this week.']);
   const calibrating = session.exercises.filter((e) => e.calibration && !e.skipped).length;
@@ -207,6 +218,7 @@ function exerciseCard(ctx, { session, idxs, pidx, training, save }) {
         h('div', { class: 'grow' },
           h('div', { class: 'ex-name' }, e.label ? h('span', { class: 'ex-tag' }, e.label) : null, e.name),
           e.swapped_from ? h('div', { class: 'ex-cue' }, `Swapped for ${e.swapped_from}`) : null,
+          e.travel_of ? h('div', { class: 'ex-cue' }, `Travel swap for ${e.travel_of}`) : null,
           pex && pex.cue ? h('div', { class: 'ex-cue' }, pex.cue) : null),
         badge, more),
       h('div', { class: 'ex-target' }, e.skipped ? 'Skipped' : targetLine(e, pex)),
@@ -394,6 +406,7 @@ function noteSheet(ctx, { session, i, save }) {
 
 function swapSheet(ctx, { session, i, pex, training, save }) {
   const e = session.exercises[i];
+  if (session.travel) { travelSwapSheet(ctx, { session, i, training, save }); return; }
   const prefs = training.prefs[e.slot_id] || {};
   const names = [...new Set([...(pex.alternates || []), ...(prefs.alternates || [])])].filter((n) => n !== e.name);
   if (e.swapped_from) names.unshift(e.swapped_from);
@@ -423,6 +436,34 @@ function swapSheet(ctx, { session, i, pex, training, save }) {
       names.length ? list : h('p', { class: 'muted small' }, 'No alternates saved for this exercise yet.'),
       custom,
       segmented([{ value: false, label: 'Just today' }, { value: true, label: 'From now on' }], false, (v) => { remember = v; }, { label: 'Swap scope' })),
+    actions: [
+      { label: 'Use this name', kind: 'primary', onClick: async () => { const n = custom.value.trim(); if (!n) { toast('Type a name or pick one above'); return true; } await apply(n); } },
+      { label: 'Cancel', kind: 'outline' },
+    ],
+  });
+}
+
+// Travel workout: pick the lift that fits the equipment; each name keeps its own travel history.
+function travelSwapSheet(ctx, { session, i, training, save }) {
+  const e = session.exercises[i];
+  const gym = programIndex(ctx.program)[e.slot_id];
+  const names = travelExercise(gym, e.name).alternates;
+  const custom = h('input', { class: 'input', placeholder: 'Other exercise…', 'aria-label': 'Other exercise name' });
+  const apply = async (name) => {
+    if (!name) return;
+    const tex = travelExercise(gym, name);
+    const t = targetFor(tex, historyFor(training.sessions, e.slot_id, travelMovement(name)), { mode: ctx.settings.mode, deload: session.deload });
+    const ex2 = exerciseFromPlan({ ex: tex, movement: tex.movement, name, swapped_from: null, target: t });
+    ui.active = null;
+    await save({ ...session, exercises: session.exercises.map((x, xi) => (xi === i ? ex2 : x)) });
+    toast(`Swapped to ${name}`);
+  };
+  const sheet = openSheet({
+    title: 'Swap exercise',
+    subtitle: `Travel options for ${gym.name}. Each keeps its own travel history.`,
+    body: h('div', { class: 'stack' },
+      h('div', { class: 'list' }, names.map((n) => h('button', { type: 'button', class: 'item', onClick: () => { sheet.close(); apply(n); } }, h('span', { class: 'grow' }, n), icon('chevron', { size: 16 })))),
+      custom),
     actions: [
       { label: 'Use this name', kind: 'primary', onClick: async () => { const n = custom.value.trim(); if (!n) { toast('Type a name or pick one above'); return true; } await apply(n); } },
       { label: 'Cancel', kind: 'outline' },
@@ -479,7 +520,7 @@ async function showNextTargets(ctx, session, day) {
   const lines = plan.map(planItem);
   openSheet({
     title: session.status === 'finished' ? 'Session saved' : 'Next session',
-    subtitle: `Next ${day.name}: targets worked out on this phone.`,
+    subtitle: session.travel ? `Travel workout saved. Your gym targets for the next ${day.name} are unchanged:` : `Next ${day.name}: targets worked out on this phone.`,
     body: h('div', { class: 'list' }, lines),
     actions: [{ label: 'Done', kind: 'primary' }],
   });

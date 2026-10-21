@@ -121,6 +121,7 @@ The new service worker installs in the background and waits. Walter sees "Update
 - `targets/today.json` → `cardio` holds today's session, the heart-rate range and the week's done items. The phone recomputes it offline from the week's Strava items in the latest targets (plus any older Stairs ✓ taps).
 - Cardio is recorded in Strava only: the cardio card is a reminder with no logging controls (Walter, 2026-10-13). On the Week tab each day's cardio is its own line under the workout (`cardioMeta` → `{ text, state }`); there is no weekly cardio box.
 - Lift days have a **Switch workout** link under the title until the first set is logged (`chooseDay`).
+- **Travel workout** (Walter, 2026-10-20): `coach/travel.js` maps each slot to a comparable dumbbell/bodyweight lift (`TRAVEL`, `travelExercise()`, `travelDay()`). Movements are `travel-<slug>`, so travel lifts keep their own history and gym targets never move. `planFor(…, { travel })` / `draftSession(…, { travel })` build it; sessions carry `travel: true`; the Log tab resolves `pidx` to the travel version. Counted as done in reviews, not judged for strength.
 - A moved workout counts for its own day: `trainingPoint()` (`coach/summary.js`) matches planned days to sessions by `day_dow` within the review window, `trainingDay()` (`coach/daily.js`) knows a day done early, and the Week tab shows "Moved · done <day>" (Walter, 2026-10-20).
 - Strava HR zones come from `get_athlete_zones` (routine step 3, saved as `zones` in `.coach/strava.json`) and are kept in `data/model/state.json` → `hr_zones`.
 

@@ -49,6 +49,7 @@ const SHELL_FILES = [
   "app/views/history.js",
   "app/views/settings.js",
   "coach/time.js",
+  "coach/travel.js",
   "coach/trend.js",
   "coach/seed.js",
   "coach/model.js",

@@ -848,6 +848,26 @@ try {
     await p.getByRole('button', { name: 'Switch workout' }).click();
     await p.locator('.sheet.show .item', { hasText: 'Pull #1' }).first().click();
     await p.locator('.title', { hasText: 'Pull #1' }).waitFor();
+    // travelling: the same day with comparable free-weight lifts (Walter, 2026-10-20)
+    await p.getByRole('button', { name: 'Travel workout' }).click();
+    await p.getByText('Travel workout', { exact: true }).first().waitFor();
+    const names = await p.locator('.ex-name').allTextContents();
+    assert.ok(names.some((n) => n.includes('Pull-ups')) && !names.some((n) => /Assisted|Hammer Pulldowns|Cable/.test(n)), `travel lifts: ${names.join(', ')}`);
+    await p.locator('.ex-cue', { hasText: 'Travel swap for Hammer Pulldowns' }).waitFor();
+    assert.match(await p.locator('.header .label, .screen .label').first().textContent(), /week 2 · travel/);
+    await p.waitForTimeout(400);
+    await shot(p, 'h10-log-travel-workout', { stage: 'stage-8' });
+    await p.getByLabel('Pull-ups reps', { exact: true }).fill('8');
+    await p.locator('.set-editor').getByRole('button', { name: /Log set|Done|Save/ }).click();
+    await p.waitForTimeout(400);
+    const travelSess = await p.evaluate(() => new Promise((resolve) => {
+      indexedDB.open('wmcoach').onsuccess = (e) => { e.target.result.transaction('sessions').objectStore('sessions').getAll().onsuccess = (r) => resolve(r.target.result.find((x) => x.local_date === '2026-10-20')); };
+    }));
+    assert.equal(travelSess.travel, true);
+    assert.equal(travelSess.day_name, 'Pull #1');
+    assert.ok(travelSess.exercises.every((e) => e.movement.startsWith('travel-')), 'own travel histories');
+    assert.deepEqual(travelSess.exercises[0].sets[0].reps, 8);
+    assert.equal(await p.getByRole('button', { name: 'Back to the gym version' }).count(), 0, 'fixed once a set is logged');
 
     await tab(p, 'Week');
     // each day's cardio on its own line under the workout; no separate weekly box

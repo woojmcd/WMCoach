@@ -103,7 +103,7 @@ export async function render(screen, ctx) {
     if (logged.length) {
       const sx = logged[logged.length - 1];
       const p = progressCount(sx);
-      meta = sx.status === 'finished' ? `Done · ${p.done} sets${sx.day_dow !== isoWeekday(d) ? ` · did ${sx.day_name}` : ''}` : `In progress · ${p.done} of ${p.total} sets`;
+      meta = sx.status === 'finished' ? `Done · ${p.done} sets${sx.travel ? ' · travel' : ''}${sx.day_dow !== isoWeekday(d) ? ` · did ${sx.day_name}` : ''}` : `In progress · ${p.done} of ${p.total} sets`;
     } else if (day && day.exercises.length && movedFor(d)) {
       meta = `Moved · done ${WEEKDAYS[isoWeekday(movedFor(d).local_date) - 1]}`;
     } else if (day && day.exercises.length) {

@@ -106,6 +106,7 @@ export function trainingDay({ date, program, sessions, activities = [], programS
   const one = (x) => (x.total ? `${x.reps} reps` : x.assist ? `${x.load} assist × ${x.reps}` : `${x.load}×${x.reps}`);
   const fmt = (l) => `${l.name} ${one(l.cur)} (was ${one(l.prev)})`;
   const parts = [`${s.day_name}: ${done} of ${plural(total, 'set')} logged${s.auto_finished ? ' (closed automatically the next morning)' : ''}.`];
+  if (s.travel) parts.push('Travel workout: comparable lifts, compared with your last travel workout; gym targets unchanged.');
   if (s.deload) parts.push('Deload: lighter on purpose, so it isn’t judged on strength.');
   else {
     if (up.length) parts.push(`Beat last time on ${up.length}: ${up.slice(0, 3).map(fmt).join('; ')}${up.length > 3 ? `; and ${up.length - 3} more` : ''}.`);

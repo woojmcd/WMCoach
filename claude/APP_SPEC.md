@@ -172,6 +172,7 @@ Backoff      [ 55] [12 ]             ✓
 - "Finish session" saves the log, and the app immediately computes the baseline next-session targets on-device (§6.2), so progression works offline even if the daily run never comes.
 - Cardio is recorded in Strava only; the Log tab has no cardio logging (Walter, 2026-10-13). Older Stairs ✓ taps still count.
 - Lift days show **Switch workout** under the title until the first set is logged, to do another day's session (open days have "Lift today instead").
+- **Travel workout** (Walter, 2026-10-20), next to Switch workout until the first set: the same day done with comparable dumbbell and bodyweight lifts (machines, cables and the Smith swapped out; `coach/travel.js`), same sets, rest and RIR. Each travel lift has its own history (`travel-…` movement), so it progresses from the last travel workout and never moves the gym targets. Any lift can be swapped for another travel option or a typed name. The session is saved with `travel: true`; it counts as done in the Week in review ("Travel workout: Legs and abs"), the daily review and the Week tab ("Done · 22 sets · travel"), and isn't used to judge strength.
 - Every day, a cardio card shows the coach's cardio for today with the lifts (§6.5).
 
 ### 4.3 Body
