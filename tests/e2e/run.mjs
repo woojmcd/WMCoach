@@ -241,14 +241,11 @@ try {
   }
   assert.ok(!(await page.locator('main').innerText()).includes('null'), 'no stray "null" text');
 
-  step('Body: measurements (two readings, averaged) + check-in');
+  step('Body: measurements (one reading per site) + check-in');
   await page.locator('.site-row input').first().waitFor();
-  const tape = { Waist: [32.1, 32.3], Neck: [15.2, 15.2], Chest: [40, 40.2], Arm: [14.1, 14.1], Thigh: [22.5, 22.7] };
-  for (const [site, [a, b]] of Object.entries(tape)) {
-    await page.getByLabel(`${site} reading 1`).fill(String(a));
-    await page.getByLabel(`${site} reading 2`).fill(String(b));
-  }
-  await page.locator('.site-row', { hasText: 'Waist' }).locator('.avg', { hasText: '32.2' }).waitFor();
+  assert.equal(await page.locator('.site-row:not(.site-head) input').count(), 5, 'one tape input per site (Walter, 2026-10-20)');
+  const tape = { Waist: 32.2, Neck: 15.2, Chest: 40.1, Arm: 14.1, Thigh: 22.6 };
+  for (const [site, v] of Object.entries(tape)) await page.getByLabel(`${site} reading`, { exact: true }).fill(String(v));
   const save = page.getByRole('button', { name: 'Save check-in' });
   assert.equal(await save.isDisabled(), true, 'biofeedback required');
   for (const [i, bio] of ['Hunger', 'Energy', 'Sleep', 'Stress', 'Digestion'].entries()) {
@@ -264,7 +261,7 @@ try {
   assert.equal(ci.adherence_pct, 50, 'auto-filled from the one Partial tap');
   assert.equal(ci.measurement_id, meas.id);
   assert.equal(meas.avg.waist, 32.2);
-  assert.deepEqual(meas.readings.waist, [32.1, 32.3]);
+  assert.deepEqual(meas.readings.waist, [32.2]);
   if (await page.getByText('Back up this week?').count()) {
     await page.evaluate(() => document.getElementById('app').scrollTo(0, 0));
     await page.waitForTimeout(3000);

@@ -56,6 +56,11 @@ test('training: a lift day with nothing logged, a Strava lift with no sets, open
   assert.equal(strava.state, 'unlogged');
   assert.match(strava.point.text, /Strava shows a 45-min lift, but no sets were logged/);
   assert.equal(trainingDay({ date: '2026-10-10', program, sessions: [s0], programStart: '2026-10-05' }), null, 'Saturday is an open day');
+  // Fri's Upper Pull #2 done early, on Thu, with "Switch workout": not missed on Friday's review
+  const early = trainingDay({ date: '2026-10-16', program, sessions: [s0, { ...session('2026-10-15', [ex(flyes, [set(45, 10)])]), day_dow: 5 }], programStart: '2026-10-05' });
+  assert.equal(early.state, 'moved');
+  assert.equal(early.point.text, 'Upper Pull #2 was already done on Thu, so nothing was missed.');
+  assert.match(trainingDay({ date: '2026-10-16', program, sessions: [s0], programStart: '2026-10-05' }).point.text, /do it on the next free day \(Log tab → Lift today instead\) and it still counts for the week\./);
   assert.equal(trainingDay({ date: '2026-10-12', program, sessions: [], programStart: null }), null, 'nothing is "missed" before the first session');
 });
 

@@ -9,7 +9,7 @@ import { parseWeightCsv, historyWeighins, historyPhases } from './seed.js';
 import { trendFromEntries, rateOverDays } from './trend.js';
 import { planDay, trainingCalendar } from './progression.js';
 import { dayForWeekday } from './program.js';
-import { readiness, normalizeHealth, hasRecovery } from './readiness.js';
+import { readiness, normalizeHealth, hasRecovery, healthSettled } from './readiness.js';
 import { normalizeFetch, stravaPath, enduranceAddons, cardioByDate } from './strava.js';
 import { estimateTdee, planKcalByDate, intakeByDate } from './tdee.js';
 import {
@@ -208,7 +208,7 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
     writes['data/model/state.json'] = json(state);
     return { status: 'rerun', today, tz, writes, notifications, report: [`New Health data for ${today}: readiness, targets and the daily summary only.`, ...report], commitMessage: `daily ${today} (${tz}): readiness after late Health data` };
   }
-  if (!hasRecovery(health[today])) state.health_missing_on = today;
+  if (!healthSettled(health[today])) state.health_missing_on = today;
 
   // ---- model state (daily) ----
   state.trend = { ...(state.trend || {}), half_life_days: (state.trend && state.trend.half_life_days) || 7, last_local_date: last ? last.date : null, last_weight_lb: last ? Math.round(last.weight * 10) / 10 : null, trend_lb: last ? Math.round(last.trend * 10) / 10 : null, rate_14d_pct_bw_wk: rate ? Math.round(rate.pct_bw_per_wk * 100) / 100 : null };
