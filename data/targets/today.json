@@ -2,13 +2,20 @@
   "schema_version": 1,
   "local_date": "2026-10-22",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-22T17:09:09.371Z",
+  "generated_utc": "2026-10-22T19:46:27.388Z",
   "readiness": {
     "status": "green",
     "flags": [],
-    "reason": "no recovery data",
-    "missing": true,
-    "travel": null
+    "reason": "recovery normal",
+    "missing": false,
+    "travel": null,
+    "hrv_ms": null,
+    "resting_hr": 61,
+    "sleep_h": null,
+    "baseline": {
+      "hrv_ms": null,
+      "resting_hr": 68
+    }
   },
   "day": {
     "dow": 4,
@@ -471,9 +478,9 @@
     "points": [
       {
         "key": "recovery",
-        "tone": "warn",
-        "title": "Recovery",
-        "text": "No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health."
+        "tone": "good",
+        "title": "Last night",
+        "text": "Resting HR 61 (−7 vs your 68 average). 10,984 steps yesterday. Readiness green."
       },
       {
         "key": "weight",
@@ -491,7 +498,7 @@
         "key": "cardio",
         "tone": "good",
         "title": "Cardio",
-        "text": "Extra: 32 min run (Strava). Average HR 127: in Zone 2. Week so far: 3 of 2 sessions. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness not in yet. Baseline 8:26/mi from your last 5 3-mile runs."
+        "text": "Extra: 32 min run (Strava). Average HR 127: in Zone 2. Week so far: 3 of 2 sessions. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness green. Baseline 8:26/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",

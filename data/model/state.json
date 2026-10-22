@@ -222,7 +222,7 @@
   "health_missing_on": "2026-10-22",
   "last_daily_run_utc": "2026-10-22T17:09:09.371Z",
   "last_daily_run_tz": "America/Los_Angeles",
-  "health_rerun_on": "2026-10-18",
+  "health_rerun_on": "2026-10-22",
   "hr_zones": {
     "zones": [
       {
@@ -270,10 +270,10 @@
   ],
   "health_seen": {
     "local_date": "2026-10-22",
-    "sig": null
+    "sig": "[null,61,null,10984,null]"
   },
   "health_reruns": {
-    "local_date": "2026-10-18",
+    "local_date": "2026-10-22",
     "n": 1
   },
   "run_zones": {
