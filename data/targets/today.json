@@ -2,13 +2,20 @@
   "schema_version": 1,
   "local_date": "2026-10-23",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-23T17:09:18.211Z",
+  "generated_utc": "2026-10-23T23:56:58.854Z",
   "readiness": {
     "status": "green",
     "flags": [],
-    "reason": "no recovery data",
-    "missing": true,
-    "travel": null
+    "reason": "recovery normal",
+    "missing": false,
+    "travel": null,
+    "hrv_ms": null,
+    "resting_hr": 63,
+    "sleep_h": 15.175,
+    "baseline": {
+      "hrv_ms": null,
+      "resting_hr": 68
+    }
   },
   "day": {
     "dow": 5,
@@ -463,15 +470,15 @@
     "date": "2026-10-22",
     "label": "Thu 22 Oct",
     "tone": "warn",
-    "headline": "You were only partly on plan. Also: no weigh-in. Good: every set logged, 5 lifts beat last time.",
+    "headline": "You were only partly on plan. Also: no weigh-in. Good: every set logged, 5 lifts beat last time, 15.2 h sleep.",
     "focus": "Eat every prepped meal today; no extras.",
     "today": "Upper Pull #2: up on Reverse Pec Deck Flyes 105 lb × 10, Single Arm DB Rows 65 lb × 8 +2 more.",
     "points": [
       {
         "key": "recovery",
-        "tone": "warn",
-        "title": "Recovery",
-        "text": "No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health."
+        "tone": "good",
+        "title": "Last night",
+        "text": "15.2 h sleep. Resting HR 63 (−5 vs your 68 average). 3,703 steps yesterday. Readiness green."
       },
       {
         "key": "weight",
@@ -489,7 +496,7 @@
         "key": "cardio",
         "tone": "info",
         "title": "Cardio",
-        "text": "Nothing prescribed or done. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness not in yet. Baseline 8:26/mi from your last 5 3-mile runs."
+        "text": "Nothing prescribed or done. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness green. Baseline 8:26/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",
