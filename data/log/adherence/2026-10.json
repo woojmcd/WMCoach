@@ -101,6 +101,15 @@
       "status": "partial",
       "kcal": null,
       "updated_utc": "2026-10-23T15:10:46.271Z"
+    },
+    {
+      "id": "plan-b5692388-256b-47ea-9f56-45ead81e6c21",
+      "local_date": "2026-10-23",
+      "utc": "2026-10-23T15:11:07.430Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-10-23T15:11:07.430Z"
     }
   ]
 }
