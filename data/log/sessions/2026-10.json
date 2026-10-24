@@ -6027,6 +6027,687 @@
       ],
       "note": null,
       "updated_utc": "2026-10-22T23:46:32.639Z"
+    },
+    {
+      "id": "sess-7d7b6fa1-334e-4083-81bc-d62980dd3901",
+      "local_date": "2026-10-23",
+      "tz": "America/Los_Angeles",
+      "utc": "2026-10-23T23:56:05.646Z",
+      "started_utc": "2026-10-23T23:56:05.646Z",
+      "finished_utc": "2026-10-24T01:00:29.907Z",
+      "status": "finished",
+      "day_dow": 5,
+      "day_name": "Upper Pull #2",
+      "program_id": "TRAIN-CUT26",
+      "week": 2,
+      "deload": false,
+      "exercises": [
+        {
+          "slot_id": "fri-reverse-pec-deck-flyes",
+          "movement": "reverse-pec-deck-flyes",
+          "name": "Reverse Pec Deck Flyes",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "All sets hit 12: +5 lb, back to 10 · easing back: RIR +1",
+          "change": "up",
+          "delta_lb": 5,
+          "calibration": false,
+          "last": "100 × 12, 12, 12",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 105,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 10,
+                "rir": [
+                  2,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 105,
+              "reps": 16,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-23T23:56:05.645Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 105,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 10,
+                "rir": [
+                  2,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 110,
+              "reps": 11,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-23T23:58:26.633Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 105,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 10,
+                "rir": [
+                  2,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 110,
+              "reps": 12,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:01:22.747Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "fri-cable-lat-pullovers",
+          "movement": "cable-lat-pullovers",
+          "name": "Cable Lat Pullovers",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Aim +1 rep where below 15 · easing back: RIR +1",
+          "change": "hold",
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "50 × 19 · 52.5 × 15, 13",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 52.5,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 15,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 52.5,
+              "reps": 17,
+              "rir": 3,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:04:43.345Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 52.5,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 15,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 57.5,
+              "reps": 16,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:11:26.629Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 52.5,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 14,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 57.5,
+              "reps": 14,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:11:28.092Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "fri-single-arm-db-rows",
+          "movement": "single-arm-db-rows",
+          "name": "Single Arm DB Rows",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "All sets hit 10: +5 lb, back to 8 · easing back: RIR +1",
+          "change": "up",
+          "delta_lb": 5,
+          "calibration": false,
+          "last": "60 × 13, 12, 12",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 65,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 8,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 65,
+              "reps": 11,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:14:34.157Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 65,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 8,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 65,
+              "reps": 10,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:18:19.311Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 65,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 8,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 65,
+              "reps": 10,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:25:44.786Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "fri-single-arm-cable-pulldowns",
+          "movement": "single-arm-cable-pulldowns",
+          "name": "Single Arm Cable Pulldowns",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "fixed",
+          "reason": "All sets hit 10: +2.5 lb, back to 10 · easing back: RIR +1",
+          "change": "up",
+          "delta_lb": 2.5,
+          "calibration": false,
+          "last": "57.5 × 10, 10, 10",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 60,
+                "reps_min": 10,
+                "reps_max": 10,
+                "aim": 10,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 62.5,
+              "reps": 10,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:27:57.617Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 60,
+                "reps_min": 10,
+                "reps_max": 10,
+                "aim": 10,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 62.5,
+              "reps": 10,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:33:34.401Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 60,
+                "reps_min": 10,
+                "reps_max": 10,
+                "aim": 10,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 62.5,
+              "reps": 10,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:37:06.015Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "fri-incline-db-curls",
+          "movement": "incline-db-curls",
+          "name": "Incline DB Curls",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Aim +1 rep where below 10 · easing back: RIR +1",
+          "change": "hold",
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "25 × 10, 8, 8",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 25,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 10,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 10,
+              "rir": 3,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:38:16.510Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 25,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 9,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 11,
+              "rir": 3,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:41:25.877Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 25,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 9,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 12,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:44:48.767Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "fri-hammer-rope-curls",
+          "movement": "hammer-rope-curls",
+          "name": "Hammer Rope Curls",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Aim +1 rep where below 15 · easing back: RIR +1",
+          "change": "hold",
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "52.5 × 15, 12, 12",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 52.5,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 15,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 52.5,
+              "reps": 12,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:45:47.255Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 52.5,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 13,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 52.5,
+              "reps": 11,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:47:37.864Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 52.5,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 13,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 52.5,
+              "reps": 11,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:49:40.515Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "fri-cable-ab-crunches",
+          "movement": "cable-ab-crunches",
+          "name": "Cable Ab Crunches",
+          "swapped_from": null,
+          "label": "A1",
+          "group": "Fri-A",
+          "type": "range",
+          "reason": "All sets hit 15: +2.5 lb, back to 15 · easing back: RIR +1",
+          "change": "up",
+          "delta_lb": 2.5,
+          "calibration": false,
+          "last": "57.5 × 20, 20, 16",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 60,
+                "reps_min": 15,
+                "reps_max": 15,
+                "aim": 15,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 60,
+              "reps": 20,
+              "rir": 3,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:52:07.669Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 60,
+                "reps_min": 15,
+                "reps_max": 15,
+                "aim": 15,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 60,
+              "reps": 20,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:55:34.996Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 60,
+                "reps_min": 15,
+                "reps_max": 15,
+                "aim": 15,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 60,
+              "reps": 16,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T01:00:26.846Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "fri-ab-plank",
+          "movement": "ab-plank",
+          "name": "Ab Plank",
+          "swapped_from": null,
+          "label": "A2",
+          "group": "Fri-A",
+          "type": "timed",
+          "reason": null,
+          "change": null,
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "3 × 30 s",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "timed",
+              "target": {
+                "load": null,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": null,
+                "rir": null,
+                "seconds": 30,
+                "amrap": false
+              },
+              "load": null,
+              "reps": null,
+              "rir": null,
+              "seconds": 30,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:52:08.400Z"
+            },
+            {
+              "kind": "timed",
+              "target": {
+                "load": null,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": null,
+                "rir": null,
+                "seconds": 30,
+                "amrap": false
+              },
+              "load": null,
+              "reps": null,
+              "rir": null,
+              "seconds": 30,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T00:55:36.039Z"
+            },
+            {
+              "kind": "timed",
+              "target": {
+                "load": null,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": null,
+                "rir": null,
+                "seconds": 30,
+                "amrap": false
+              },
+              "load": null,
+              "reps": null,
+              "rir": null,
+              "seconds": 30,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-24T01:00:29.040Z"
+            }
+          ]
+        }
+      ],
+      "note": null,
+      "updated_utc": "2026-10-24T01:00:29.907Z"
     }
   ]
 }
