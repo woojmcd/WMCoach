@@ -86,10 +86,10 @@
   },
   "trend": {
     "half_life_days": 7,
-    "last_local_date": "2026-10-23",
-    "last_weight_lb": 180.6,
-    "trend_lb": 176.7,
-    "rate_14d_pct_bw_wk": 0.46
+    "last_local_date": "2026-10-25",
+    "last_weight_lb": 179,
+    "trend_lb": 177.1,
+    "rate_14d_pct_bw_wk": 0.61
   },
   "tdee": {
     "method": "prior",
@@ -159,7 +159,7 @@
     }
   ],
   "progression": {},
-  "last_daily_run_local_date": "2026-10-24",
+  "last_daily_run_local_date": "2026-10-25",
   "last_weekly_run_week": "2026-10-25",
   "readiness_history": [
     {
@@ -225,10 +225,14 @@
     {
       "local_date": "2026-10-24",
       "status": "green"
+    },
+    {
+      "local_date": "2026-10-25",
+      "status": "green"
     }
   ],
-  "health_missing_on": "2026-10-23",
-  "last_daily_run_utc": "2026-10-24T14:00:57.965Z",
+  "health_missing_on": "2026-10-25",
+  "last_daily_run_utc": "2026-10-25T17:08:12.488Z",
   "last_daily_run_tz": "America/Los_Angeles",
   "health_rerun_on": "2026-10-23",
   "hr_zones": {
@@ -254,7 +258,7 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-10-24"
+    "updated_local_date": "2026-10-25"
   },
   "weekly_history": [
     {
@@ -286,8 +290,8 @@
     }
   ],
   "health_seen": {
-    "local_date": "2026-10-24",
-    "sig": "[null,54,7.75,3990,null]"
+    "local_date": "2026-10-25",
+    "sig": null
   },
   "health_reruns": {
     "local_date": "2026-10-23",
@@ -320,6 +324,6 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-10-24"
+    "updated_local_date": "2026-10-25"
   }
 }

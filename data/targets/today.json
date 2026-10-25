@@ -1,24 +1,17 @@
 {
   "schema_version": 1,
-  "local_date": "2026-10-24",
+  "local_date": "2026-10-25",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-24T14:00:57.965Z",
+  "generated_utc": "2026-10-25T17:08:12.488Z",
   "readiness": {
     "status": "green",
     "flags": [],
-    "reason": "recovery normal",
-    "missing": false,
-    "travel": null,
-    "hrv_ms": null,
-    "resting_hr": 54,
-    "sleep_h": 7.75,
-    "baseline": {
-      "hrv_ms": null,
-      "resting_hr": 68
-    }
+    "reason": "no recovery data",
+    "missing": true,
+    "travel": null
   },
   "day": {
-    "dow": 6,
+    "dow": 7,
     "name": "Open: cardio / social",
     "rest_day": true
   },
@@ -31,7 +24,7 @@
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-10-24",
+    "date": "2026-10-25",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -54,7 +47,7 @@
       "hi": 156,
       "source": "strava"
     },
-    "weight_lb": 176.7,
+    "weight_lb": 177.1,
     "week": {
       "from": "2026-10-19",
       "to": "2026-10-25",
@@ -99,42 +92,36 @@
   },
   "daily": {
     "schema_version": 1,
-    "date": "2026-10-23",
-    "label": "Fri 23 Oct",
-    "tone": "good",
-    "headline": "Good day: every set logged, 6 lifts beat last time, on plan.",
-    "focus": "Same again today: hit the plan and beat the logbook.",
+    "date": "2026-10-24",
+    "label": "Sat 24 Oct",
+    "tone": "warn",
+    "headline": "You were only partly on plan. Good: weighed in.",
+    "focus": "Eat every prepped meal today; no extras.",
     "today": "Open day.",
     "points": [
       {
         "key": "recovery",
-        "tone": "good",
-        "title": "Last night",
-        "text": "7.8 h sleep. Resting HR 54 (−14 vs your 68 average). 3,990 steps yesterday. Readiness green."
+        "tone": "warn",
+        "title": "Recovery",
+        "text": "No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health."
       },
       {
         "key": "weight",
         "tone": "good",
         "title": "Weight",
-        "text": "180.6 lb. Trend 176.7 lb (+1.4 lb in a week)."
-      },
-      {
-        "key": "training",
-        "tone": "good",
-        "title": "Training",
-        "text": "Upper Pull #2: 24 of 24 sets logged. Beat last time on 6: Reverse Pec Deck Flyes 105×16 (was 100×12); Cable Lat Pullovers 57.5×16 (was 50×19); Single Arm DB Rows 65×11 (was 60×13); and 3 more. Below last time: Hammer Rope Curls."
+        "text": "178.8 lb. Trend 176.9 lb (+1.6 lb in a week)."
       },
       {
         "key": "cardio",
         "tone": "info",
         "title": "Cardio",
-        "text": "Nothing prescribed or done. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness green. Baseline 8:26/mi from your last 5 3-mile runs."
+        "text": "Nothing prescribed or done. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness not in yet. Baseline 8:26/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",
-        "tone": "good",
+        "tone": "warn",
         "title": "Food",
-        "text": "On plan (2,492 kcal)."
+        "text": "Partly on plan (2,492 kcal)."
       }
     ],
     "pace": {
