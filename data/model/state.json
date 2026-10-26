@@ -159,7 +159,7 @@
     }
   ],
   "progression": {},
-  "last_daily_run_local_date": "2026-10-25",
+  "last_daily_run_local_date": "2026-10-26",
   "last_weekly_run_week": "2026-10-25",
   "readiness_history": [
     {
@@ -229,10 +229,14 @@
     {
       "local_date": "2026-10-25",
       "status": "green"
+    },
+    {
+      "local_date": "2026-10-26",
+      "status": "green"
     }
   ],
   "health_missing_on": "2026-10-25",
-  "last_daily_run_utc": "2026-10-25T17:08:12.488Z",
+  "last_daily_run_utc": "2026-10-26T14:00:38.801Z",
   "last_daily_run_tz": "America/Los_Angeles",
   "health_rerun_on": "2026-10-23",
   "hr_zones": {
@@ -258,7 +262,7 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-10-25"
+    "updated_local_date": "2026-10-26"
   },
   "weekly_history": [
     {
@@ -290,8 +294,8 @@
     }
   ],
   "health_seen": {
-    "local_date": "2026-10-25",
-    "sig": null
+    "local_date": "2026-10-26",
+    "sig": "[null,54,7.63333333333333,3400,null]"
   },
   "health_reruns": {
     "local_date": "2026-10-23",
@@ -301,29 +305,29 @@
     "zones": [
       {
         "min": 0,
-        "max": 2.802
+        "max": 2.797
       },
       {
-        "min": 2.802,
-        "max": 3.255
+        "min": 2.797,
+        "max": 3.249
       },
       {
-        "min": 3.255,
-        "max": 3.626
+        "min": 3.249,
+        "max": 3.619
       },
       {
-        "min": 3.626,
-        "max": 3.874
+        "min": 3.619,
+        "max": 3.866
       },
       {
-        "min": 3.874,
-        "max": 4.121
+        "min": 3.866,
+        "max": 4.113
       },
       {
-        "min": 4.121,
+        "min": 4.113,
         "max": -1
       }
     ],
-    "updated_local_date": "2026-10-25"
+    "updated_local_date": "2026-10-26"
   }
 }

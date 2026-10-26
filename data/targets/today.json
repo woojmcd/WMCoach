@@ -1,30 +1,464 @@
 {
   "schema_version": 1,
-  "local_date": "2026-10-25",
+  "local_date": "2026-10-26",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-25T17:08:12.488Z",
+  "generated_utc": "2026-10-26T14:00:38.801Z",
   "readiness": {
     "status": "green",
     "flags": [],
-    "reason": "no recovery data",
-    "missing": true,
-    "travel": null
+    "reason": "recovery normal",
+    "missing": false,
+    "travel": null,
+    "hrv_ms": null,
+    "resting_hr": 54,
+    "sleep_h": 7.63333333333333,
+    "baseline": {
+      "hrv_ms": null,
+      "resting_hr": 60
+    }
   },
   "day": {
-    "dow": 7,
-    "name": "Open: cardio / social",
-    "rest_day": true
+    "dow": 1,
+    "name": "Push #1",
+    "rest_day": false
   },
-  "program_week": 2,
+  "program_week": 3,
   "deload": {
     "active": false,
     "reason": null
   },
-  "exercises": [],
+  "exercises": [
+    {
+      "slot_id": "mon-incline-db-flyes",
+      "movement": "incline-db-flyes",
+      "name": "Incline DB Flyes",
+      "load": 50,
+      "change": "hold",
+      "calibration": false,
+      "reason": "Aim +1 rep where below 10",
+      "sets": [
+        {
+          "kind": "work",
+          "load": 50,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": 10,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 50,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": 10,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 50,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": 10,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-flat-db-bench",
+      "movement": "flat-db-bench",
+      "name": "Flat DB Bench",
+      "load": 65,
+      "change": "hold",
+      "calibration": false,
+      "reason": "Aim +1 rep where below 10",
+      "sets": [
+        {
+          "kind": "top",
+          "load": 65,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": 10,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "top",
+          "load": 65,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": 10,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "backoff",
+          "load": 45,
+          "reps_min": 12,
+          "reps_max": 12,
+          "aim": null,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-chest-dips",
+      "movement": "chest-dips",
+      "name": "Chest Dips",
+      "load": 0,
+      "change": null,
+      "calibration": false,
+      "reason": "Beat 55 total reps",
+      "sets": [
+        {
+          "kind": "amrap",
+          "load": 0,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 17,
+          "rir": [
+            0,
+            0
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 0,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 14,
+          "rir": [
+            0,
+            0
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 0,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 13,
+          "rir": [
+            0,
+            0
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 0,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 11,
+          "rir": [
+            0,
+            0
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-single-cable-lateral-raise",
+      "movement": "single-cable-lateral-raise",
+      "name": "Single Cable Lateral Raise",
+      "load": 12.5,
+      "change": "hold",
+      "calibration": false,
+      "reason": "Aim +1 rep where below 15",
+      "sets": [
+        {
+          "kind": "work",
+          "load": 12.5,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": 14,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 12.5,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": 13,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 12.5,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": 13,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-standing-lateral-db-raises",
+      "movement": "standing-lateral-db-raises",
+      "name": "Standing Lateral DB Raises",
+      "load": 22.5,
+      "change": "up",
+      "calibration": false,
+      "reason": "All sets hit 12: +2.5 lb, back to 10",
+      "sets": [
+        {
+          "kind": "work",
+          "load": 22.5,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": 10,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 22.5,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": 10,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 22.5,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": 10,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-rope-tricep-extensions",
+      "movement": "rope-tricep-extensions",
+      "name": "Rope Tricep Extensions",
+      "load": 42.5,
+      "change": "hold",
+      "calibration": false,
+      "reason": "Aim +1 rep where below 12",
+      "sets": [
+        {
+          "kind": "work",
+          "load": 42.5,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": 11,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 42.5,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": 12,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 42.5,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": 12,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-rope-pushdowns",
+      "movement": "rope-pushdowns",
+      "name": "Rope Pushdowns",
+      "load": 42.5,
+      "change": null,
+      "calibration": false,
+      "reason": "Same weight as the first exercise; beat 22 reps",
+      "sets": [
+        {
+          "kind": "amrap",
+          "load": 42.5,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 12,
+          "rir": [
+            0,
+            0
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 42.5,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 6,
+          "rir": [
+            0,
+            0
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 42.5,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 4,
+          "rir": [
+            0,
+            0
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-cable-ab-crunches",
+      "movement": "cable-ab-crunches",
+      "name": "Cable Ab Crunches",
+      "load": 57.5,
+      "change": "hold",
+      "calibration": false,
+      "reason": "Aim for 15 on every set",
+      "sets": [
+        {
+          "kind": "work",
+          "load": 57.5,
+          "reps_min": 15,
+          "reps_max": 15,
+          "aim": 15,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 57.5,
+          "reps_min": 15,
+          "reps_max": 15,
+          "aim": 15,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 57.5,
+          "reps_min": 15,
+          "reps_max": 15,
+          "aim": 15,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "mon-ab-vacuum",
+      "movement": "ab-vacuum",
+      "name": "Ab Vacuum",
+      "load": null,
+      "change": null,
+      "calibration": false,
+      "reason": null,
+      "sets": [
+        {
+          "kind": "timed",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": null,
+          "seconds": 15
+        },
+        {
+          "kind": "timed",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": null,
+          "seconds": 15
+        },
+        {
+          "kind": "timed",
+          "load": null,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
+          "rir": null,
+          "seconds": 15
+        }
+      ]
+    }
+  ],
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-10-25",
+    "date": "2026-10-26",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -49,79 +483,51 @@
     },
     "weight_lb": 177.1,
     "week": {
-      "from": "2026-10-19",
-      "to": "2026-10-25",
+      "from": "2026-10-26",
+      "to": "2026-11-01",
       "target_sessions": 2,
       "target_min": 50,
-      "done_sessions": 3,
-      "done_min": 95,
+      "done_sessions": 0,
+      "done_min": 0,
       "days": [
         2,
         4
       ],
-      "items": [
-        {
-          "local_date": "2026-10-19",
-          "minutes": 31,
-          "type": "Run",
-          "name": "Zoomies",
-          "avg_hr": 166,
-          "source": "strava",
-          "id": "20652443658"
-        },
-        {
-          "local_date": "2026-10-20",
-          "minutes": 32,
-          "type": "Run",
-          "name": "Evening Run",
-          "avg_hr": 135,
-          "source": "strava",
-          "id": "20669275388"
-        },
-        {
-          "local_date": "2026-10-21",
-          "minutes": 32,
-          "type": "Run",
-          "name": "PB Run Club!",
-          "avg_hr": 127,
-          "source": "strava",
-          "id": "20682827333"
-        }
-      ]
+      "items": []
     }
   },
   "daily": {
     "schema_version": 1,
-    "date": "2026-10-24",
-    "label": "Sat 24 Oct",
-    "tone": "warn",
-    "headline": "You were only partly on plan. Good: weighed in.",
-    "focus": "Eat every prepped meal today; no extras.",
-    "today": "Open day.",
+    "date": "2026-10-25",
+    "label": "Sun 25 Oct",
+    "tone": "good",
+    "headline": "Good day: on plan, weighed in, 7.6 h sleep.",
+    "focus": "Same again today: hit the plan and beat the logbook.",
+    "today": "Push #1: up on Standing Lateral DB Raises 22.5 lb × 10.",
     "points": [
       {
         "key": "recovery",
-        "tone": "warn",
-        "title": "Recovery",
-        "text": "No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health."
+        "tone": "good",
+        "title": "Last night",
+        "text": "7.6 h sleep. Resting HR 54 (−6 vs your 60 average). 3,400 steps yesterday. Readiness green."
       },
       {
         "key": "weight",
         "tone": "good",
         "title": "Weight",
-        "text": "178.8 lb. Trend 176.9 lb (+1.6 lb in a week)."
+        "text": "179.0 lb. Trend 177.1 lb (+1.8 lb in a week)."
       },
       {
         "key": "cardio",
         "tone": "info",
         "title": "Cardio",
-        "text": "Nothing prescribed or done. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness not in yet. Baseline 8:26/mi from your last 5 3-mile runs."
+        "text": "Nothing prescribed or done. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness green. Baseline 8:26/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",
-        "tone": "warn",
+        "tone": "good",
         "title": "Food",
-        "text": "Partly on plan (2,492 kcal)."
+        "text": "On plan (2,492 kcal)."
       }
     ],
     "pace": {
