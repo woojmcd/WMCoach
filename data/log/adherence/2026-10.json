@@ -128,6 +128,15 @@
       "status": "yes",
       "kcal": null,
       "updated_utc": "2026-10-25T16:04:23.667Z"
+    },
+    {
+      "id": "plan-747aa385-66f2-41a7-9049-ec5b2688e811",
+      "local_date": "2026-10-26",
+      "utc": "2026-10-27T00:01:08.773Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-10-27T00:01:08.773Z"
     }
   ]
 }
