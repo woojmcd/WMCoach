@@ -8101,6 +8101,581 @@
       ],
       "note": null,
       "updated_utc": "2026-10-28T00:58:22.768Z"
+    },
+    {
+      "id": "sess-2551187d-2d2a-4e8c-8555-f2374e3eb7e4",
+      "local_date": "2026-10-28",
+      "tz": "America/Los_Angeles",
+      "utc": "2026-10-28T23:36:52.627Z",
+      "started_utc": "2026-10-28T23:36:52.627Z",
+      "finished_utc": "2026-10-29T00:31:30.027Z",
+      "status": "finished",
+      "day_dow": 3,
+      "day_name": "Legs and abs",
+      "program_id": "TRAIN-CUT26",
+      "week": 3,
+      "deload": false,
+      "exercises": [
+        {
+          "slot_id": "wed-hamstring-hyperextensions",
+          "movement": "hamstring-hyperextensions",
+          "name": "Hamstring Hyperextensions",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "amrap",
+          "reason": "Beat 39 total reps",
+          "change": null,
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "BW+25 × 14, 13, 12",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "amrap",
+              "target": {
+                "load": 25,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": 14,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 14,
+              "rir": 0,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "amrap",
+              "target": {
+                "load": 25,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": 13,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 13,
+              "rir": 0,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "amrap",
+              "target": {
+                "load": 25,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": 12,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 12,
+              "rir": 0,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-machine-adductors",
+          "movement": "machine-adductors",
+          "name": "Machine Adductors",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "All sets hit 15: +5 lb, back to 12",
+          "change": "up",
+          "delta_lb": 5,
+          "calibration": false,
+          "last": "130 × 18 · 135 × 20 · 140 × 22",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 145,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 12,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 160,
+              "reps": 12,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-28T23:36:52.626Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 145,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 12,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 160,
+              "reps": 11,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-28T23:40:12.602Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 145,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 12,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 160,
+              "reps": 10,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-28T23:43:07.706Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-single-leg-press",
+          "movement": "single-leg-press",
+          "name": "Single Leg Press",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Aim +1 rep where below 12",
+          "change": "hold",
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "90 × 10, 13, 11",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 90,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 11,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 90,
+              "reps": 11,
+              "rir": 1,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 90,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 12,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 90,
+              "reps": 12,
+              "rir": 1,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 90,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 12,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 90,
+              "reps": 12,
+              "rir": 1,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-bb-squats",
+          "movement": "bb-squats",
+          "name": "BB Squats (Smith)",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "All sets hit 10: +5 lb, back to 8",
+          "change": "up",
+          "delta_lb": 5,
+          "calibration": false,
+          "last": "90 × 12 · 140 × 10",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 145,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 8,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 145,
+              "reps": 8,
+              "rir": 1,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 145,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 8,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 145,
+              "reps": 8,
+              "rir": 1,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-seated-hamstring-curls",
+          "movement": "seated-hamstring-curls",
+          "name": "Seated Hamstring Curls",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "top_backoff",
+          "reason": "All sets hit 10: +5 lb, back to 8",
+          "change": "up",
+          "delta_lb": 5,
+          "calibration": false,
+          "last": "115 × 11, 10 · backoff 115 × 9",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "top",
+              "target": {
+                "load": 120,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 8,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 120,
+              "reps": 11,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-28T23:57:00.028Z"
+            },
+            {
+              "kind": "top",
+              "target": {
+                "load": 120,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 8,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 120,
+              "reps": 10,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-29T00:00:58.324Z"
+            },
+            {
+              "kind": "backoff",
+              "target": {
+                "load": 85,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 120,
+              "reps": 10,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-29T00:08:29.240Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-hanging-leg-raises",
+          "movement": "hanging-leg-raises",
+          "name": "Hanging Leg Raises",
+          "swapped_from": null,
+          "label": "A1",
+          "group": "Wed-A",
+          "type": "amrap",
+          "reason": "As many reps as possible",
+          "change": null,
+          "delta_lb": 0,
+          "calibration": false,
+          "last": null,
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "amrap",
+              "target": {
+                "load": 0,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": null,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 0,
+              "reps": null,
+              "rir": 0,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "amrap",
+              "target": {
+                "load": 0,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": null,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 0,
+              "reps": null,
+              "rir": 0,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "amrap",
+              "target": {
+                "load": 0,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": null,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 0,
+              "reps": null,
+              "rir": 0,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-russian-twists",
+          "movement": "russian-twists",
+          "name": "Russian Twists",
+          "swapped_from": null,
+          "label": "A2",
+          "group": "Wed-A",
+          "type": "timed",
+          "reason": null,
+          "change": null,
+          "delta_lb": 0,
+          "calibration": false,
+          "last": null,
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "timed",
+              "target": {
+                "load": null,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": null,
+                "rir": null,
+                "seconds": 30,
+                "amrap": false
+              },
+              "load": null,
+              "reps": null,
+              "rir": null,
+              "seconds": 30,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "timed",
+              "target": {
+                "load": null,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": null,
+                "rir": null,
+                "seconds": 30,
+                "amrap": false
+              },
+              "load": null,
+              "reps": null,
+              "rir": null,
+              "seconds": 30,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "timed",
+              "target": {
+                "load": null,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": null,
+                "rir": null,
+                "seconds": 30,
+                "amrap": false
+              },
+              "load": null,
+              "reps": null,
+              "rir": null,
+              "seconds": 30,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            }
+          ]
+        }
+      ],
+      "note": null,
+      "updated_utc": "2026-10-29T00:31:30.027Z"
     }
   ]
 }
