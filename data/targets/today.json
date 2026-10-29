@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "local_date": "2026-10-28",
+  "local_date": "2026-10-29",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-28T14:00:58.765Z",
+  "generated_utc": "2026-10-29T15:05:14.393Z",
   "readiness": {
     "status": "green",
     "flags": [],
@@ -10,16 +10,16 @@
     "missing": false,
     "travel": null,
     "hrv_ms": null,
-    "resting_hr": 57,
-    "sleep_h": 7.21666666666667,
+    "resting_hr": 59,
+    "sleep_h": 8.08333333333333,
     "baseline": {
       "hrv_ms": null,
       "resting_hr": 58
     }
   },
   "day": {
-    "dow": 3,
-    "name": "Legs and abs",
+    "dow": 4,
+    "name": "Upper Push #2",
     "rest_day": false
   },
   "program_week": 3,
@@ -29,44 +29,91 @@
   },
   "exercises": [
     {
-      "slot_id": "wed-hamstring-hyperextensions",
-      "movement": "hamstring-hyperextensions",
-      "name": "Hamstring Hyperextensions",
-      "load": 25,
-      "change": null,
+      "slot_id": "thu-pec-deck-flyes",
+      "movement": "pec-deck-flyes",
+      "name": "Pec Deck Flyes",
+      "load": 125,
+      "change": "hold",
       "calibration": false,
-      "reason": "Beat 39 total reps",
+      "reason": "Aim +1 rep where below 15",
       "sets": [
         {
-          "kind": "amrap",
-          "load": 25,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": 14,
+          "kind": "work",
+          "load": 125,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": 15,
           "rir": [
-            0,
-            0
+            1,
+            1
           ],
           "seconds": null
         },
         {
-          "kind": "amrap",
-          "load": 25,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": 13,
+          "kind": "work",
+          "load": 125,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": 15,
           "rir": [
-            0,
-            0
+            1,
+            1
           ],
           "seconds": null
         },
         {
-          "kind": "amrap",
-          "load": 25,
-          "reps_min": null,
-          "reps_max": null,
+          "kind": "work",
+          "load": 125,
+          "reps_min": 12,
+          "reps_max": 15,
           "aim": 12,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "thu-incline-db-bench",
+      "movement": "incline-db-bench",
+      "name": "Incline DB Bench",
+      "load": 65,
+      "change": "hold",
+      "calibration": false,
+      "reason": "Aim +1 rep where below 10",
+      "sets": [
+        {
+          "kind": "top",
+          "load": 65,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": 10,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "top",
+          "load": 65,
+          "reps_min": 8,
+          "reps_max": 10,
+          "aim": 9,
+          "rir": [
+            1,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "backoff",
+          "load": 45,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": null,
           "rir": [
             0,
             0
@@ -76,64 +123,17 @@
       ]
     },
     {
-      "slot_id": "wed-machine-adductors",
-      "movement": "machine-adductors",
-      "name": "Machine Adductors",
-      "load": 145,
-      "change": "up",
-      "calibration": false,
-      "reason": "All sets hit 15: +5 lb, back to 12",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 145,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 12,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 145,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 12,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 145,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 12,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "wed-single-leg-press",
-      "movement": "single-leg-press",
-      "name": "Single Leg Press",
-      "load": 90,
+      "slot_id": "thu-flat-smith-machine-bench",
+      "movement": "flat-smith-machine-bench",
+      "name": "Flat Smith Machine Bench",
+      "load": 135,
       "change": "hold",
       "calibration": false,
       "reason": "Aim +1 rep where below 12",
       "sets": [
         {
           "kind": "work",
-          "load": 90,
+          "load": 135,
           "reps_min": 10,
           "reps_max": 12,
           "aim": 11,
@@ -145,10 +145,10 @@
         },
         {
           "kind": "work",
-          "load": 90,
+          "load": 135,
           "reps_min": 10,
           "reps_max": 12,
-          "aim": 12,
+          "aim": 11,
           "rir": [
             0,
             1
@@ -157,10 +157,10 @@
         },
         {
           "kind": "work",
-          "load": 90,
+          "load": 135,
           "reps_min": 10,
           "reps_max": 12,
-          "aim": 12,
+          "aim": 11,
           "rir": [
             0,
             1
@@ -170,34 +170,58 @@
       ]
     },
     {
-      "slot_id": "wed-bb-squats",
-      "movement": "bb-squats",
-      "name": "BB Squats (Smith)",
-      "load": 145,
+      "slot_id": "thu-seated-lateral-db-raises",
+      "movement": "seated-lateral-db-raises",
+      "name": "Seated Lateral DB Raises",
+      "load": 25,
       "change": "up",
       "calibration": false,
-      "reason": "All sets hit 10: +5 lb, back to 8",
+      "reason": "All sets hit 10: +2.5 lb, back to 10",
       "sets": [
         {
           "kind": "work",
-          "load": 145,
-          "reps_min": 8,
+          "load": 25,
+          "reps_min": 10,
           "reps_max": 10,
-          "aim": 8,
+          "aim": 10,
           "rir": [
-            1,
+            0,
             1
           ],
           "seconds": null
         },
         {
           "kind": "work",
-          "load": 145,
-          "reps_min": 8,
+          "load": 25,
+          "reps_min": 10,
           "reps_max": 10,
-          "aim": 8,
+          "aim": 10,
           "rir": [
-            1,
+            0,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 25,
+          "reps_min": 10,
+          "reps_max": 10,
+          "aim": 10,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "work",
+          "load": 25,
+          "reps_min": 10,
+          "reps_max": 10,
+          "aim": 10,
+          "rir": [
+            0,
             1
           ],
           "seconds": null
@@ -205,134 +229,155 @@
       ]
     },
     {
-      "slot_id": "wed-seated-hamstring-curls",
-      "movement": "seated-hamstring-curls",
-      "name": "Seated Hamstring Curls",
-      "load": 120,
-      "change": "up",
+      "slot_id": "thu-standing-lateral-db-raises",
+      "movement": "standing-lateral-db-raises",
+      "name": "Standing Lateral DB Raises",
+      "load": 25,
+      "change": null,
       "calibration": false,
-      "reason": "All sets hit 10: +5 lb, back to 8",
+      "reason": "Same weight as the first exercise; beat 30 reps",
       "sets": [
         {
-          "kind": "top",
-          "load": 120,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
+          "kind": "amrap",
+          "load": 25,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 7,
           "rir": [
-            1,
+            0,
+            0
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 25,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 9,
+          "rir": [
+            0,
+            0
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 25,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 7,
+          "rir": [
+            0,
+            0
+          ],
+          "seconds": null
+        },
+        {
+          "kind": "amrap",
+          "load": 25,
+          "reps_min": null,
+          "reps_max": null,
+          "aim": 7,
+          "rir": [
+            0,
+            0
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "thu-single-arm-cable-pushdowns",
+      "movement": "single-arm-cable-pushdowns",
+      "name": "Single Arm Cable Pushdowns",
+      "load": 35,
+      "change": "up",
+      "calibration": false,
+      "reason": "All sets hit 12: +2.5 lb, back to 10",
+      "sets": [
+        {
+          "kind": "work",
+          "load": 35,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": 10,
+          "rir": [
+            0,
             1
           ],
           "seconds": null
         },
         {
-          "kind": "top",
-          "load": 120,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
+          "kind": "work",
+          "load": 35,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": 10,
           "rir": [
-            1,
+            0,
             1
           ],
           "seconds": null
         },
         {
-          "kind": "backoff",
-          "load": 85,
+          "kind": "work",
+          "load": 35,
+          "reps_min": 10,
+          "reps_max": 12,
+          "aim": 10,
+          "rir": [
+            0,
+            1
+          ],
+          "seconds": null
+        }
+      ]
+    },
+    {
+      "slot_id": "thu-incline-db-skullcrushers",
+      "movement": "incline-db-skullcrushers",
+      "name": "Incline DB Skullcrushers",
+      "load": 25,
+      "change": "hold",
+      "calibration": false,
+      "reason": "Below 12 twice at 25: hold",
+      "sets": [
+        {
+          "kind": "work",
+          "load": 25,
           "reps_min": 12,
           "reps_max": 15,
-          "aim": null,
+          "aim": 14,
           "rir": [
             0,
             1
           ],
           "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "wed-hanging-leg-raises",
-      "movement": "hanging-leg-raises",
-      "name": "Hanging Leg Raises",
-      "load": 0,
-      "change": null,
-      "calibration": false,
-      "reason": "As many reps as possible",
-      "sets": [
+        },
         {
-          "kind": "amrap",
-          "load": 0,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
+          "kind": "work",
+          "load": 25,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": 12,
           "rir": [
             0,
-            0
+            1
           ],
           "seconds": null
         },
         {
-          "kind": "amrap",
-          "load": 0,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
+          "kind": "work",
+          "load": 25,
+          "reps_min": 12,
+          "reps_max": 15,
+          "aim": 12,
           "rir": [
             0,
-            0
+            1
           ],
           "seconds": null
-        },
-        {
-          "kind": "amrap",
-          "load": 0,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": [
-            0,
-            0
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "wed-russian-twists",
-      "movement": "russian-twists",
-      "name": "Russian Twists",
-      "load": null,
-      "change": null,
-      "calibration": false,
-      "reason": null,
-      "sets": [
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
-        },
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
-        },
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
         }
       ]
     }
@@ -340,7 +385,7 @@
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-10-28",
+    "date": "2026-10-29",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -356,7 +401,23 @@
       "reason": "Bulk: two easy sessions a week for heart health, recovery and appetite. Their calories count in your expenditure, so the food covers them and you keep gaining.",
       "change": null
     },
-    "today": null,
+    "today": {
+      "minutes": 25,
+      "makeup": false,
+      "kind": "stairs",
+      "zone": 2,
+      "hr": {
+        "lo": 126,
+        "hi": 156,
+        "source": "strava"
+      },
+      "kcal": 190,
+      "optional": false,
+      "note": null,
+      "status": "todo",
+      "done_min": 0,
+      "done": []
+    },
     "extra": null,
     "hr": {
       "lo": 126,
@@ -369,53 +430,63 @@
       "to": "2026-11-01",
       "target_sessions": 2,
       "target_min": 50,
-      "done_sessions": 0,
-      "done_min": 0,
+      "done_sessions": 1,
+      "done_min": 24,
       "days": [
         2,
         4
       ],
-      "items": []
+      "items": [
+        {
+          "local_date": "2026-10-28",
+          "minutes": 24,
+          "type": "Run",
+          "name": "Post Leg Slog",
+          "avg_hr": 163,
+          "source": "strava",
+          "id": "20772846944"
+        }
+      ]
     }
   },
   "daily": {
     "schema_version": 1,
-    "date": "2026-10-27",
-    "label": "Tue 27 Oct",
+    "date": "2026-10-28",
+    "label": "Wed 28 Oct",
     "tone": "warn",
-    "headline": "Only 15 of 21 sets were logged. Also: food wasn’t logged; the prescribed cardio was missed. Good: 3 lifts beat last time, weighed in, 7.2 h sleep.",
+    "headline": "Only 6 of 20 sets were logged. Good: 1 lift beat last time, cardio done, on plan.",
     "focus": "Log each set right after you finish it: the targets come from the logbook.",
-    "today": "Legs and abs: up on Machine Adductors 145 lb × 12, BB Squats (Smith) 145 lb × 8 +1 more.",
+    "today": "Upper Push #2: up on Seated Lateral DB Raises 25 lb × 10, Single Arm Cable Pushdowns 35 lb × 10. Cardio: 25 min stairs at 126–156 bpm.",
     "points": [
       {
         "key": "recovery",
         "tone": "good",
         "title": "Last night",
-        "text": "7.2 h sleep. Resting HR 57 (−1 vs your 58 average). 2,049 steps yesterday. Readiness green."
+        "text": "8.1 h sleep. Resting HR 59 (+1 vs your 58 average). 8,647 steps yesterday. Readiness green."
       },
       {
         "key": "weight",
         "tone": "good",
         "title": "Weight",
-        "text": "178.2 lb. Trend 177.3 lb (+1.6 lb in a week)."
+        "text": "177.6 lb. Trend 177.3 lb (+1.5 lb in a week)."
       },
       {
         "key": "training",
         "tone": "warn",
         "title": "Training",
-        "text": "Pull #1: 15 of 21 sets logged. Beat last time on 3: Assisted Pullups 0 assist × 14 (was 0 assist × 12); Incline DB Rows (upper back) 55×11 (was 50×14); Reverse DB Flyes 30×15 (was 27.5×18). Below last time: Cable Lat Pullovers. 6 sets not logged: those can’t drive the next targets."
+        "text": "Legs and abs: 6 of 20 sets logged. Beat last time on 1: Seated Hamstring Curls 120×11 (was 115×11). Below last time: Machine Adductors. 14 sets not logged: those can’t drive the next targets."
       },
       {
         "key": "cardio",
-        "tone": "warn",
+        "tone": "good",
         "title": "Cardio",
-        "text": "Prescribed 25 min easy stairs: not done. Week so far: 0 of 2 sessions. It moves to the next free day. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness green. Baseline 8:26/mi from your last 5 3-mile runs."
+        "text": "Extra: 24 min run (Strava). Average HR 163: above your Zone 2 (126–156), so a hard session rather than easy cardio. Week so far: 1 of 2 sessions. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness green. Baseline 8:26/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",
-        "tone": "warn",
+        "tone": "good",
         "title": "Food",
-        "text": "Not logged. Tap “On plan” on the Body tab every day; without it the coach can’t tell a plan that isn’t working from a plan that wasn’t followed."
+        "text": "On plan (2,492 kcal)."
       }
     ],
     "pace": {
