@@ -8676,6 +8676,656 @@
       ],
       "note": null,
       "updated_utc": "2026-10-29T00:31:30.027Z"
+    },
+    {
+      "id": "sess-ff070539-d769-42a0-a397-c487dbcbd1d8",
+      "local_date": "2026-10-29",
+      "tz": "America/Los_Angeles",
+      "utc": "2026-10-30T00:16:39.128Z",
+      "started_utc": "2026-10-30T00:16:39.128Z",
+      "finished_utc": "2026-10-30T01:09:35.987Z",
+      "status": "finished",
+      "day_dow": 4,
+      "day_name": "Upper Push #2",
+      "program_id": "TRAIN-CUT26",
+      "week": 3,
+      "deload": false,
+      "exercises": [
+        {
+          "slot_id": "thu-pec-deck-flyes",
+          "movement": "pec-deck-flyes",
+          "name": "Pec Deck Flyes",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Aim +1 rep where below 15",
+          "change": "hold",
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "115 × 15 · 120 × 15 · 125 × 11",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 125,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 15,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 125,
+              "reps": 12,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:16:39.128Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 125,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 15,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 125,
+              "reps": 12,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:19:01.827Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 125,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 12,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 125,
+              "reps": 11,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:22:28.832Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "thu-incline-db-bench",
+          "movement": "incline-db-bench",
+          "name": "Incline DB Bench",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "top_backoff",
+          "reason": "Aim +1 rep where below 10",
+          "change": "hold",
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "65 × 9, 8 · backoff 45 × 11",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "top",
+              "target": {
+                "load": 65,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 10,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 65,
+              "reps": 9,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:25:19.265Z"
+            },
+            {
+              "kind": "top",
+              "target": {
+                "load": 65,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": 9,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 65,
+              "reps": 9,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:31:10.588Z"
+            },
+            {
+              "kind": "backoff",
+              "target": {
+                "load": 45,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": null,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": true
+              },
+              "load": 45,
+              "reps": 10,
+              "rir": 0,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:31:13.278Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "thu-flat-smith-machine-bench",
+          "movement": "flat-smith-machine-bench",
+          "name": "Flat Smith Machine Bench",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Aim +1 rep where below 12",
+          "change": "hold",
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "135 × 10, 10, 10",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 135,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 11,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 135,
+              "reps": 12,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:38:59.265Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 135,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 11,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 135,
+              "reps": 11,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:42:22.189Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 135,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 11,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 135,
+              "reps": 10,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:46:16.552Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "thu-seated-lateral-db-raises",
+          "movement": "seated-lateral-db-raises",
+          "name": "Seated Lateral DB Raises",
+          "swapped_from": null,
+          "label": "A1",
+          "group": "Thu-A",
+          "type": "superset_lead",
+          "reason": "All sets hit 10: +2.5 lb, back to 10",
+          "change": "up",
+          "delta_lb": 2.5,
+          "calibration": false,
+          "last": "22.5 × 16, 14, 14, 14",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 25,
+                "reps_min": 10,
+                "reps_max": 10,
+                "aim": 10,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 15,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:49:05.455Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 25,
+                "reps_min": 10,
+                "reps_max": 10,
+                "aim": 10,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 11,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:51:29.420Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 25,
+                "reps_min": 10,
+                "reps_max": 10,
+                "aim": 10,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 11,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:54:00.664Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 25,
+                "reps_min": 10,
+                "reps_max": 10,
+                "aim": 10,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 10,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:56:24.954Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "thu-standing-lateral-db-raises",
+          "movement": "standing-lateral-db-raises",
+          "name": "Standing Lateral DB Raises",
+          "swapped_from": null,
+          "label": "A2",
+          "group": "Thu-A",
+          "type": "superset_same_weight",
+          "reason": "Same weight as the first exercise; beat 30 reps",
+          "change": null,
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "22.5 × 7, 9, 7, 7",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "amrap",
+              "target": {
+                "load": 25,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": 7,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 6,
+              "rir": 0,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:49:06.953Z"
+            },
+            {
+              "kind": "amrap",
+              "target": {
+                "load": 25,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": 9,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 7,
+              "rir": 0,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:51:32.148Z"
+            },
+            {
+              "kind": "amrap",
+              "target": {
+                "load": 25,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": 7,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 6,
+              "rir": 0,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:54:02.663Z"
+            },
+            {
+              "kind": "amrap",
+              "target": {
+                "load": 25,
+                "reps_min": null,
+                "reps_max": null,
+                "aim": 7,
+                "rir": [
+                  0,
+                  0
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 5,
+              "rir": 0,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T00:56:26.078Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "thu-single-arm-cable-pushdowns",
+          "movement": "single-arm-cable-pushdowns",
+          "name": "Single Arm Cable Pushdowns",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "All sets hit 12: +2.5 lb, back to 10",
+          "change": "up",
+          "delta_lb": 2.5,
+          "calibration": false,
+          "last": "32.5 × 12, 14, 12",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 35,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 10,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 35,
+              "reps": 12,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T01:00:12.920Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 35,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 10,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 35,
+              "reps": 9,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T01:01:29.979Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 35,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": 10,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 35,
+              "reps": 7,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T01:02:44.413Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "thu-incline-db-skullcrushers",
+          "movement": "incline-db-skullcrushers",
+          "name": "Incline DB Skullcrushers",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Below 12 twice at 25: hold",
+          "change": "hold",
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "25 × 13, 11, 9",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 25,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 14,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 10,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T01:04:48.746Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 25,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 12,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 10,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T01:07:10.409Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 25,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 12,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 25,
+              "reps": 9,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-10-30T01:09:34.639Z"
+            }
+          ]
+        }
+      ],
+      "note": null,
+      "updated_utc": "2026-10-30T01:09:35.987Z"
     }
   ]
 }
