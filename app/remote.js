@@ -8,7 +8,9 @@ import { getAll, getMeta, setMeta, put } from './db.js';
 import { live } from './records.js';
 import { GitHub } from './sync.js';
 import { weekDates } from '../coach/time.js';
-import { normalizeHealth, hasRecovery } from '../coach/readiness.js';
+import { normalizeHealth, healthSettled } from '../coach/readiness.js';
+// Bumped when what makes today's Health file "complete" changes, so a cached answer is rechecked.
+const HEALTH_RULE = 3;
 
 const PULL_EVERY_MS = 5 * 60 * 1000;
 const FILES = ['data/targets/today.json', 'data/plan/current.json', 'data/plan/next.json'];
@@ -35,8 +37,8 @@ async function viaApi(cfg, today, prev, fetchImpl) {
   const hp = `data/health/${today}.json`;
   let complete = null;
   if (sha[hp]) {
-    if (prev.health && prev.health.date === today && prev.health.sha === sha[hp] && typeof prev.health.complete === 'boolean') complete = prev.health.complete;
-    else { try { complete = hasRecovery(normalizeHealth(JSON.parse(await gh.blobText(sha[hp])))); } catch { complete = null; } }
+    if (prev.health && prev.health.date === today && prev.health.sha === sha[hp] && prev.health.rule === HEALTH_RULE && typeof prev.health.complete === 'boolean') complete = prev.health.complete;
+    else { try { complete = healthSettled(normalizeHealth(JSON.parse(await gh.blobText(sha[hp])))); } catch { complete = null; } }
   }
   return { docs, shas: Object.fromEntries(FILES.map((p) => [p, sha[p] || null])), healthToday: Boolean(sha[hp]), healthSha: sha[hp] || null, healthComplete: complete };
 }
@@ -77,7 +79,7 @@ export async function pullRemote(ctx, { force = false, fetchImpl = (...a) => fet
     shas: got.shas,
     docs: got.docs,
     targets: targets && targets.local_date ? targets : null,
-    health: { date: today, present: got.healthToday, sha: got.healthSha, complete: got.healthComplete },
+    health: { date: today, present: got.healthToday, sha: got.healthSha, complete: got.healthComplete, rule: HEALTH_RULE },
   };
   const changed = plansChanged || JSON.stringify(prev.targets) !== JSON.stringify(next.targets) || JSON.stringify(prev.health) !== JSON.stringify(next.health);
   await setMeta(ctx.db, 'remote', next);
@@ -97,7 +99,8 @@ export function weekTargets(remote, today) {
   return t.local_date >= weekDates(today)[0] ? t : null;
 }
 
-// "Sync Health" chip: only when we know today's file is missing, or has no recovery data.
+// "Sync Health" chip: only when we know today's file is missing, has no recovery data, or
+// has an implausible sleep number (a double-counted night; coach/readiness.js MAX_SLEEP_H).
 export function healthMissing(remote, today) {
   const hl = remote && remote.health;
   return Boolean(hl && hl.date === today && (hl.present === false || hl.complete === false));

@@ -241,14 +241,11 @@ try {
   }
   assert.ok(!(await page.locator('main').innerText()).includes('null'), 'no stray "null" text');
 
-  step('Body: measurements (two readings, averaged) + check-in');
+  step('Body: measurements (one reading per site) + check-in');
   await page.locator('.site-row input').first().waitFor();
-  const tape = { Waist: [32.1, 32.3], Neck: [15.2, 15.2], Chest: [40, 40.2], Arm: [14.1, 14.1], Thigh: [22.5, 22.7] };
-  for (const [site, [a, b]] of Object.entries(tape)) {
-    await page.getByLabel(`${site} reading 1`).fill(String(a));
-    await page.getByLabel(`${site} reading 2`).fill(String(b));
-  }
-  await page.locator('.site-row', { hasText: 'Waist' }).locator('.avg', { hasText: '32.2' }).waitFor();
+  assert.equal(await page.locator('.site-row:not(.site-head) input').count(), 5, 'one tape input per site (Walter, 2026-10-20)');
+  const tape = { Waist: 32.2, Neck: 15.2, Chest: 40.1, Arm: 14.1, Thigh: 22.6 };
+  for (const [site, v] of Object.entries(tape)) await page.getByLabel(`${site} reading`, { exact: true }).fill(String(v));
   const save = page.getByRole('button', { name: 'Save check-in' });
   assert.equal(await save.isDisabled(), true, 'biofeedback required');
   for (const [i, bio] of ['Hunger', 'Energy', 'Sleep', 'Stress', 'Digestion'].entries()) {
@@ -264,7 +261,7 @@ try {
   assert.equal(ci.adherence_pct, 50, 'auto-filled from the one Partial tap');
   assert.equal(ci.measurement_id, meas.id);
   assert.equal(meas.avg.waist, 32.2);
-  assert.deepEqual(meas.readings.waist, [32.1, 32.3]);
+  assert.deepEqual(meas.readings.waist, [32.2]);
   if (await page.getByText('Back up this week?').count()) {
     await page.evaluate(() => document.getElementById('app').scrollTo(0, 0));
     await page.waitForTimeout(3000);
@@ -851,6 +848,26 @@ try {
     await p.getByRole('button', { name: 'Switch workout' }).click();
     await p.locator('.sheet.show .item', { hasText: 'Pull #1' }).first().click();
     await p.locator('.title', { hasText: 'Pull #1' }).waitFor();
+    // travelling: the same day with comparable free-weight lifts (Walter, 2026-10-20)
+    await p.getByRole('button', { name: 'Travel workout' }).click();
+    await p.getByText('Travel workout', { exact: true }).first().waitFor();
+    const names = await p.locator('.ex-name').allTextContents();
+    assert.ok(names.some((n) => n.includes('Pull-ups')) && !names.some((n) => /Assisted|Hammer Pulldowns|Cable/.test(n)), `travel lifts: ${names.join(', ')}`);
+    await p.locator('.ex-cue', { hasText: 'Travel swap for Hammer Pulldowns' }).waitFor();
+    assert.match(await p.locator('.header .label, .screen .label').first().textContent(), /week 2 · travel/);
+    await p.waitForTimeout(400);
+    await shot(p, 'h10-log-travel-workout', { stage: 'stage-8' });
+    await p.getByLabel('Pull-ups reps', { exact: true }).fill('8');
+    await p.locator('.set-editor').getByRole('button', { name: /Log set|Done|Save/ }).click();
+    await p.waitForTimeout(400);
+    const travelSess = await p.evaluate(() => new Promise((resolve) => {
+      indexedDB.open('wmcoach').onsuccess = (e) => { e.target.result.transaction('sessions').objectStore('sessions').getAll().onsuccess = (r) => resolve(r.target.result.find((x) => x.local_date === '2026-10-20')); };
+    }));
+    assert.equal(travelSess.travel, true);
+    assert.equal(travelSess.day_name, 'Pull #1');
+    assert.ok(travelSess.exercises.every((e) => e.movement.startsWith('travel-')), 'own travel histories');
+    assert.deepEqual(travelSess.exercises[0].sets[0].reps, 8);
+    assert.equal(await p.getByRole('button', { name: 'Back to the gym version' }).count(), 0, 'fixed once a set is logged');
 
     await tab(p, 'Week');
     // each day's cardio on its own line under the workout; no separate weekly box

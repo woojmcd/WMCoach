@@ -60,6 +60,14 @@ export function trainingDay({ date, program, sessions, activities = [], programS
   if (!logged.length) {
     if (!day || !day.exercises.length) return null; // open day: nothing to judge
     if (!programStart || date < programStart) return null; // before the first logged session
+    // done early this week with "Switch workout" / "Lift today instead": not missed
+    const early = live(sessions).find((x) => x.status !== 'draft' && x.day_dow === isoWeekday(date) && x.local_date < date && x.local_date >= addDays(date, 1 - isoWeekday(date)));
+    if (early) {
+      return {
+        state: 'moved', day,
+        point: { key: 'training', tone: 'good', title: 'Training', text: `${day.name} was already done on ${WEEKDAYS[isoWeekday(early.local_date) - 1]}, so nothing was missed.` },
+      };
+    }
     if (stravaLift) {
       const min = Math.round((stravaLift.duration_s || 0) / 60);
       return {
@@ -69,7 +77,7 @@ export function trainingDay({ date, program, sessions, activities = [], programS
     }
     return {
       state: 'missed', day,
-      point: { key: 'training', tone: 'bad', title: 'Training', text: `${day.name} wasn’t logged. If you trained, it doesn’t count until it’s in the app; if you skipped it, move it to the weekend rather than lose it.` },
+      point: { key: 'training', tone: 'bad', title: 'Training', text: `${day.name} wasn’t logged. If you trained, it doesn’t count until it’s in the app; if you skipped it, do it on the next free day (Log tab → Lift today instead) and it still counts for the week.` },
     };
   }
   const s = logged[logged.length - 1];
@@ -98,6 +106,7 @@ export function trainingDay({ date, program, sessions, activities = [], programS
   const one = (x) => (x.total ? `${x.reps} reps` : x.assist ? `${x.load} assist × ${x.reps}` : `${x.load}×${x.reps}`);
   const fmt = (l) => `${l.name} ${one(l.cur)} (was ${one(l.prev)})`;
   const parts = [`${s.day_name}: ${done} of ${plural(total, 'set')} logged${s.auto_finished ? ' (closed automatically the next morning)' : ''}.`];
+  if (s.travel) parts.push('Travel workout: comparable lifts, compared with your last travel workout; gym targets unchanged.');
   if (s.deload) parts.push('Deload: lighter on purpose, so it isn’t judged on strength.');
   else {
     if (up.length) parts.push(`Beat last time on ${up.length}: ${up.slice(0, 3).map(fmt).join('; ')}${up.length > 3 ? `; and ${up.length - 3} more` : ''}.`);
@@ -173,13 +182,16 @@ export function weightDay({ date, weighins = [], series = [], units = 'lb' }) {
 export function recoveryNight({ health = null, readiness = null, mode = 'bulk', stepFloor = 8000 }) {
   const h = health;
   const has = h && [h.sleep_h, h.resting_hr, h.hrv_ms].some(Number.isFinite);
-  if (!has) return { state: 'none', point: { key: 'recovery', tone: 'warn', title: 'Recovery', text: 'No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health.' } };
+  if (!has) return { state: 'none', point: { key: 'recovery', tone: 'warn', title: 'Recovery', text: 'Last night isn’t in Apple Health yet: Oura sends it when its app opens. Open Oura, then tap Sync Health on the Log or Body tab.' } };
   const parts = [];
   let tone = 'good';
   if (Number.isFinite(h.sleep_h)) {
     const short = h.sleep_h < SLEEP_SHORT_H;
     if (short) tone = 'warn';
     parts.push(`${h.sleep_h.toFixed(1)} h sleep${short ? ', under 6 h' : h.sleep_h >= SLEEP_GOOD_H ? '' : ', a bit short of 7'}.`);
+  } else if (Number.isFinite(h.sleep_unsettled)) {
+    tone = 'warn';
+    parts.push(`Sleep read ${h.sleep_unsettled.toFixed(1)} h, which means the sync ran while Oura was still writing the night: run WMCoach Health Resync.`);
   }
   if (Number.isFinite(h.resting_hr)) {
     const b = readiness && readiness.baseline ? readiness.baseline.resting_hr : null;

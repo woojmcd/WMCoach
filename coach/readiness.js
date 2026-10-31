@@ -26,10 +26,107 @@ const num = (x) => {
 // can arrive before Oura has written the night (Walter, 2026-10-13).
 export const hasRecovery = (h) => Boolean(h && [h.hrv_ms, h.resting_hr, h.sleep_h].some(Number.isFinite));
 
+// More sleep than this from one overnight window isn't a real night: a sync that ran while
+// Oura was still writing counted the night twice (14.3 h for 7.2 h on 2026-10-17). It's
+// dropped and kept as sleep_unsettled, so the night counts as not in yet and the phone
+// shows the Sync Health chip; the re-sync's real number then reruns the day (spec §2b).
+export const MAX_SLEEP_H = 12;
+
+// ---- raw samples from the Shortcut (Walter, 2026-10-20) --------------------------------------
+// Oura rewrites a night in Apple Health several times, so the same stretch can sit there as
+// two or three overlapping samples, and sums inside the Shortcut came out double (14.3 h for
+// a 7.2 h night) while "lowest heart rate" picked up daytime readings. The Shortcut now sends
+// the samples themselves, one per line, and the coach does the maths:
+//   sleep_samples: "<start ISO>|<end ISO>|<value>"   (value: In Bed, Core, Deep, REM, Awake…)
+//   hr_samples:    "<start ISO>|<bpm>"
+// Sleep = time covered by an asleep stage and by no Awake sample, inside the main In Bed
+// window (overlaps count once). Resting HR = the lowest heart rate inside that window, which
+// is Oura's "lowest heart rate".
+const rowsOf = (text) => String(text || '').split(/\r?\n|\\n/).map((l) => l.split(/\s*[|;\t]\s*/).map((x) => x.trim())).filter((r) => r.length >= 2 && r[0]);
+const ms = (x) => { const t = Date.parse(x); return Number.isFinite(t) ? t : null; };
+const kindOf = (v) => {
+  const t = String(v || '').toLowerCase();
+  if (t.includes('awake')) return 'awake';
+  if (t.includes('bed')) return 'bed';
+  if (/core|deep|rem|asleep|unspecified|light/.test(t)) return 'asleep';
+  return null;
+};
+function union(list) {
+  const xs = list.filter(([a, b]) => b > a).sort((p, q) => p[0] - q[0]);
+  const out = [];
+  for (const [a, b] of xs) {
+    const last = out[out.length - 1];
+    if (last && a <= last[1]) last[1] = Math.max(last[1], b);
+    else out.push([a, b]);
+  }
+  return out;
+}
+const total = (u) => u.reduce((t, [a, b]) => t + (b - a), 0);
+function intersect(u, v) {
+  const out = [];
+  let i = 0; let j = 0;
+  while (i < u.length && j < v.length) {
+    const a = Math.max(u[i][0], v[j][0]); const b = Math.min(u[i][1], v[j][1]);
+    if (a < b) out.push([a, b]);
+    if (u[i][1] < v[j][1]) i += 1; else j += 1;
+  }
+  return out;
+}
+
+// → { sleep_h, window: [startMs, endMs] } or null when the text holds no night.
+export function sleepFromSamples(text) {
+  const iv = { bed: [], asleep: [], awake: [] };
+  for (const [a, b, v] of rowsOf(text)) {
+    const k = kindOf(v); const s0 = ms(a); const s1 = ms(b);
+    if (k && s0 !== null && s1 !== null && s1 > s0) iv[k].push([s0, s1]);
+  }
+  const asleep = union(iv.asleep);
+  if (!asleep.length) return null;
+  // the main night: the longest In Bed stretch (joined if Oura split it), else the asleep span
+  const beds = union(iv.bed).sort((p, q) => (q[1] - q[0]) - (p[1] - p[0]));
+  const window = beds.length ? beds[0] : [asleep[0][0], asleep[asleep.length - 1][1]];
+  const inWin = intersect(asleep, [window]);
+  const asleepMs = total(inWin) - total(intersect(inWin, union(iv.awake)));
+  if (!(asleepMs > 0)) return null;
+  return { sleep_h: Math.round((asleepMs / 3600000) * 100) / 100, window };
+}
+
+export function restingFromSamples(text, window) {
+  if (!window) return null;
+  let low = null;
+  for (const [a, v] of rowsOf(text)) {
+    const t = ms(a); const bpm = Number(String(v).replace(',', '.').match(/[\d.]+/)?.[0]);
+    if (t === null || !(bpm > 25 && bpm < 220) || t < window[0] || t > window[1]) continue;
+    if (low === null || bpm < low) low = bpm;
+  }
+  return low === null ? null : Math.round(low);
+}
+
 export function normalizeHealth(h) {
   if (!h || typeof h !== 'object') return null;
-  return { ...h, hrv_ms: num(h.hrv_ms), resting_hr: num(h.resting_hr), sleep_h: num(h.sleep_h), steps: num(h.steps), weight_lb: num(h.weight_lb) };
+  let sleep = num(h.sleep_h);
+  let rhr = num(h.resting_hr);
+  const fromSamples = Boolean(h.sleep_samples);
+  if (fromSamples) {
+    const night = sleepFromSamples(h.sleep_samples);
+    sleep = night ? night.sleep_h : null;
+    if (h.hr_samples) rhr = night ? restingFromSamples(h.hr_samples, night.window) : null;
+  }
+  const out = { ...h, hrv_ms: num(h.hrv_ms), resting_hr: rhr, sleep_h: sleep, steps: num(h.steps), weight_lb: num(h.weight_lb) };
+  delete out.sleep_samples; delete out.hr_samples;
+  if (sleep !== null && sleep > MAX_SLEEP_H) { out.sleep_h = null; out.sleep_unsettled = sleep; }
+  // No sleep at all means Oura hasn't sent the night to Health yet (it does when its app
+  // opens). The "lowest heart rate" is then a daytime reading (87 for 58 on 2026-10-18), so
+  // it waits for the night too.
+  if (out.sleep_h === null && !out.sleep_unsettled && out.resting_hr !== null && !Number.isFinite(out.hrv_ms)) {
+    out.resting_hr_unsettled = out.resting_hr;
+    out.resting_hr = null;
+  }
+  return out;
 }
+
+// Today's Health file is settled: it has recovery data and no implausible sleep.
+export const healthSettled = (h) => hasRecovery(h) && Number.isFinite(h.sleep_h) && !h.sleep_unsettled;
 
 // healthByDate: { 'YYYY-MM-DD': { hrv_ms, resting_hr, sleep_h, steps } } (data/health/)
 export function baselines(healthByDate, today, days = 7) {

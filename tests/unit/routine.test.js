@@ -143,6 +143,24 @@ test('Health re-syncs (Walter, 2026-10-13): an empty file counts as missing; new
   assert.equal(run(repo, '2026-10-14').status, 'skip', 'three reruns a day at most');
 });
 
+test('a double-counted night (14.3 h) is ignored and flagged; the Resync\'s real number reruns the day', () => {
+  const repo = phone();
+  for (let i = 1; i <= 7; i += 1) repo.files[`data/health/${addDays('2026-10-14', -i)}.json`] = JSON.stringify({ resting_hr: 62, sleep_h: 7.2 });
+  repo.files['data/health/2026-10-14.json'] = JSON.stringify({ hrv_ms: '', resting_hr: '61', sleep_h: '14.325', steps: '8943' });
+  run(repo, '2026-10-14');
+  let t = J(repo, 'data/targets/today.json');
+  assert.equal(t.readiness.sleep_h, null);
+  assert.equal(J(repo, 'data/model/state.json').health_missing_on, '2026-10-14');
+  const rec = t.daily.points.find((p) => p.key === 'recovery');
+  assert.equal(rec.tone, 'warn');
+  assert.match(rec.text, /^Sleep read 14\.3 h, which means the sync ran while Oura was still writing the night: run WMCoach Health Resync\./);
+  assert.doesNotMatch(t.daily.headline, /14\.3 h/);
+  repo.files['data/health/2026-10-14.json'] = JSON.stringify({ hrv_ms: '', resting_hr: '61', sleep_h: '7.175', steps: '8943' });
+  assert.equal(run(repo, '2026-10-14').status, 'rerun');
+  t = J(repo, 'data/targets/today.json');
+  assert.match(t.daily.points.find((p) => p.key === 'recovery').text, /^7\.2 h sleep\./);
+});
+
 test('daily summary: yesterday reviewed in today\'s targets, with today\'s focus', () => {
   const repo = phone();
   run(repo, '2026-10-12');

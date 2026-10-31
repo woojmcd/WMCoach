@@ -244,34 +244,24 @@ function checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }) {
   const editing = ui.forceCheckin && ci.done ? ci.done : null;
   const editingM = editing && editing.measurement_id ? measurements.find((m) => m.id === editing.measurement_id) : null;
   const prev = [...measurements].filter((m) => !editingM || m.id !== editingM.id).pop() || null;
+  // One tape reading per site (Walter, 2026-10-20). Stored as a one-reading list, the same
+  // shape as older two-reading entries, whose average shows when one is edited.
   const readings = {};
-  const avgEls = {};
   const rows = SITES.map((site) => {
-    const init = editingM && editingM.readings[site.key] ? editingM.readings[site.key] : [null, null];
-    readings[site.key] = [...init];
-    const avgEl = h('span', { class: 'avg' }, '');
-    avgEls[site.key] = avgEl;
-    const input = (i) => {
-      const el = h('input', {
-        class: 'input', type: 'text', inputmode: 'decimal', autocomplete: 'off', enterkeyhint: 'next',
-        'aria-label': `${site.label} reading ${i + 1}`,
-        placeholder: prev && prev.avg && prev.avg[site.key] ? ctx.fmtLength(prev.avg[site.key]) : '',
-        value: init[i] ? ctx.fmtLength(init[i]) : '',
-      });
-      el.addEventListener('input', () => {
-        const n = Number(el.value.replace(',', '.'));
-        readings[site.key][i] = el.value.trim() && n > 0 ? ctx.toIn(n) : null;
-        updateAvg(site.key);
-      });
-      return el;
-    };
-    return h('div', { class: 'site-row' }, h('span', { class: 'site' }, site.label), input(0), input(1), avgEl, h('small', { class: 'landmark' }, site.landmark));
+    const was = editingM ? (editingM.avg && editingM.avg[site.key]) || siteAverages({ [site.key]: editingM.readings[site.key] })[site.key] : null;
+    readings[site.key] = [was || null];
+    const el = h('input', {
+      class: 'input', type: 'text', inputmode: 'decimal', autocomplete: 'off', enterkeyhint: 'next',
+      'aria-label': `${site.label} reading`,
+      placeholder: prev && prev.avg && prev.avg[site.key] ? ctx.fmtLength(prev.avg[site.key]) : '',
+      value: was ? ctx.fmtLength(was) : '',
+    });
+    el.addEventListener('input', () => {
+      const n = Number(el.value.replace(',', '.'));
+      readings[site.key] = [el.value.trim() && n > 0 ? ctx.toIn(n) : null];
+    });
+    return h('div', { class: 'site-row' }, h('span', { class: 'site' }, site.label), el, h('small', { class: 'landmark' }, site.landmark));
   });
-  function updateAvg(key) {
-    const a = siteAverages({ [key]: readings[key] })[key];
-    avgEls[key].textContent = a ? ctx.fmtLength(a) : '';
-  }
-  for (const { key } of SITES) updateAvg(key);
 
   const auto = adherenceFromTaps(taps, today);
   let adherence = editing ? editing.adherence_pct : auto.pct;
@@ -314,10 +304,10 @@ function checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }) {
   });
 
   return h('div', { class: 'card stack' },
-    h('p', { class: 'muted small', style: 'margin:0' }, 'Fasted, after the weigh-in, before training. Tape snug, not compressing. Two readings per site; the app averages them.'),
+    h('p', { class: 'muted small', style: 'margin:0' }, 'Fasted, after the weigh-in, before training. Tape snug, not compressing. One reading per site.'),
     h('div', {},
       h('p', { class: 'label', style: 'margin:0 0 4px; color: var(--text)' }, 'Tape measurements'),
-      h('div', { class: 'site-row site-head' }, h('span', {}, `Site (${lenUnit})`), h('span', {}, '1st'), h('span', {}, '2nd'), h('span', {}, 'Avg')),
+      h('div', { class: 'site-row site-head' }, h('span', {}, 'Site'), h('span', {}, lenUnit)),
       rows),
     h('p', { class: 'label', style: 'margin:8px 0 0; color: var(--text)' }, 'Check-in'),
     h('div', { class: 'field' },

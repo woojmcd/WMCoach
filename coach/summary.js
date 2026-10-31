@@ -143,15 +143,27 @@ function trainingPoint({ sessions, program, period, today }) {
     return { point: { key: 'training', tone: 'info', title: 'Training', text: 'Program not started yet: your first logged session sets the baselines.' }, lifts: [], doneCount: null };
   }
   const programStart = logged[0];
-  // planned training days in the window that have passed (today's counts once logged)
-  const planned = [];
+  // Planned training days in the window that have passed (today's counts once logged). A
+  // workout counts wherever it was done in the window: on its day, or moved to another day
+  // with "Lift today instead" / "Switch workout" (Walter, 2026-10-20: Fri's lift done Sat).
+  const slots = [];
   for (let d = period.from > programStart ? period.from : programStart; d <= period.to; d = addDays(d, 1)) {
     const day = dayForWeekday(program, isoWeekday(d));
-    if (!day || !day.exercises.length) continue;
-    const done = sessions.some((s) => s.local_date === d && !s.deleted && s.status !== 'draft');
-    if (d < today || done) planned.push({ date: d, day, done });
+    if (day && day.exercises.length) slots.push({ date: d, day, dow: isoWeekday(d), session: null });
   }
+  const pool = sessions.filter((s) => !s.deleted && s.status !== 'draft' && s.local_date >= period.from && s.local_date <= period.to);
+  const used = new Set();
+  const take = (slot, pred) => {
+    if (slot.session) return;
+    const s = pool.find((x) => !used.has(x) && pred(x));
+    if (s) { used.add(s); slot.session = s; }
+  };
+  for (const slot of slots) take(slot, (x) => x.local_date === slot.date && (x.day_dow == null || x.day_dow === slot.dow)); // as planned
+  for (const slot of slots) take(slot, (x) => x.day_dow === slot.dow); // the same workout on another day
+  for (const slot of slots) take(slot, (x) => x.local_date === slot.date); // something else that day
+  const planned = slots.map((x) => ({ ...x, done: Boolean(x.session) })).filter((x) => x.date < today || x.done);
   const missed = planned.filter((p) => !p.done);
+  const moved = planned.filter((p) => p.done && p.session.local_date !== p.date && p.session.day_dow === p.dow);
   const doneCount = inWeek.length;
   const lifts = mainLiftChanges(sessions, program, period);
   const up = lifts.filter((l) => l.dir === 'up');
@@ -168,6 +180,9 @@ function trainingPoint({ sessions, program, period, today }) {
   if (!plannedN && !doneCount) return { point: null, lifts };
   const of = Math.max(plannedN, doneCount);
   parts.push(`${doneCount} of ${of} session${of === 1 ? '' : 's'}.`);
+  const travel = planned.filter((p) => p.done && p.session.travel);
+  if (travel.length) parts.push(`Travel workout${travel.length === 1 ? '' : 's'}: ${travel.map((m) => m.day.name).join(', ')} (done with comparable lifts; strength is judged on gym days).`);
+  if (moved.length) parts.push(`Moved: ${moved.map((m) => `${m.day.name} to ${WEEKDAYS[isoWeekday(m.session.local_date) - 1]}`).join(', ')}.`);
   if (missed.length) parts.push(`Missed ${missed.map((m) => `${WEEKDAYS[isoWeekday(m.date) - 1]} (${m.day.name})`).join(', ')}. Every missed session is progress you don’t get back.`);
   const fmt = (l) => `${l.name} ${l.prev.load}×${l.prev.reps} → ${l.cur.load}×${l.cur.reps}`;
   if (deload) parts.push('Deload week: lighter on purpose, so strength isn’t judged.');
@@ -185,7 +200,7 @@ function trainingPoint({ sessions, program, period, today }) {
   else if (!deload && down.length >= 3) tone = 'bad';
   else if (missed.length || (!deload && down.length > up.length)) tone = 'warn';
   if (!doneCount) parts.splice(0, parts.length, plannedN ? `No sessions logged out of ${plannedN} planned. Unlogged training can’t drive progression, so log every set, even on a bad day.` : 'No sessions logged.');
-  return { point: { key: 'training', tone, title: 'Training', text: parts.join(' ') }, lifts, up, down, missed, doneCount, deload };
+  return { point: { key: 'training', tone, title: 'Training', text: parts.join(' ') }, lifts, up, down, missed, moved, doneCount, deload };
 }
 
 function bodyPoint({ measurements, checkin, phase, mode, units }) {

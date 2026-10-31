@@ -67,6 +67,7 @@ The new service worker installs in the background and waits. Walter sees "Update
 - e2e checks that the page can't scroll, that the tab bar sits on the bottom edge when scrolled to the end, and that a gap is filled.
 
 ## Records
+- Tape: one reading per site (Walter, 2026-10-20), stored as a one-item `readings[site]` list, the shape older two-reading entries have.
 - Daily records (weigh-ins, measurements, check-ins, on-plan taps) are written with `saveDaily()` in `app/records.js`: saving again for a date edits that day's entry made in the same zone.
 - Nothing is hard-deleted in the app. `removeRecord()` leaves a tombstone (`deleted: true`, `deleted_utc`) so sync and a newer-wins merge can't resurrect it. Read with `live()`.
 - The weigh-in and "On plan?" inputs live in `app/views/day-log.js`, shared by the Body tab (today) and the Week tab's day sheets (any day up to today), so a forgotten day can be filled in later (Walter, 2026-10-17). An earlier day edits the entry it already has, in that entry's zone.
@@ -120,6 +121,8 @@ The new service worker installs in the background and waits. Walter sees "Update
 - `targets/today.json` → `cardio` holds today's session, the heart-rate range and the week's done items. The phone recomputes it offline from the week's Strava items in the latest targets (plus any older Stairs ✓ taps).
 - Cardio is recorded in Strava only: the cardio card is a reminder with no logging controls (Walter, 2026-10-13). On the Week tab each day's cardio is its own line under the workout (`cardioMeta` → `{ text, state }`); there is no weekly cardio box.
 - Lift days have a **Switch workout** link under the title until the first set is logged (`chooseDay`).
+- **Travel workout** (Walter, 2026-10-20): `coach/travel.js` maps each slot to a comparable dumbbell/bodyweight lift (`TRAVEL`, `travelExercise()`, `travelDay()`). Movements are `travel-<slug>`, so travel lifts keep their own history and gym targets never move. `planFor(…, { travel })` / `draftSession(…, { travel })` build it; sessions carry `travel: true`; the Log tab resolves `pidx` to the travel version. Counted as done in reviews, not judged for strength.
+- A moved workout counts for its own day: `trainingPoint()` (`coach/summary.js`) matches planned days to sessions by `day_dow` within the review window, `trainingDay()` (`coach/daily.js`) knows a day done early, and the Week tab shows "Moved · done <day>" (Walter, 2026-10-20).
 - Strava HR zones come from `get_athlete_zones` (routine step 3, saved as `zones` in `.coach/strava.json`) and are kept in `data/model/state.json` → `hr_zones`.
 
 ## Daily summary (stage 8, spec §6.6)
@@ -129,11 +132,13 @@ The new service worker installs in the background and waits. Walter sees "Update
 - Points order (Walter, 2026-10-13): last night, weight, training, cardio, food. The cardio point always ends with today's 3-mile pace: `runBaseline()` + `runPaceToday()` in `coach/cardio.js`. Strava run pace zones are kept in `state.run_zones`.
 - Health re-syncs (§2b):
   - A Health file only counts with recovery data: `hasRecovery()` in `coach/readiness.js`.
+  - The Shortcut sends raw `sleep_samples` (`start|end|value`) and `hr_samples` (`start|bpm`) (2026-10-20). `normalizeHealth()` computes sleep with `sleepFromSamples()` (asleep stages minus Awake, overlaps once, main In Bed window; Oura rewrites nights) and resting HR with `restingFromSamples()` (lowest inside that window). Older files keep `sleep_h` / `resting_hr`.
+  - No sleep → the night isn't in Health yet: resting HR is dropped too (`resting_hr_unsettled`). Sleep over `MAX_SLEEP_H` (12 h) is dropped as `sleep_unsettled`. Either way `healthSettled()` is false, so the chip shows.
   - New numbers since the run rerun readiness, targets and the summary, up to `MAX_HEALTH_RERUNS` (3) a day. The run tracks this in `state.health_seen` and `state.health_reruns`.
   - The phone reads today's file to show the Sync Health chip, and opens the "WMCoach Health Resync" Shortcut when the file exists.
 - What the Shortcut can read (`docs/shortcut.md`): Oura gives sleep and overnight heart rate, but not HRV or resting HR. So:
-  - resting HR = the lowest Oura heart rate since 6 PM;
-  - sleep = In Bed − Awake;
+  - resting HR = the lowest Oura heart rate inside the night (from `hr_samples`);
+  - sleep = asleep stages minus Awake, overlaps once (from `sleep_samples`);
   - steps = iPhone only.
 - e2e: the main walkthrough and every context without its own scenario clock run at `FRIDAY` (Fri 9 Oct 2026, 09:30 LA), so results don't depend on the day the suite runs.
 
