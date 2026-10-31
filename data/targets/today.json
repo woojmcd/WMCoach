@@ -1,405 +1,30 @@
 {
   "schema_version": 1,
-  "local_date": "2026-10-30",
+  "local_date": "2026-10-31",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-30T14:01:59.095Z",
+  "generated_utc": "2026-10-31T17:08:02.576Z",
   "readiness": {
     "status": "green",
     "flags": [],
-    "reason": "recovery normal",
-    "missing": false,
-    "travel": null,
-    "hrv_ms": null,
-    "resting_hr": 57,
-    "sleep_h": null,
-    "baseline": {
-      "hrv_ms": null,
-      "resting_hr": 57
-    }
+    "reason": "no recovery data",
+    "missing": true,
+    "travel": null
   },
   "day": {
-    "dow": 5,
-    "name": "Upper Pull #2",
-    "rest_day": false
+    "dow": 6,
+    "name": "Open: cardio / social",
+    "rest_day": true
   },
   "program_week": 3,
   "deload": {
     "active": false,
     "reason": null
   },
-  "exercises": [
-    {
-      "slot_id": "fri-reverse-pec-deck-flyes",
-      "movement": "reverse-pec-deck-flyes",
-      "name": "Reverse Pec Deck Flyes",
-      "load": 110,
-      "change": "hold",
-      "calibration": false,
-      "reason": "Aim +1 rep where below 12",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 110,
-          "reps_min": 10,
-          "reps_max": 12,
-          "aim": 12,
-          "rir": [
-            1,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 110,
-          "reps_min": 10,
-          "reps_max": 12,
-          "aim": 12,
-          "rir": [
-            1,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 110,
-          "reps_min": 10,
-          "reps_max": 12,
-          "aim": 12,
-          "rir": [
-            1,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-cable-lat-pullovers",
-      "movement": "cable-lat-pullovers",
-      "name": "Cable Lat Pullovers",
-      "load": 57.5,
-      "change": "hold",
-      "calibration": false,
-      "reason": "Aim +1 rep where below 15",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 57.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 57.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 57.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-single-arm-db-rows",
-      "movement": "single-arm-db-rows",
-      "name": "Single Arm DB Rows",
-      "load": 70,
-      "change": "up",
-      "calibration": false,
-      "reason": "All sets hit 10: +5 lb, back to 8",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 70,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 70,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 70,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-single-arm-cable-pulldowns",
-      "movement": "single-arm-cable-pulldowns",
-      "name": "Single Arm Cable Pulldowns",
-      "load": 65,
-      "change": "up",
-      "calibration": false,
-      "reason": "All sets hit 10: +2.5 lb, back to 10",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 65,
-          "reps_min": 10,
-          "reps_max": 10,
-          "aim": 10,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 65,
-          "reps_min": 10,
-          "reps_max": 10,
-          "aim": 10,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 65,
-          "reps_min": 10,
-          "reps_max": 10,
-          "aim": 10,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-incline-db-curls",
-      "movement": "incline-db-curls",
-      "name": "Incline DB Curls",
-      "load": 27.5,
-      "change": "up",
-      "calibration": false,
-      "reason": "All sets hit 10: +2.5 lb, back to 8",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 27.5,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
-          "rir": [
-            0,
-            0
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 27.5,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
-          "rir": [
-            0,
-            0
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 27.5,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
-          "rir": [
-            0,
-            0
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-hammer-rope-curls",
-      "movement": "hammer-rope-curls",
-      "name": "Hammer Rope Curls",
-      "load": 52.5,
-      "change": "hold",
-      "calibration": false,
-      "reason": "Aim +1 rep where below 15",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 52.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 13,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 52.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 12,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 52.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 12,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-cable-ab-crunches",
-      "movement": "cable-ab-crunches",
-      "name": "Cable Ab Crunches",
-      "load": 62.5,
-      "change": "up",
-      "calibration": false,
-      "reason": "All sets hit 15: +2.5 lb, back to 15",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 62.5,
-          "reps_min": 15,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 62.5,
-          "reps_min": 15,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 62.5,
-          "reps_min": 15,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-ab-plank",
-      "movement": "ab-plank",
-      "name": "Ab Plank",
-      "load": null,
-      "change": null,
-      "calibration": false,
-      "reason": null,
-      "sets": [
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
-        },
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
-        },
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
-        }
-      ]
-    }
-  ],
+  "exercises": [],
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -465,42 +90,42 @@
   },
   "daily": {
     "schema_version": 1,
-    "date": "2026-10-29",
-    "label": "Thu 29 Oct",
+    "date": "2026-10-30",
+    "label": "Fri 30 Oct",
     "tone": "warn",
-    "headline": "The prescribed cardio was missed. Good: every set logged, 4 lifts beat last time, on plan.",
-    "focus": "Get today’s 25 min in after lifting.",
-    "today": "Upper Pull #2: up on Single Arm DB Rows 70 lb × 8, Single Arm Cable Pulldowns 65 lb × 10 +2 more. Cardio: 25 min stairs at 126–156 bpm (make-up).",
+    "headline": "Food wasn’t logged. Also: the prescribed cardio was missed. Good: every set logged, 4 lifts beat last time, weighed in.",
+    "focus": "Eat the plan and tap “On plan” before bed.",
+    "today": "Open day. Cardio: 25 min stairs at 126–156 bpm (make-up).",
     "points": [
       {
         "key": "recovery",
-        "tone": "good",
-        "title": "Last night",
-        "text": "Resting HR 57 (right on your 57 average). 2,221 steps yesterday. Readiness green."
+        "tone": "warn",
+        "title": "Recovery",
+        "text": "No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health."
       },
       {
         "key": "weight",
         "tone": "good",
         "title": "Weight",
-        "text": "177.2 lb. Trend 177.3 lb (+1.5 lb in a week)."
+        "text": "177.2 lb. Trend 177.3 lb (+0.6 lb in a week)."
       },
       {
         "key": "training",
         "tone": "good",
         "title": "Training",
-        "text": "Upper Push #2: 23 of 23 sets logged. Beat last time on 4: Flat Smith Machine Bench 135×12 (was 135×10); Seated Lateral DB Raises 25×15 (was 22.5×16); Standing Lateral DB Raises 25×7 (was 22.5×9); and 1 more. Below last time: Pec Deck Flyes, Incline DB Skullcrushers."
+        "text": "Upper Pull #2: 24 of 24 sets logged. Beat last time on 4: Single Arm DB Rows 70×10 (was 65×11); Incline DB Curls 27.5×12 (was 25×12); Hammer Rope Curls 52.5×13 (was 52.5×12); and 1 more. Below last time: Reverse Pec Deck Flyes, Cable Lat Pullovers, Single Arm Cable Pulldowns."
       },
       {
         "key": "cardio",
         "tone": "warn",
         "title": "Cardio",
-        "text": "Prescribed 25 min easy stairs: not done. Week so far: 1 of 2 sessions. It moves to the next free day. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness green. Baseline 8:26/mi from your last 5 3-mile runs."
+        "text": "Prescribed 25 min easy stairs: not done. Week so far: 1 of 2 sessions. It moves to the next free day. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness not in yet. Baseline 8:26/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",
-        "tone": "good",
+        "tone": "warn",
         "title": "Food",
-        "text": "On plan (2,492 kcal)."
+        "text": "Not logged. Tap “On plan” on the Body tab every day; without it the coach can’t tell a plan that isn’t working from a plan that wasn’t followed."
       }
     ],
     "pace": {

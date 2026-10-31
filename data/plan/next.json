@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "id": "2026-10-25",
-  "week_start": "2026-10-25",
-  "week_end": "2026-10-31",
+  "id": "2026-11-01",
+  "week_start": "2026-11-01",
+  "week_end": "2026-11-07",
   "mode": "bulk",
   "plan": {
     "structure": "single",
@@ -26,7 +26,7 @@
           {
             "food": "rice_cake",
             "name": "Flavored rice cake",
-            "qty": 6,
+            "qty": 5,
             "unit": "each"
           },
           {
@@ -52,7 +52,7 @@
           {
             "food": "rice",
             "name": "Jasmine/white rice, cooked",
-            "qty": 340,
+            "qty": 270,
             "unit": "g"
           },
           {
@@ -106,10 +106,10 @@
     },
     "macros": {
       "MP": {
-        "P": 191.9,
-        "C": 312.5,
-        "F": 52.7,
-        "kcal": 2492,
+        "P": 189.2,
+        "C": 281.8,
+        "F": 52.2,
+        "kcal": 2353,
         "per_meal": {
           "M1": {
             "P": 33.9,
@@ -118,16 +118,16 @@
             "kcal": 464
           },
           "Pre-workout": {
-            "P": 34,
-            "C": 71.2,
-            "F": 11.8,
-            "kcal": 527
+            "P": 33.2,
+            "C": 60.2,
+            "F": 11.5,
+            "kcal": 477
           },
           "Post-workout": {
-            "P": 54.8,
-            "C": 99.8,
-            "F": 6.3,
-            "kcal": 675
+            "P": 52.9,
+            "C": 80,
+            "F": 6.1,
+            "kcal": 587
           },
           "M4": {
             "P": 51.5,
@@ -145,44 +145,73 @@
       }
     },
     "weekly_avg": {
-      "P": 191.9,
-      "C": 312.5,
-      "F": 52.7,
-      "kcal": 2492
+      "P": 189.2,
+      "C": 281.8,
+      "F": 52.2,
+      "kcal": 2353
     },
-    "id": "BULK-2026-10-25",
+    "id": "BULK-2026-11-01",
     "phase": "Bulk",
-    "start": "2026-10-25",
+    "start": "2026-11-01",
     "based_on": "CUT26-V4",
-    "carb_steps": 1,
+    "carb_steps": 0,
     "coach_note": "Week 1 of the bulk: CUT26-V4's high-carb day (MP2), +1 carb step to fit 2488 kcal."
   },
   "source": "routine",
-  "based_on": "2026-10-18",
+  "based_on": "2026-10-25",
   "changes": {
     "structure": null,
-    "items": [],
+    "items": [
+      {
+        "where": null,
+        "meal": "Pre-workout",
+        "food": "rice_cake",
+        "name": "Flavored rice cake",
+        "unit": "each",
+        "from": 6,
+        "to": 5
+      },
+      {
+        "where": null,
+        "meal": "Post-workout",
+        "food": "rice",
+        "name": "Jasmine/white rice, cooked",
+        "unit": "g",
+        "from": 340,
+        "to": 270
+      }
+    ],
     "kcal": {
       "from": 2492,
-      "to": 2492,
-      "delta": 0
+      "to": 2353,
+      "delta": -139
     },
-    "changed": false
+    "changed": true
   },
   "decision": {
-    "change": 0,
-    "stoppedAt": "adherence",
-    "reason": "adherence 83 % (under 90 %); observe-only start: 0 more days and 1 more weigh-in before the first change",
+    "change": -1,
+    "stoppedAt": null,
+    "reason": "rate +0.67 %BW/wk, over the +0.35 cap, adherence 93 %",
     "checks": [
       {
         "key": "adherence",
-        "ok": false,
-        "text": "adherence 83 % (under 90 %); observe-only start: 0 more days and 1 more weigh-in before the first change"
+        "ok": true,
+        "text": "adherence 93 %"
+      },
+      {
+        "key": "data",
+        "ok": true,
+        "text": "6 weigh-ins"
+      },
+      {
+        "key": "rate",
+        "ok": true,
+        "text": "rate +0.67 %BW/wk, over the +0.35 cap"
       }
     ]
   },
   "notes": [],
-  "reason": "No macro change: adherence 83 % (under 90 %); observe-only start: 0 more days and 1 more weigh-in before the first change.",
+  "reason": "Rate +0.67 %BW/wk, over the +0.35 cap, adherence 93 %.",
   "cardio": {
     "schema_version": 1,
     "mode": "bulk",
@@ -198,8 +227,8 @@
     "reason": "Bulk: two easy sessions a week for heart health, recovery and appetite. Their calories count in your expenditure, so the food covers them and you keep gaining.",
     "change": null
   },
-  "generated_utc": "2026-10-24T14:00:57.965Z",
-  "generated_local_date": "2026-10-24",
-  "created_utc": "2026-10-24T14:00:57.965Z",
-  "updated_utc": "2026-10-24T14:00:57.965Z"
+  "generated_utc": "2026-10-31T17:08:02.576Z",
+  "generated_local_date": "2026-10-31",
+  "created_utc": "2026-10-31T17:08:02.576Z",
+  "updated_utc": "2026-10-31T17:08:02.576Z"
 }
