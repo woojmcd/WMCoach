@@ -1,17 +1,33 @@
 {
   "schema_version": 1,
-  "local_date": "2026-10-31",
+  "local_date": "2026-11-01",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-10-31T17:08:02.576Z",
+  "generated_utc": "2026-11-01T15:00:32.522Z",
   "readiness": {
-    "status": "green",
-    "flags": [],
-    "reason": "no recovery data",
-    "missing": true,
-    "travel": null
+    "status": "red",
+    "flags": [
+      {
+        "key": "rhr",
+        "text": "resting HR up (77 vs 57)"
+      },
+      {
+        "key": "sleep",
+        "text": "5.4 h sleep"
+      }
+    ],
+    "reason": "resting HR up (77 vs 57), 5.4 h sleep",
+    "missing": false,
+    "travel": null,
+    "hrv_ms": null,
+    "resting_hr": 77,
+    "sleep_h": 5.38333333333333,
+    "baseline": {
+      "hrv_ms": null,
+      "resting_hr": 57
+    }
   },
   "day": {
-    "dow": 6,
+    "dow": 7,
     "name": "Open: cardio / social",
     "rest_day": true
   },
@@ -24,7 +40,7 @@
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-10-31",
+    "date": "2026-11-01",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -41,17 +57,13 @@
       "change": null
     },
     "today": {
-      "minutes": 25,
+      "minutes": 20,
       "makeup": true,
-      "note": "Make-up: 1 session behind this week.",
-      "kind": "stairs",
-      "zone": 2,
-      "hr": {
-        "lo": 126,
-        "hi": 156,
-        "source": "strava"
-      },
-      "kcal": 190,
+      "note": "Readiness red (resting HR up (77 vs 57), 5.4 h sleep): swap it for an easy 20-min walk. It still counts. Make-up: 1 session behind this week.",
+      "kind": "walk",
+      "zone": 1,
+      "hr": null,
+      "kcal": null,
       "optional": false,
       "status": "todo",
       "done_min": 0,
@@ -90,36 +102,30 @@
   },
   "daily": {
     "schema_version": 1,
-    "date": "2026-10-30",
-    "label": "Fri 30 Oct",
-    "tone": "warn",
-    "headline": "Food wasn’t logged. Also: the prescribed cardio was missed. Good: every set logged, 4 lifts beat last time, weighed in.",
-    "focus": "Eat the plan and tap “On plan” before bed.",
-    "today": "Open day. Cardio: 25 min stairs at 126–156 bpm (make-up).",
+    "date": "2026-10-31",
+    "label": "Sat 31 Oct",
+    "tone": "bad",
+    "headline": "Recovery is red this morning (resting HR up (77 vs 57), 5.4 h sleep). Also: food wasn’t logged; no weigh-in.",
+    "focus": "Take today easier: loads are held with one set fewer, cardio is an easy walk, and get to bed early tonight.",
+    "today": "Open day. Cardio: 20 min easy walk (make-up).",
     "points": [
       {
         "key": "recovery",
-        "tone": "warn",
-        "title": "Recovery",
-        "text": "No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health."
+        "tone": "bad",
+        "title": "Last night",
+        "text": "5.4 h sleep, under 6 h. Resting HR 77 (+20 vs your 57 average: a sign of fatigue or something coming on). 6,784 steps yesterday. Readiness red (resting HR up (77 vs 57), 5.4 h sleep)."
       },
       {
         "key": "weight",
-        "tone": "good",
+        "tone": "warn",
         "title": "Weight",
-        "text": "177.2 lb. Trend 177.3 lb (+0.6 lb in a week)."
-      },
-      {
-        "key": "training",
-        "tone": "good",
-        "title": "Training",
-        "text": "Upper Pull #2: 24 of 24 sets logged. Beat last time on 4: Single Arm DB Rows 70×10 (was 65×11); Incline DB Curls 27.5×12 (was 25×12); Hammer Rope Curls 52.5×13 (was 52.5×12); and 1 more. Below last time: Reverse Pec Deck Flyes, Cable Lat Pullovers, Single Arm Cable Pulldowns."
+        "text": "No weigh-in (6 of the last 7 days). The trend needs 5+ a week: every morning, after the bathroom, before food."
       },
       {
         "key": "cardio",
         "tone": "warn",
         "title": "Cardio",
-        "text": "Prescribed 25 min easy stairs: not done. Week so far: 1 of 2 sessions. It moves to the next free day. 3-mile pace today: steady, 8:16–8:36/mi (about 25:18). Readiness not in yet. Baseline 8:26/mi from your last 5 3-mile runs."
+        "text": "Prescribed 25 min easy stairs: not done. Week so far: 1 of 2 sessions. It moves to the next free day. 3-mile run: not today. Readiness red (resting HR up (77 vs 57), 5.4 h sleep): an easy 20–30 min walk instead."
       },
       {
         "key": "food",
@@ -129,9 +135,9 @@
       }
     ],
     "pace": {
-      "kind": "steady",
-      "lo": 496,
-      "hi": 516
+      "kind": "walk",
+      "lo": null,
+      "hi": null
     }
   }
 }
