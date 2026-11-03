@@ -1,0 +1,16 @@
+{
+  "schema_version": 4,
+  "store": "adherence",
+  "partition": "2026-11",
+  "records": [
+    {
+      "id": "plan-3b8498ba-9b35-46d6-8cc6-c1100e452610",
+      "local_date": "2026-11-02",
+      "utc": "2026-11-03T00:32:33.629Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-03T00:32:33.629Z"
+    }
+  ]
+}
