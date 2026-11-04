@@ -86,10 +86,10 @@
   },
   "trend": {
     "half_life_days": 7,
-    "last_local_date": "2026-11-02",
-    "last_weight_lb": 182.4,
-    "trend_lb": 178.6,
-    "rate_14d_pct_bw_wk": 0.71
+    "last_local_date": "2026-11-03",
+    "last_weight_lb": 180,
+    "trend_lb": 178.8,
+    "rate_14d_pct_bw_wk": 0.68
   },
   "tdee": {
     "method": "blend",
@@ -159,13 +159,9 @@
     }
   ],
   "progression": {},
-  "last_daily_run_local_date": "2026-11-03",
+  "last_daily_run_local_date": "2026-11-04",
   "last_weekly_run_week": "2026-11-01",
   "readiness_history": [
-    {
-      "local_date": "2026-10-14",
-      "status": "green"
-    },
     {
       "local_date": "2026-10-15",
       "status": "green"
@@ -245,10 +241,14 @@
     {
       "local_date": "2026-11-03",
       "status": "green"
+    },
+    {
+      "local_date": "2026-11-04",
+      "status": "green"
     }
   ],
-  "health_missing_on": "2026-11-03",
-  "last_daily_run_utc": "2026-11-03T17:08:47.279Z",
+  "health_missing_on": "2026-11-04",
+  "last_daily_run_utc": "2026-11-04T17:08:09.388Z",
   "last_daily_run_tz": "America/Los_Angeles",
   "health_rerun_on": "2026-11-03",
   "hr_zones": {
@@ -274,7 +274,7 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-11-03"
+    "updated_local_date": "2026-11-04"
   },
   "weekly_history": [
     {
@@ -315,8 +315,8 @@
     }
   ],
   "health_seen": {
-    "local_date": "2026-11-03",
-    "sig": "[null,56,7.55,1348,null]"
+    "local_date": "2026-11-04",
+    "sig": null
   },
   "health_reruns": {
     "local_date": "2026-11-03",
@@ -349,7 +349,7 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-11-03"
+    "updated_local_date": "2026-11-04"
   },
   "notified": {
     "checkin": "2026-11-03"
