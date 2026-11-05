@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20862501288",
+  "name": "Business Meeting",
+  "type": "Run",
+  "start_local": "2026-11-04T13:24:04",
+  "local_date": "2026-11-04",
+  "duration_s": 1648,
+  "elapsed_s": 2234,
+  "distance_km": 4.84,
+  "elevation_m": 13,
+  "avg_hr": 154,
+  "max_hr": 169,
+  "hr_zones_s": null,
+  "relative_effort": 41,
+  "kcal": 380,
+  "location": "San Diego, California",
+  "source": "strava"
+}
