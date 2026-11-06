@@ -22,6 +22,15 @@
       "updated_utc": "2026-11-03T17:48:17.218Z"
     },
     {
+      "id": "plan-59cece69-93c2-4402-8dd6-df513e6af06f",
+      "local_date": "2026-11-04",
+      "utc": "2026-11-06T19:03:55.605Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-06T19:03:55.605Z"
+    },
+    {
       "id": "plan-34f21e5d-fcae-425b-a03f-fbe73867dcba",
       "local_date": "2026-11-05",
       "utc": "2026-11-06T19:03:46.915Z",
