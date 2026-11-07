@@ -60,6 +60,21 @@
       "stopped_at": null,
       "cardio": "2 × 25 min stairs (Tue, Thu)",
       "cardio_changed": false
+    },
+    {
+      "week_start": "2026-11-08",
+      "local_date": "2026-11-07",
+      "generated_utc": "2026-11-07T15:00:55.602Z",
+      "mode": "bulk",
+      "changed": true,
+      "kcal_from": 2353,
+      "kcal_to": 2215,
+      "delta": -138,
+      "what": "Post-workout rice 270 → 200 g, −1 rice cake",
+      "reason": "Rate +0.73 %BW/wk, over the +0.35 cap, adherence 100 %.",
+      "stopped_at": null,
+      "cardio": "2 × 25 min stairs (Tue, Thu)",
+      "cardio_changed": false
     }
   ]
 }
