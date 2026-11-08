@@ -1,29 +1,17 @@
 {
   "schema_version": 1,
-  "local_date": "2026-11-07",
+  "local_date": "2026-11-08",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-11-07T15:00:55.602Z",
+  "generated_utc": "2026-11-08T17:08:06.088Z",
   "readiness": {
-    "status": "amber",
-    "flags": [
-      {
-        "key": "sleep",
-        "text": "5.7 h sleep"
-      }
-    ],
-    "reason": "5.7 h sleep",
-    "missing": false,
-    "travel": null,
-    "hrv_ms": null,
-    "resting_hr": 62,
-    "sleep_h": 5.66666666666667,
-    "baseline": {
-      "hrv_ms": null,
-      "resting_hr": 61
-    }
+    "status": "green",
+    "flags": [],
+    "reason": "no recovery data",
+    "missing": true,
+    "travel": null
   },
   "day": {
-    "dow": 6,
+    "dow": 7,
     "name": "Open: cardio / social",
     "rest_day": true
   },
@@ -36,7 +24,7 @@
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-11-07",
+    "date": "2026-11-08",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -55,7 +43,7 @@
     "today": {
       "minutes": 25,
       "makeup": true,
-      "note": "Readiness amber (5.7 h sleep): keep it truly easy, Zone 2 or below. Easy cardio helps you recover. Make-up: 1 session behind this week.",
+      "note": "Make-up: 1 session behind this week.",
       "kind": "stairs",
       "zone": 2,
       "hr": {
@@ -102,48 +90,42 @@
   },
   "daily": {
     "schema_version": 1,
-    "date": "2026-11-06",
-    "label": "Fri 6 Nov",
+    "date": "2026-11-07",
+    "label": "Sat 7 Nov",
     "tone": "warn",
-    "headline": "Only 15 of 21 sets were logged. Also: short night (5.7 h); the prescribed cardio was missed. Good: 3 lifts beat last time, on plan, weighed in.",
-    "focus": "Log each set right after you finish it: the targets come from the logbook.",
+    "headline": "Food wasn’t logged. Also: no weigh-in; the prescribed cardio was missed.",
+    "focus": "Eat the plan and tap “On plan” before bed.",
     "today": "Open day. Cardio: 25 min stairs at 126–156 bpm (make-up).",
     "points": [
       {
         "key": "recovery",
         "tone": "warn",
-        "title": "Last night",
-        "text": "5.7 h sleep, under 6 h. Resting HR 62 (+1 vs your 61 average). 5,678 steps yesterday. Readiness amber (5.7 h sleep)."
+        "title": "Recovery",
+        "text": "No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health."
       },
       {
         "key": "weight",
-        "tone": "good",
-        "title": "Weight",
-        "text": "180.4 lb. Trend 179.0 lb (+1.7 lb in a week)."
-      },
-      {
-        "key": "training",
         "tone": "warn",
-        "title": "Training",
-        "text": "Pull #1: 15 of 21 sets logged. Beat last time on 3: Incline DB Rows (upper back) 60×12 (was 55×11); Hammer Pulldowns 120×12 (was 115×10); Reverse DB Flyes 30×16 (was 30×15). Below last time: Assisted Pullups, Cable Lat Pullovers. 6 sets not logged: those can’t drive the next targets."
+        "title": "Weight",
+        "text": "No weigh-in (5 of the last 7 days). The trend needs 5+ a week: every morning, after the bathroom, before food."
       },
       {
         "key": "cardio",
         "tone": "warn",
         "title": "Cardio",
-        "text": "Prescribed 25 min easy stairs: not done. Week so far: 1 of 2 sessions. It moves to the next free day. 3-mile pace today: easy, 10:08–10:38/mi (about 31:09), heart rate 126–156. Readiness amber (5.7 h sleep). Baseline 9:08/mi from your last 5 3-mile runs."
+        "text": "Prescribed 25 min easy stairs: not done. Week so far: 1 of 2 sessions. It moves to the next free day. 3-mile pace today: steady, 8:58–9:18/mi (about 27:24). Readiness not in yet. Baseline 9:08/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",
-        "tone": "good",
+        "tone": "warn",
         "title": "Food",
-        "text": "On plan (2,353 kcal)."
+        "text": "Not logged. Tap “On plan” on the Body tab every day; without it the coach can’t tell a plan that isn’t working from a plan that wasn’t followed."
       }
     ],
     "pace": {
-      "kind": "easy",
-      "lo": 608,
-      "hi": 638
+      "kind": "steady",
+      "lo": 538,
+      "hi": 558
     }
   }
 }
