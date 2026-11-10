@@ -86,10 +86,10 @@
   },
   "trend": {
     "half_life_days": 7,
-    "last_local_date": "2026-11-06",
-    "last_weight_lb": 180.4,
-    "trend_lb": 179,
-    "rate_14d_pct_bw_wk": 0.82
+    "last_local_date": "2026-11-09",
+    "last_weight_lb": 180,
+    "trend_lb": 179.3,
+    "rate_14d_pct_bw_wk": 0.76
   },
   "tdee": {
     "method": "blend",
@@ -159,13 +159,9 @@
     }
   ],
   "progression": {},
-  "last_daily_run_local_date": "2026-11-09",
+  "last_daily_run_local_date": "2026-11-10",
   "last_weekly_run_week": "2026-11-08",
   "readiness_history": [
-    {
-      "local_date": "2026-10-20",
-      "status": "green"
-    },
     {
       "local_date": "2026-10-21",
       "status": "green"
@@ -245,10 +241,14 @@
     {
       "local_date": "2026-11-09",
       "status": "green"
+    },
+    {
+      "local_date": "2026-11-10",
+      "status": "green"
     }
   ],
   "health_missing_on": "2026-11-09",
-  "last_daily_run_utc": "2026-11-09T17:09:31.355Z",
+  "last_daily_run_utc": "2026-11-10T15:00:36.623Z",
   "last_daily_run_tz": "America/Los_Angeles",
   "health_rerun_on": "2026-11-03",
   "hr_zones": {
@@ -274,7 +274,7 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-11-09"
+    "updated_local_date": "2026-11-10"
   },
   "weekly_history": [
     {
@@ -324,8 +324,8 @@
     }
   ],
   "health_seen": {
-    "local_date": "2026-11-09",
-    "sig": null
+    "local_date": "2026-11-10",
+    "sig": "[null,56,null,10135,null]"
   },
   "health_reruns": {
     "local_date": "2026-11-03",
@@ -335,33 +335,33 @@
     "zones": [
       {
         "min": 0,
-        "max": 2.787
+        "max": 2.785
       },
       {
-        "min": 2.787,
-        "max": 3.238
+        "min": 2.785,
+        "max": 3.236
       },
       {
-        "min": 3.238,
-        "max": 3.607
+        "min": 3.236,
+        "max": 3.605
       },
       {
-        "min": 3.607,
-        "max": 3.853
+        "min": 3.605,
+        "max": 3.85
       },
       {
-        "min": 3.853,
-        "max": 4.099
+        "min": 3.85,
+        "max": 4.096
       },
       {
-        "min": 4.099,
+        "min": 4.096,
         "max": -1
       }
     ],
-    "updated_local_date": "2026-11-09"
+    "updated_local_date": "2026-11-10"
   },
   "notified": {
-    "checkin": "2026-11-03"
+    "checkin": "2026-11-10"
   },
   "last_change_week_start": "2026-11-08"
 }
