@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "local_date": "2026-11-13",
+  "local_date": "2026-11-14",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-11-13T17:10:08.388Z",
+  "generated_utc": "2026-11-14T17:08:58.315Z",
   "readiness": {
     "status": "green",
     "flags": [],
@@ -11,388 +11,20 @@
     "travel": null
   },
   "day": {
-    "dow": 5,
-    "name": "Upper Pull #2",
-    "rest_day": false
+    "dow": 6,
+    "name": "Open: cardio / social",
+    "rest_day": true
   },
   "program_week": 5,
   "deload": {
     "active": false,
     "reason": null
   },
-  "exercises": [
-    {
-      "slot_id": "fri-reverse-pec-deck-flyes",
-      "movement": "reverse-pec-deck-flyes",
-      "name": "Reverse Pec Deck Flyes",
-      "load": 110,
-      "change": "hold",
-      "calibration": false,
-      "reason": "Aim +1 rep where below 12",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 110,
-          "reps_min": 10,
-          "reps_max": 12,
-          "aim": 12,
-          "rir": [
-            1,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 110,
-          "reps_min": 10,
-          "reps_max": 12,
-          "aim": 12,
-          "rir": [
-            1,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 110,
-          "reps_min": 10,
-          "reps_max": 12,
-          "aim": 12,
-          "rir": [
-            1,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-cable-lat-pullovers",
-      "movement": "cable-lat-pullovers",
-      "name": "Cable Lat Pullovers",
-      "load": 57.5,
-      "change": "hold",
-      "calibration": false,
-      "reason": "Aim +1 rep where below 15",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 57.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 57.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 57.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 14,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-single-arm-db-rows",
-      "movement": "single-arm-db-rows",
-      "name": "Single Arm DB Rows",
-      "load": 70,
-      "change": "hold",
-      "calibration": false,
-      "reason": "Aim +1 rep where below 10",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 70,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 10,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 70,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 10,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 70,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 10,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-single-arm-cable-pulldowns",
-      "movement": "single-arm-cable-pulldowns",
-      "name": "Single Arm Cable Pulldowns",
-      "load": 62.5,
-      "change": "hold",
-      "calibration": false,
-      "reason": "Aim for 10 on every set",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 62.5,
-          "reps_min": 10,
-          "reps_max": 10,
-          "aim": 10,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 62.5,
-          "reps_min": 10,
-          "reps_max": 10,
-          "aim": 10,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 62.5,
-          "reps_min": 10,
-          "reps_max": 10,
-          "aim": 10,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-incline-db-curls",
-      "movement": "incline-db-curls",
-      "name": "Incline DB Curls",
-      "load": 30,
-      "change": "up",
-      "calibration": false,
-      "reason": "All sets hit 10: +2.5 lb, back to 8",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 30,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
-          "rir": [
-            0,
-            0
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 30,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
-          "rir": [
-            0,
-            0
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 30,
-          "reps_min": 8,
-          "reps_max": 10,
-          "aim": 8,
-          "rir": [
-            0,
-            0
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-hammer-rope-curls",
-      "movement": "hammer-rope-curls",
-      "name": "Hammer Rope Curls",
-      "load": 52.5,
-      "change": "hold",
-      "calibration": false,
-      "reason": "Below 12 twice at 52.5: hold",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 52.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 14,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 52.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 12,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 52.5,
-          "reps_min": 12,
-          "reps_max": 15,
-          "aim": 12,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-cable-ab-crunches",
-      "movement": "cable-ab-crunches",
-      "name": "Cable Ab Crunches",
-      "load": 62.5,
-      "change": "hold",
-      "calibration": false,
-      "reason": "Aim for 15 on every set",
-      "sets": [
-        {
-          "kind": "work",
-          "load": 62.5,
-          "reps_min": 15,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 62.5,
-          "reps_min": 15,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        },
-        {
-          "kind": "work",
-          "load": 62.5,
-          "reps_min": 15,
-          "reps_max": 15,
-          "aim": 15,
-          "rir": [
-            0,
-            1
-          ],
-          "seconds": null
-        }
-      ]
-    },
-    {
-      "slot_id": "fri-ab-plank",
-      "movement": "ab-plank",
-      "name": "Ab Plank",
-      "load": null,
-      "change": null,
-      "calibration": false,
-      "reason": null,
-      "sets": [
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
-        },
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
-        },
-        {
-          "kind": "timed",
-          "load": null,
-          "reps_min": null,
-          "reps_max": null,
-          "aim": null,
-          "rir": null,
-          "seconds": 30
-        }
-      ]
-    }
-  ],
+  "exercises": [],
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-11-13",
+    "date": "2026-11-14",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -415,7 +47,7 @@
       "hi": 156,
       "source": "strava"
     },
-    "weight_lb": 179.6,
+    "weight_lb": 179.7,
     "week": {
       "from": "2026-11-09",
       "to": "2026-11-15",
@@ -451,12 +83,12 @@
   },
   "daily": {
     "schema_version": 1,
-    "date": "2026-11-12",
-    "label": "Thu 12 Nov",
-    "tone": "bad",
-    "headline": "Yesterday’s lift wasn’t logged. Good: cardio done, on plan, weighed in.",
-    "focus": "Log every set today as you go: unlogged sessions don’t move your targets.",
-    "today": "Upper Pull #2: up on Incline DB Curls 30 lb × 8.",
+    "date": "2026-11-13",
+    "label": "Fri 13 Nov",
+    "tone": "warn",
+    "headline": "Only 16 of 24 sets were logged. Also: you were off plan. Good: 4 lifts beat last time, weighed in.",
+    "focus": "Log each set right after you finish it: the targets come from the logbook.",
+    "today": "Open day.",
     "points": [
       {
         "key": "recovery",
@@ -468,25 +100,25 @@
         "key": "weight",
         "tone": "good",
         "title": "Weight",
-        "text": "180.6 lb. Trend 179.6 lb (+0.7 lb in a week)."
+        "text": "180.6 lb. Trend 179.7 lb (+0.7 lb in a week)."
       },
       {
         "key": "training",
-        "tone": "bad",
+        "tone": "warn",
         "title": "Training",
-        "text": "Upper Push #2: Strava shows a 51-min lift, but no sets were logged in the app, so it can’t count toward progression. Next Thu starts from the same targets."
+        "text": "Upper Pull #2: 16 of 24 sets logged. Beat last time on 4: Reverse Pec Deck Flyes 110×15 (was 110×13); Cable Lat Pullovers 57.5×19 (was 57.5×15); Single Arm DB Rows 70×13 (was 70×10); and 1 more. 8 sets not logged: those can’t drive the next targets."
       },
       {
         "key": "cardio",
-        "tone": "good",
+        "tone": "info",
         "title": "Cardio",
-        "text": "Prescribed 25 min cardio: done. 24 min run (Strava). Average HR 170: above your Zone 2 (126–156), so a hard session rather than easy cardio. Week so far: 2 of 2 sessions. 3-mile pace today: steady, 8:58–9:18/mi (about 27:24). Readiness not in yet. Baseline 9:08/mi from your last 5 3-mile runs."
+        "text": "Nothing prescribed or done. 3-mile pace today: steady, 8:58–9:18/mi (about 27:24). Readiness not in yet. Baseline 9:08/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",
-        "tone": "good",
+        "tone": "warn",
         "title": "Food",
-        "text": "On plan (2,215 kcal)."
+        "text": "Off plan. That day is left out of the expenditure estimate, so the macros learn nothing from it. If you meant to tap something else, change it on the Body tab."
       }
     ],
     "pace": {
