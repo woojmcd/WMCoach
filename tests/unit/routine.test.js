@@ -267,6 +267,24 @@ test('Strava: new activities become files once, never rewritten; a late long rid
   assert.equal('data/strava/2026-10-16-777.json' in r.writes, false, 'existing Strava entries are never rewritten');
 });
 
+test('Strava extras (2026-11-14): HR streams become minutes per zone in the new file; best efforts are kept and set the 3-mile baseline', () => {
+  const repo = phone();
+  const zones = { heart_rate: { zones: [{ min: 0, max: 118 }, { min: 118, max: 147 }, { min: 147, max: 162 }, { min: 162, max: 176 }, { min: 176, max: -1 }] } };
+  const fetched = {
+    activities: [{ id: '901', name: 'Stairs', sport_type: 'StairStepper', start_local: '2026-10-13T17:30:00', summary: { moving_time: 1500, elapsed_time: 1500, relative_effort: 18, total_calories: 190 } }],
+    streams: { 901: { time: [0, 300, 600, 900, 1200, 1500], heart_rate: [110, 130, 135, 140, 150, 120] } },
+    zones,
+    best_efforts: { efforts: [{ sport: 'Run', best_effort_type: 'Fastest5k', value: 1347, unit: 'seconds', date: '2026-06-24' }] },
+  };
+  run(repo, '2026-10-14', { stravaFetched: fetched });
+  const file = J(repo, 'data/strava/2026-10-13-901.json');
+  assert.deepEqual([file.hr_zones_s, file.relative_effort], [[300, 900, 300, 0, 0], 18]);
+  assert.deepEqual(J(repo, 'data/model/state.json').best_efforts.efforts, [{ type: 'Fastest5k', s: 1347, date: '2026-06-24', sport: 'Run' }]);
+  const cardio = J(repo, 'data/targets/today.json').daily.points.find((p) => p.key === 'cardio');
+  assert.match(cardio.text, /25 min stairs \(Strava\)\. 15 of 25 min in Zone 2, 5 above\. Relative effort 18\./);
+  assert.match(cardio.text, /from your 5K best \(22:27\) \+ 40 s\/mi/);
+});
+
 test('write guard: the routine may never write the phone\'s or the Shortcut\'s paths', () => {
   assert.deepEqual(checkWrites({ 'data/log/settings.json': '{}', 'data/health/2026-10-10.json': '{}', 'data/targets/today.json': '{}' }, () => false), [
     'data/log/settings.json: not a routine-owned path',

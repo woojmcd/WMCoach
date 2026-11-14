@@ -11,6 +11,7 @@ import { historyFor } from './progression.js';
 import { dayForWeekday } from './program.js';
 import { cardioItems, cardioForDay, itemText, runBaseline, runPaceToday } from './cardio.js';
 import { planKcalByDate } from './tdee.js';
+import { effortQuartile, isCardio } from './strava.js';
 
 export const DAILY_SCHEMA = 1;
 const LB_TO_KG = 0.45359237;
@@ -125,21 +126,35 @@ export function trainingDay({ date, program, sessions, activities = [], programS
 
 // ---- cardio --------------------------------------------------------------------------------
 
-function hrNote(item, hr) {
-  if (!hr || !Number.isFinite(item.avg_hr)) return '';
-  if (item.avg_hr > hr.hi) return ` Average HR ${item.avg_hr}: above your Zone 2 (${hr.lo}–${hr.hi}), so a hard session rather than easy cardio.`;
-  if (item.avg_hr >= hr.lo) return ` Average HR ${item.avg_hr}: in Zone 2.`;
-  return ` Average HR ${item.avg_hr}: easy.`;
+const RUN_TYPES = new Set(['Run', 'TrailRun', 'VirtualRun']);
+// Time in zones from the heart-rate stream (Walter, 2026-11-14), else the average HR.
+function hrNote(item, hr, q75 = null) {
+  const effort = Number.isFinite(item.relative_effort)
+    ? ` Relative effort ${item.relative_effort}${q75 !== null && item.relative_effort >= q75 ? ': top quarter of your sessions, a hard one' : ''}.`
+    : '';
+  const z = item.hr_zones_s;
+  if (Array.isArray(z) && z.length >= 3) {
+    const total = z.reduce((a, b) => a + b, 0);
+    const min = (s) => Math.round(s / 60);
+    const inZ2 = min(z[1]); const above = min(z.slice(2).reduce((a, b) => a + b, 0)); const all = min(total);
+    if (!RUN_TYPES.has(item.type) && above > all / 3) return ` ${above} of ${all} min above Zone 2: easier next time, so it stays recovery cardio.${effort}`;
+    return ` ${inZ2} of ${all} min in Zone 2${above ? `, ${above} above` : ''}.${effort}`;
+  }
+  if (!hr || !Number.isFinite(item.avg_hr)) return effort;
+  if (item.avg_hr > hr.hi) return ` Average HR ${item.avg_hr}: above your Zone 2 (${hr.lo}–${hr.hi}), so a hard session rather than easy cardio.${effort}`;
+  if (item.avg_hr >= hr.lo) return ` Average HR ${item.avg_hr}: in Zone 2.${effort}`;
+  return ` Average HR ${item.avg_hr}: easy.${effort}`;
 }
 
 export function cardioDay({ date, rx, activities = [], stairs = [], hr = null }) {
+  const q75 = effortQuartile(activities.filter((a) => a && a.local_date > addDays(date, -90) && a.local_date <= date && isCardio(a)));
   if (!rx) return null;
   const wk = weekDates(date);
   const items = cardioItems({ activities, stairs, from: wk[0], to: wk[6] });
   const c = cardioForDay({ rx, date, items, hr });
   const todays = items.filter((i) => i.local_date === date);
   const week = `Week so far: ${c.week.done_sessions} of ${c.week.target_sessions} sessions.`;
-  const did = todays.map((i) => `${itemText(i)}.${hrNote(i, hr)}`).join(' ');
+  const did = todays.map((i) => `${itemText(i)}.${hrNote(i, hr, q75)}`).join(' ');
   const t = c.today;
   if (t && t.status === 'done') return { state: 'done', point: { key: 'cardio', tone: 'good', title: 'Cardio', text: `Prescribed ${t.minutes} min${t.makeup ? ' make-up' : ''} cardio: done. ${did} ${week}` } };
   if (t && !t.optional) {
@@ -280,12 +295,12 @@ function verdict({ training, cardio, food, weight, recovery, readiness, todayCar
 export function dailySummary({
   date, today = addDays(date, 1), program = null, sessions = [], programStart = null, activities = [], stairs = [],
   health = {}, readiness = null, weighins = [], series = [], taps = [], plans = [], rx = null, hr = null,
-  runZones = null, mode = 'bulk', units = 'lb', stepFloor = 8000, todayPlan = {},
+  runZones = null, bestEfforts = [], mode = 'bulk', units = 'lb', stepFloor = 8000, todayPlan = {},
 }) {
   const training = trainingDay({ date, program, sessions, activities, programStart });
   const cardio = cardioDay({ date, rx, activities, stairs, hr });
   // today's 3-mile pace from his baseline and this morning's readiness (Walter, 2026-10-13)
-  const pace = runPaceToday({ baseline: runBaseline({ activities, runZones, date }), readiness, hr });
+  const pace = runPaceToday({ baseline: runBaseline({ activities, runZones, date, bestEfforts }), readiness, hr });
   const cardioPoint = cardio
     ? { ...cardio.point, text: `${cardio.point.text} ${pace.text}` }
     : { key: 'cardio', tone: 'info', title: 'Cardio', text: `Nothing prescribed or done. ${pace.text}` };

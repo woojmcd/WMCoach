@@ -44,12 +44,46 @@ export function normalizeActivity(raw, perf = null) {
 
 export const stravaPath = (a) => `data/strava/${a.local_date}-${a.id}.json`;
 
-// The routine saves the connector's output as-is: { activities: [...], performance?: { id: {...} } },
-// or a bare array of activities.
-export function normalizeFetch(fetched) {
+// Seconds in each heart-rate zone from a get_activity_streams result ({ time: [s…],
+// heart_rate: [bpm…] }, parallel arrays; Walter 2026-11-14). zones: parseHrZones() output,
+// the top zone open-ended (max -1). → [z1, z2, …] seconds, or null without data.
+export function zoneSeconds(stream, zones) {
+  const t = stream && (stream.time || (stream.streams && stream.streams.time));
+  const hr = stream && (stream.heart_rate || stream.heartrate || (stream.streams && (stream.streams.heart_rate || stream.streams.heartrate)));
+  if (!Array.isArray(t) || !Array.isArray(hr) || t.length < 2 || hr.length !== t.length || !zones || !zones.length) return null;
+  const out = zones.map(() => 0);
+  for (let i = 0; i < t.length - 1; i += 1) {
+    const dt = Number(t[i + 1]) - Number(t[i]);
+    const bpm = Number(hr[i]);
+    if (!(dt > 0) || !(bpm > 0)) continue;
+    // the highest zone whose floor it reaches: Strava's maxes are inclusive and leave gaps
+    // (zone 1 0–125, zone 2 126–156), so 125.5 or 156 must not fall through to zone 5
+    let z = 0;
+    zones.forEach((zz, i) => { if (bpm >= zz.min) z = i; });
+    out[z] += dt;
+  }
+  return out.some((x) => x > 0) ? out.map((x) => Math.round(x)) : null;
+}
+
+// The routine saves the connector's output as-is: { activities: [...], performance?: { id: {...} },
+// streams?: { id: { time, heart_rate } }, zones?, best_efforts? }, or a bare array of activities.
+// hrZones (parseHrZones) turns each stream into seconds per zone (hr_zones_s).
+export function normalizeFetch(fetched, { hrZones = null } = {}) {
   const list = Array.isArray(fetched) ? fetched : (fetched && fetched.activities) || [];
   const perf = (fetched && fetched.performance) || {};
-  return list.map((a) => normalizeActivity(a, perf[String(a.id)] || null)).filter(Boolean);
+  const streams = (fetched && fetched.streams) || {};
+  return list.map((a) => {
+    const p = perf[String(a.id)] || null;
+    const zs = zoneSeconds(streams[String(a.id)], hrZones);
+    return normalizeActivity(a, zs ? { ...(p || {}), hr_zones_s: zs } : p);
+  }).filter(Boolean);
+}
+
+// get_athlete_best_efforts, saved as-is → [{ type, s, date }] for the running distances.
+export function parseBestEfforts(x) {
+  const list = (x && (x.efforts || x.best_efforts)) || (Array.isArray(x) ? x : []);
+  return list.filter((e) => e && /^Fastest/.test(e.best_effort_type || e.type || '') && Number.isFinite(Number(e.value)) && (e.unit || 'seconds') === 'seconds')
+    .map((e) => ({ type: e.best_effort_type || e.type, s: Number(e.value), date: e.date || null, sport: e.sport || 'Run' }));
 }
 
 export const isCardio = (a) => CARDIO.has(a.type);

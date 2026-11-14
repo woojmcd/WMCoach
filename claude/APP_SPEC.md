@@ -340,6 +340,9 @@ The coach prescribes cardio as part of each day's workout. Strava records what h
   - Week tab: its own line under each day's workout ("Cardio · 25 min stairs", "Cardio · 35 min run (Strava) ✓", "Cardio · missed"), and in the day's preview. No separate weekly box (Walter, 2026-10-13).
 
 ### 6.6 Daily summary (Walter, 2026-10-13)
+
+Strava extras (Walter, 2026-11-14): each cardio session's heart-rate stream is split into minutes per zone, so the cardio point says "21 of 25 min in Zone 2" (and "15 of 25 min above Zone 2: easier next time" when easy cardio ran hot) and its relative effort, flagged when it's in the top quarter of his own sessions. With no 3-mile run in 90 days, the 3-mile baseline comes from his 5K best of the last year + 40 s/mi (then 2-mile best + 45).
+
 Each morning the Week tab opens on **Yesterday · <date>**: an executive summary of the previous day and the focus for today. It's pure code in `coach/daily.js`, computed by the daily run into `targets/today.json` → `daily`, and recomputed when Health data is re-synced (§2b). The voice is the weekly review's (§10): the numbers first, no softening, always what went well, then one thing to do.
 - **A box like the Week in review** (Walter, 2026-10-14): the title and headline show; a tap anywhere on them opens the focus, today's plan and the details. It starts closed, and the phone remembers how each day's was left.
 - **Yesterday, by area** (each with a good / warn / bad dot), in this order (Walter, 2026-10-13): last night, weight, training, cardio, food. The cardio area always ends with **today's 3-mile pace**:

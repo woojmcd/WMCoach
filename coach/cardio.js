@@ -150,7 +150,10 @@ export function cardioItems({ activities = [], stairs = [], from = '0000-00-00',
     const id = a.id ? String(a.id) : null;
     if (id && seen.has(id)) continue;
     if (id) seen.add(id);
-    items.push({ local_date: a.local_date, minutes, type: a.type, name: a.name || null, avg_hr: a.avg_hr ?? null, source: 'strava', id });
+    items.push({
+      local_date: a.local_date, minutes, type: a.type, name: a.name || null, avg_hr: a.avg_hr ?? null, source: 'strava', id,
+      ...(Array.isArray(a.hr_zones_s) ? { hr_zones_s: a.hr_zones_s } : {}), ...(Number.isFinite(a.relative_effort) ? { relative_effort: a.relative_effort } : {}),
+    });
     if (a.type === 'StairStepper') stairDays.add(a.local_date);
   }
   for (const t of stairs) {
@@ -261,7 +264,11 @@ const timeText = (s) => paceText(s * PACE_MILES);
 const median = (xs) => { const v = [...xs].sort((a, b) => a - b); const m = Math.floor(v.length / 2); return v.length % 2 ? v[m] : (v[m - 1] + v[m]) / 2; };
 
 // → { s_per_mi, source: 'runs' | 'zones', n, text } or null
-export function runBaseline({ activities = [], runZones = null, date = '9999-12-31', days = 90 } = {}) {
+// bestEfforts (parseBestEfforts, Walter 2026-11-14): with no recent 3-mile run, his 5K best
+// from the last year + 40 s/mi (a steady 3 miles sits about there; his 22:27 5K → 7:53/mi,
+// the pace of his recent easy-hard runs), then the 2-mile best + 45 s/mi.
+export const BEST_EFFORT_STEADY_S = { Fastest5k: [3.10686, 40], Fastest2Mile: [2, 45] };
+export function runBaseline({ activities = [], runZones = null, date = '9999-12-31', days = 90, bestEfforts = [] } = {}) {
   const from = new Date(Date.parse(`${date}T00:00:00Z`) - days * 86400000).toISOString().slice(0, 10);
   const threeMile = activities.filter((a) => a && RUNS.has(a.type) && a.local_date >= from && a.local_date <= date
     && a.distance_km >= 2.5 * MILE_KM && a.distance_km <= 3.5 * MILE_KM && a.duration_s > 0)
@@ -271,6 +278,14 @@ export function runBaseline({ activities = [], runZones = null, date = '9999-12-
   if (use.length) {
     const s = median(use.map(secPerMile));
     return { s_per_mi: Math.round(s), source: 'runs', n: use.length, text: `your last ${use.length === 1 ? '3-mile run' : `${use.length} 3-mile runs`}${road.length ? '' : ' (trail)'}` };
+  }
+  const yearAgo = new Date(Date.parse(`${date}T00:00:00Z`) - 365 * 86400000).toISOString().slice(0, 10);
+  for (const [type, [miles, plus]] of Object.entries(BEST_EFFORT_STEADY_S)) {
+    const best = (bestEfforts || []).filter((e) => e.type === type && (!e.date || (e.date >= yearAgo && e.date <= date))).sort((a, b) => a.s - b.s)[0];
+    if (best) {
+      const m = Math.floor(best.s / 60); const sec = String(Math.round(best.s % 60)).padStart(2, '0');
+      return { s_per_mi: Math.round(best.s / miles + plus), source: 'best_effort', n: 0, text: `your ${type === 'Fastest5k' ? '5K' : '2-mile'} best (${m}:${sec}) + ${plus} s/mi` };
+    }
   }
   if (runZones && runZones.length >= 3 && runZones[2].max > runZones[2].min) {
     // Strava's tempo zone (zone 3) midpoint, from its pace estimate
