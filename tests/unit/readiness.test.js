@@ -5,7 +5,7 @@ import { readiness, baselines, travelShift, normalizeHealth, healthSettled, hasR
 import { planDay } from '../../coach/progression.js';
 import { addDays } from '../../coach/time.js';
 
-const program = JSON.parse(readFileSync(new URL('../../data/program.json', import.meta.url), 'utf8'));
+const program = JSON.parse(readFileSync(new URL('../fixtures/program-c.json', import.meta.url) /* Program C, frozen: these tests use its lifts */, 'utf8'));
 const TODAY = '2026-10-14'; // a Wednesday: Legs and abs
 const week = (over = {}) => {
   const h = {};

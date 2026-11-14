@@ -7,7 +7,7 @@ import { baseCardio } from '../../coach/cardio.js';
 import { trendFromEntries } from '../../coach/trend.js';
 import { startingPlan } from '../../coach/meals.js';
 
-const program = JSON.parse(readFileSync(new URL('../../data/program.json', import.meta.url), 'utf8'));
+const program = JSON.parse(readFileSync(new URL('../fixtures/program-c.json', import.meta.url) /* Program C, frozen: these tests use its lifts */, 'utf8'));
 const plansJson = JSON.parse(readFileSync(new URL('../../data/plans.json', import.meta.url), 'utf8'));
 const push = program.days.find((d) => d.dow === 1);
 const set = (load, reps, kind = 'work') => ({ kind, load, reps, rir: 1, done: true, skipped: false });

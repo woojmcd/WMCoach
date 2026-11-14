@@ -206,7 +206,18 @@ Top to bottom (order changed 2026-10-15: "On plan today?" first so it's tapped d
 
 ---
 
-## 5. Training program: Program C (current; stays fixed unless Walter changes it)
+## 5. Training program: Program E (since 0.9.0, 2026-11-14)
+
+**Program E (`TRAIN-E26`) is the program the app runs**, approved by Walter on 2026-11-14. Full write-up: `claude/PROGRAM_E.md` (goals, the four mechanical rules, banned lifts, every lift's sets, tempo and reasoning). Source the app builds from: `data/programs/TRAIN-E26.json` → `npm run build:program` → `data/program.json`.
+- Same skeleton as Program C: Mon Push A · Tue Pull A · Wed Legs and abs · Thu Push B · Fri Pull B; weekends open. Supersets, top + backoff sets, 90 s rest (60 s primers, 120 s main presses, leg press and the chain squat).
+- Main lifts: Mon low-incline DB press, Tue chest-supported machine row, Wed leg press (feet low, narrow), Thu converging machine chest press, Fri single-arm DB row.
+- Close-stance chain squat: `max_load_lb: 225`, RIR 3. Targets never go above 225 lb; at the ceiling it progresses with tempo, not load (§6.2).
+- KB suitcase carry: logged in metres (`scheme.unit: 'm'`, 30–40 m each side).
+- A lift kept from Program C on the same day keeps its name, so its slot id, movement and history carry over (e.g. Reverse Cable Curls → Cable Bar Curls, Seated Hamstring Curls, Thu lateral superset, Single Arm DB Rows, Incline DB Curls). New lifts start with a calibration.
+- **A new program starts a new block** (`trainingCalendar`): its weeks and deloads count from its own first session (`sessions[].program_id`; sessions without one were Program C's). Program E's week 1 is Mon 16 Nov, not Program C's week-6 deload. "Lifted less since May" easing applied to the first block only.
+- The Log tab shows the day's focus and a **Program E rules** sheet (the four rules and the stop rule). The travel workout (§4.2) maps Program E's lifts and keeps its banned list.
+
+### Program C (Oct–Nov 2026, kept for reference; frozen in `tests/fixtures/program-c.json`)
 
 Source of truth: `TRAIN-CUT26` in `data/training_history.json` (full prescriptions, rest, groups, cues, alternates). Generate `data/program.json` from it. Walter's favourite split; he ran it through the 2026 cut and since. He'll ask when he wants it changed.
 
@@ -368,7 +379,19 @@ Each morning the Week tab opens on **Yesterday · <date>**: an executive summary
 
 Walter preps food **once a week**. A plan that moves mid-week is useless to him.
 
-### 8.0 Starting plan: Bulk, grown from CUT26-V4
+### 8.0a Lean-gain plan (since 0.9.0, week of Sun 15 Nov 2026)
+
+`claude/NUTRITION_PLAN.md` rev 4, approved 2026-11-14. In the repo as a **coach plan**, `data/coach/plans/2026-11-15.json` (written in a reviewed PR; read-only to the routine).
+- **Publishing:** the daily run publishes a coach plan for its week once, from the day before the week (after that day's weekly step) or any day during it, as `data/plan/current.json` or `next.json`, appends the changelog and sends a "New meal plan" notification (`state.coach_plans_applied`). The phone shows "New plan: Lean-gain plan" instead of every food change.
+- **Mon–Fri: ~2,375 kcal, 184 P / 287 C / 55 F.** M1 3 eggs + 2 slices Dave's Killer Bread · Lunch 6 oz 93/7 beef/turkey + 250 g rice + 65 g veg · Pre-workout option A/B/C · Post-workout 5 oz chicken + 300 g sweet potato + 65 g veg · Evening Greek yogurt + 40 g granola + 16 g peanut butter. Meal windows show under each meal.
+- **Pre-workout options** (`plan.options`): A whey + 2 bananas + applesauce (~385, used for the day totals), B 2 instant oatmeal + whey (~+55), C 70 g Cheerios + 1 cup fat-free milk + whey (~+90). The Meals tab switches between them; any is on plan.
+- **Prep** covers Mon–Fri (`plan.prep_days: 5`). Whey (in every option) is prepped; the rest of each option is listed as per-day stock.
+- **Weekends:** a "Sat–Sun: best effort" card (2,300–2,600 kcal, protein 170 g+, fat 50 g+, and the plan's tips). "Plan rules and timing" opens the rules and the if-the-gym-time-moves notes.
+- **Weekly changes** move lunch rice ±90 g (≈ ±100–115 kcal, `plan.carb_lever`) instead of the CUT26 steps; the 150 kcal cap and §8.2 rules are unchanged.
+- New foods are `EXTRA_FOODS` in `coach/meals.js` (plans.json stays read-only); `foodDbOf()` merges them.
+- A plan's `coach_note` no longer carries into later weeks (BULK-2026-11-08 still said "+1 carb step to fit 2488 kcal" under a −1 decision).
+
+### 8.0 Starting plan: Bulk, grown from CUT26-V4 (Oct 2026)
 
 He continues from his most recent coach plan (CUT26-V4, carb cycle, weekly avg 2,192 kcal). That plan sits at about base maintenance at ~165 lb (brief §6), and his history says a bulk should start at maintenance + 150–200 kcal, not the 2,500 that drove +1.34 lb/wk in Oct 2025 (2,299 held flat; 2,388 gained +0.53 lb/wk).
 

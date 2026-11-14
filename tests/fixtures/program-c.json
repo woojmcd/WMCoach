@@ -1,0 +1,1191 @@
+{
+  "schema_version": 1,
+  "id": "TRAIN-CUT26",
+  "name": "Program C",
+  "source": "data/training_history.json#TRAIN-CUT26",
+  "generated_by": "scripts/build_program.mjs",
+  "defaults": {
+    "rest_s": 90,
+    "superset_rest_s": 15
+  },
+  "days": [
+    {
+      "dow": 1,
+      "day": "Mon",
+      "name": "Push #1",
+      "est_min": 61,
+      "exercises": [
+        {
+          "id": "mon-incline-db-flyes",
+          "movement": "incline-db-flyes",
+          "name": "Incline DB Flyes",
+          "source_name": "Incline DB Flyes",
+          "order": 1,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "prescription": "3 × 8–10",
+          "rir": [
+            1,
+            1
+          ],
+          "rest_s": 90,
+          "cue": "SLOW, DEEP, focus on stretching as far as possible",
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "chest",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "mon-flat-db-bench",
+          "movement": "flat-db-bench",
+          "name": "Flat DB Bench",
+          "source_name": "Flat DB Bench",
+          "order": 2,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "top_backoff",
+          "scheme": {
+            "kind": "top_backoff",
+            "top_sets": 2,
+            "min": 8,
+            "max": 10,
+            "backoff": {
+              "sets": 1,
+              "min": 12,
+              "max": 12,
+              "load_factor": 0.7,
+              "rir": [
+                0,
+                1
+              ]
+            }
+          },
+          "prescription": "2 × 8–10, then 1 × 12 lighter",
+          "rir": [
+            1,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "chest",
+          "main_lift": true,
+          "alternates": []
+        },
+        {
+          "id": "mon-chest-dips",
+          "movement": "chest-dips",
+          "name": "Chest Dips",
+          "source_name": "Chest Dips",
+          "order": 3,
+          "group": null,
+          "label": null,
+          "sets": 4,
+          "type": "amrap",
+          "scheme": {
+            "kind": "amrap",
+            "add_load_at": 15
+          },
+          "prescription": "4 × AMRAP",
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "bodyweight",
+          "load_kind": "bodyweight",
+          "increment_lb": 5,
+          "muscle": "chest",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "mon-single-cable-lateral-raise",
+          "movement": "single-cable-lateral-raise",
+          "name": "Single Cable Lateral Raise",
+          "source_name": "Single Cable Lateral Raise",
+          "order": 4,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15,
+            "per_side": true
+          },
+          "prescription": "3 × 12–15 each side",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "side_delts",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "mon-standing-lateral-db-raises",
+          "movement": "standing-lateral-db-raises",
+          "name": "Standing Lateral DB Raises",
+          "source_name": "Standing Lateral DB Raises",
+          "order": 5,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "prescription": "3 × 10–12",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "side_delts",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "mon-rope-tricep-extensions",
+          "movement": "rope-tricep-extensions",
+          "name": "Rope Tricep Extensions",
+          "source_name": "Rope Tricep Extensions",
+          "order": 6,
+          "group": "Mon-A",
+          "label": "A1",
+          "sets": 3,
+          "type": "superset_lead",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "prescription": "3 × 10–12",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "cue": null,
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "triceps",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "mon-rope-pushdowns",
+          "movement": "rope-pushdowns",
+          "name": "Rope Pushdowns",
+          "source_name": "Rope Pushdowns",
+          "order": 7,
+          "group": "Mon-A",
+          "label": "A2",
+          "sets": 3,
+          "type": "superset_same_weight",
+          "scheme": {
+            "kind": "amrap"
+          },
+          "prescription": "3 × AMRAP",
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "triceps",
+          "main_lift": false,
+          "alternates": [],
+          "same_load_as": "mon-rope-tricep-extensions"
+        },
+        {
+          "id": "mon-cable-ab-crunches",
+          "movement": "cable-ab-crunches",
+          "name": "Cable Ab Crunches",
+          "source_name": "Cable Ab Crunches",
+          "order": 8,
+          "group": "Mon-B",
+          "label": "B1",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 15,
+            "max": 15
+          },
+          "prescription": "3 × 15",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 0,
+          "cue": null,
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "abs",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "mon-ab-vacuum",
+          "movement": "ab-vacuum",
+          "name": "Ab Vacuum",
+          "source_name": "Ab Vacuum",
+          "order": 9,
+          "group": "Mon-B",
+          "label": "B2",
+          "sets": 3,
+          "type": "timed",
+          "scheme": {
+            "kind": "timed",
+            "seconds": 15
+          },
+          "prescription": "3 × 15 s",
+          "rir": null,
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "none",
+          "load_kind": "none",
+          "increment_lb": 0,
+          "muscle": "abs",
+          "main_lift": false,
+          "alternates": []
+        }
+      ]
+    },
+    {
+      "dow": 2,
+      "day": "Tue",
+      "name": "Pull #1",
+      "est_min": 44,
+      "exercises": [
+        {
+          "id": "tue-assisted-pullups",
+          "movement": "assisted-pullups",
+          "name": "Assisted Pullups",
+          "source_name": "Assisted Pullups",
+          "order": 1,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "assisted",
+          "scheme": {
+            "kind": "assisted",
+            "min": 6,
+            "progress_at": 8
+          },
+          "prescription": "3 × 6+",
+          "rir": [
+            1,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "assisted",
+          "load_kind": "assistance",
+          "increment_lb": 10,
+          "muscle": "back",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "tue-incline-db-rows",
+          "movement": "incline-db-rows",
+          "name": "Incline DB Rows (upper back)",
+          "source_name": "Incline DB Rows (upper back)",
+          "order": 2,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "fixed",
+          "scheme": {
+            "kind": "fixed",
+            "reps": 10
+          },
+          "prescription": "3 × 10",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": "pull elbows as far back as you can with moderately heavy weight",
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "back",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "tue-hammer-pulldowns",
+          "movement": "hammer-pulldowns",
+          "name": "Hammer Pulldowns",
+          "source_name": "Hammer Pulldowns",
+          "order": 3,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "prescription": "3 × 8–10",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": "heavy! Deep stretch",
+          "equipment": "machine",
+          "load_kind": "external",
+          "increment_lb": 10,
+          "muscle": "back",
+          "main_lift": true,
+          "alternates": []
+        },
+        {
+          "id": "tue-cable-lat-pullovers",
+          "movement": "cable-lat-pullovers",
+          "name": "Cable Lat Pullovers",
+          "source_name": "Cable Lat Pullovers",
+          "order": 4,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "open_range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 14,
+            "open": true
+          },
+          "prescription": "3 × 10+",
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "cue": "go until you're doing 3-4 partials and failing",
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "back",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "tue-reverse-db-flyes",
+          "movement": "reverse-db-flyes",
+          "name": "Reverse DB Flyes",
+          "source_name": "Reverse DB Flyes",
+          "order": 5,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "prescription": "3 × 10–12",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "rear_delts",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "tue-reverse-cable-curls",
+          "movement": "reverse-cable-curls",
+          "name": "Reverse Cable Curls",
+          "source_name": "Reverse Cable Curls",
+          "order": 6,
+          "group": "Tue-A",
+          "label": "A1",
+          "sets": 3,
+          "type": "superset_lead",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "prescription": "3 × 8–10",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "cue": null,
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "biceps",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "tue-cable-bar-curls",
+          "movement": "cable-bar-curls",
+          "name": "Cable Bar Curls",
+          "source_name": "Cable Bar Curls",
+          "order": 7,
+          "group": "Tue-A",
+          "label": "A2",
+          "sets": 3,
+          "type": "superset_same_weight",
+          "scheme": {
+            "kind": "amrap"
+          },
+          "prescription": "3 × AMRAP",
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "biceps",
+          "main_lift": false,
+          "alternates": [],
+          "same_load_as": "tue-reverse-cable-curls"
+        }
+      ]
+    },
+    {
+      "dow": 3,
+      "day": "Wed",
+      "name": "Legs and abs",
+      "est_min": 45,
+      "exercises": [
+        {
+          "id": "wed-hamstring-hyperextensions",
+          "movement": "hamstring-hyperextensions",
+          "name": "Hamstring Hyperextensions",
+          "source_name": "Hamstring Hyperextensions",
+          "order": 1,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "amrap",
+          "scheme": {
+            "kind": "amrap",
+            "add_load_at": 15
+          },
+          "prescription": "3 × AMRAP",
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "bodyweight",
+          "load_kind": "bodyweight",
+          "increment_lb": 5,
+          "muscle": "hamstrings",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "wed-machine-adductors",
+          "movement": "machine-adductors",
+          "name": "Machine Adductors",
+          "source_name": "Machine Adductors",
+          "order": 2,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "prescription": "3 × 12–15",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "machine",
+          "load_kind": "external",
+          "increment_lb": 10,
+          "muscle": "adductors",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "wed-single-leg-press",
+          "movement": "single-leg-press",
+          "name": "Single Leg Press",
+          "source_name": "Single Leg Press",
+          "order": 3,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12,
+            "per_side": true
+          },
+          "prescription": "3 × 10–12 each side",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "machine",
+          "load_kind": "external",
+          "increment_lb": 10,
+          "muscle": "quads",
+          "main_lift": true,
+          "alternates": []
+        },
+        {
+          "id": "wed-bb-squats",
+          "movement": "bb-squats",
+          "name": "BB Squats (Smith)",
+          "source_name": "BB Squats (smith machine)",
+          "order": 4,
+          "group": null,
+          "label": null,
+          "sets": 2,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "prescription": "2 × 8–10",
+          "rir": [
+            1,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "smith_lower",
+          "load_kind": "external",
+          "increment_lb": 10,
+          "muscle": "quads",
+          "main_lift": true,
+          "alternates": []
+        },
+        {
+          "id": "wed-seated-hamstring-curls",
+          "movement": "seated-hamstring-curls",
+          "name": "Seated Hamstring Curls",
+          "source_name": "Seated Hamstring Curls",
+          "order": 5,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "top_backoff",
+          "scheme": {
+            "kind": "top_backoff",
+            "top_sets": 2,
+            "min": 8,
+            "max": 10,
+            "backoff": {
+              "sets": 1,
+              "min": 12,
+              "max": 15,
+              "load_factor": 0.7,
+              "rir": [
+                0,
+                1
+              ]
+            }
+          },
+          "prescription": "2 × 8–10, then 1 × 12–15 lighter",
+          "rir": [
+            1,
+            1
+          ],
+          "rest_s": 90,
+          "cue": "focusing on huge squeeze",
+          "equipment": "machine",
+          "load_kind": "external",
+          "increment_lb": 10,
+          "muscle": "hamstrings",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "wed-hanging-leg-raises",
+          "movement": "hanging-leg-raises",
+          "name": "Hanging Leg Raises",
+          "source_name": "Hanging Leg Raises",
+          "order": 6,
+          "group": "Wed-A",
+          "label": "A1",
+          "sets": 3,
+          "type": "amrap",
+          "scheme": {
+            "kind": "amrap",
+            "reps_only": true
+          },
+          "prescription": "3 × AMRAP",
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 0,
+          "cue": null,
+          "equipment": "bodyweight",
+          "load_kind": "bodyweight",
+          "increment_lb": 5,
+          "muscle": "abs",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "wed-russian-twists",
+          "movement": "russian-twists",
+          "name": "Russian Twists",
+          "source_name": "Russian Twists",
+          "order": 7,
+          "group": "Wed-A",
+          "label": "A2",
+          "sets": 3,
+          "type": "timed",
+          "scheme": {
+            "kind": "timed",
+            "seconds": 30
+          },
+          "prescription": "3 × 30 s",
+          "rir": null,
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "none",
+          "load_kind": "none",
+          "increment_lb": 0,
+          "muscle": "abs",
+          "main_lift": false,
+          "alternates": []
+        }
+      ]
+    },
+    {
+      "dow": 4,
+      "day": "Thu",
+      "name": "Upper Push #2",
+      "est_min": 45,
+      "exercises": [
+        {
+          "id": "thu-pec-deck-flyes",
+          "movement": "pec-deck-flyes",
+          "name": "Pec Deck Flyes",
+          "source_name": "Pec Deck Flyes",
+          "order": 1,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "prescription": "3 × 12–15",
+          "rir": [
+            1,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "machine",
+          "load_kind": "external",
+          "increment_lb": 10,
+          "muscle": "chest",
+          "main_lift": false,
+          "alternates": [
+            "Cable Flyes",
+            "Flat DB Flyes"
+          ]
+        },
+        {
+          "id": "thu-incline-db-bench",
+          "movement": "incline-db-bench",
+          "name": "Incline DB Bench",
+          "source_name": "Incline DB Bench",
+          "order": 2,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "top_backoff",
+          "scheme": {
+            "kind": "top_backoff",
+            "top_sets": 2,
+            "min": 8,
+            "max": 10,
+            "backoff": {
+              "sets": 1,
+              "amrap": true,
+              "load_factor": 0.7,
+              "rir": [
+                0,
+                0
+              ]
+            }
+          },
+          "prescription": "2 × 8–10, then 1 × AMRAP lighter",
+          "rir": [
+            1,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "chest",
+          "main_lift": true,
+          "alternates": []
+        },
+        {
+          "id": "thu-flat-smith-machine-bench",
+          "movement": "flat-smith-machine-bench",
+          "name": "Flat Smith Machine Bench",
+          "source_name": "Flat Smith Machine Bench",
+          "order": 3,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "prescription": "3 × 10–12",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "smith_upper",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "chest",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "thu-seated-lateral-db-raises",
+          "movement": "seated-lateral-db-raises",
+          "name": "Seated Lateral DB Raises",
+          "source_name": "Seated Lateral DB Raises",
+          "order": 4,
+          "group": "Thu-A",
+          "label": "A1",
+          "sets": 4,
+          "type": "superset_lead",
+          "scheme": {
+            "kind": "fixed",
+            "reps": 10
+          },
+          "prescription": "4 × 10",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "cue": "pick a weight where 10 starts to get really hard",
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "side_delts",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "thu-standing-lateral-db-raises",
+          "movement": "standing-lateral-db-raises",
+          "name": "Standing Lateral DB Raises",
+          "source_name": "Standing Lateral DB Raises",
+          "order": 5,
+          "group": "Thu-A",
+          "label": "A2",
+          "sets": 4,
+          "type": "superset_same_weight",
+          "scheme": {
+            "kind": "amrap",
+            "partials": "5+"
+          },
+          "prescription": "4 × AMRAP",
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "side_delts",
+          "main_lift": false,
+          "alternates": [],
+          "same_load_as": "thu-seated-lateral-db-raises"
+        },
+        {
+          "id": "thu-single-arm-cable-pushdowns",
+          "movement": "single-arm-cable-pushdowns",
+          "name": "Single Arm Cable Pushdowns",
+          "source_name": "Single Arm Cable Pushdowns",
+          "order": 6,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12,
+            "per_side": true
+          },
+          "prescription": "3 × 10–12 each side",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "cue": null,
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "triceps",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "thu-incline-db-skullcrushers",
+          "movement": "incline-db-skullcrushers",
+          "name": "Incline DB Skullcrushers",
+          "source_name": "Incline DB Skullcrushers",
+          "order": 7,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "prescription": "3 × 12–15",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "cue": null,
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "triceps",
+          "main_lift": false,
+          "alternates": []
+        }
+      ]
+    },
+    {
+      "dow": 5,
+      "day": "Fri",
+      "name": "Upper Pull #2",
+      "est_min": 55,
+      "exercises": [
+        {
+          "id": "fri-reverse-pec-deck-flyes",
+          "movement": "reverse-pec-deck-flyes",
+          "name": "Reverse Pec Deck Flyes",
+          "source_name": "Reverse Pec Deck Flyes",
+          "order": 1,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "prescription": "3 × 10–12",
+          "rir": [
+            1,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "machine",
+          "load_kind": "external",
+          "increment_lb": 10,
+          "muscle": "rear_delts",
+          "main_lift": false,
+          "alternates": [
+            "Reverse Cable Flyes",
+            "Reverse DB Flyes"
+          ]
+        },
+        {
+          "id": "fri-cable-lat-pullovers",
+          "movement": "cable-lat-pullovers",
+          "name": "Cable Lat Pullovers",
+          "source_name": "Cable Lat Pullovers",
+          "order": 2,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "prescription": "3 × 12–15",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "back",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "fri-single-arm-db-rows",
+          "movement": "single-arm-db-rows",
+          "name": "Single Arm DB Rows",
+          "source_name": "Single Arm DB Rows",
+          "order": 3,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "prescription": "3 × 8–10",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "back",
+          "main_lift": true,
+          "alternates": []
+        },
+        {
+          "id": "fri-single-arm-cable-pulldowns",
+          "movement": "single-arm-cable-pulldowns",
+          "name": "Single Arm Cable Pulldowns",
+          "source_name": "Single Arm Cable Pulldowns",
+          "order": 4,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "fixed",
+          "scheme": {
+            "kind": "fixed",
+            "reps": 10
+          },
+          "prescription": "3 × 10",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": "heavy, focus on big stretch and driving your elbow down and into your side at the bottom",
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "back",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "fri-incline-db-curls",
+          "movement": "incline-db-curls",
+          "name": "Incline DB Curls",
+          "source_name": "Incline DB Curls",
+          "order": 5,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "prescription": "3 × 8–10",
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "cue": "go until failure, heavy",
+          "equipment": "dumbbell",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "biceps",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "fri-hammer-rope-curls",
+          "movement": "hammer-rope-curls",
+          "name": "Hammer Rope Curls",
+          "source_name": "Hammer Rope Curls",
+          "order": 6,
+          "group": null,
+          "label": null,
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "prescription": "3 × 12–15",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "biceps",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "fri-cable-ab-crunches",
+          "movement": "cable-ab-crunches",
+          "name": "Cable Ab Crunches",
+          "source_name": "Cable Ab Crunches",
+          "order": 7,
+          "group": "Fri-A",
+          "label": "A1",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 15,
+            "max": 15
+          },
+          "prescription": "3 × 15",
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 0,
+          "cue": null,
+          "equipment": "cable",
+          "load_kind": "external",
+          "increment_lb": 5,
+          "muscle": "abs",
+          "main_lift": false,
+          "alternates": []
+        },
+        {
+          "id": "fri-ab-plank",
+          "movement": "ab-plank",
+          "name": "Ab Plank",
+          "source_name": "Ab Plank",
+          "order": 8,
+          "group": "Fri-A",
+          "label": "A2",
+          "sets": 3,
+          "type": "timed",
+          "scheme": {
+            "kind": "timed",
+            "seconds": 30
+          },
+          "prescription": "3 × 30 s",
+          "rir": null,
+          "rest_s": 90,
+          "cue": null,
+          "equipment": "none",
+          "load_kind": "none",
+          "increment_lb": 0,
+          "muscle": "abs",
+          "main_lift": false,
+          "alternates": []
+        }
+      ]
+    },
+    {
+      "dow": 6,
+      "day": "Sat",
+      "name": "Open: cardio / social",
+      "est_min": null,
+      "exercises": []
+    },
+    {
+      "dow": 7,
+      "day": "Sun",
+      "name": "Open: cardio / social",
+      "est_min": null,
+      "exercises": []
+    }
+  ]
+}

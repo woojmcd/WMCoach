@@ -17,7 +17,7 @@ import {
 } from './weekly.js';
 import { mainLiftChanges } from './summary.js';
 import { dailySummary } from './daily.js';
-import { planWeekStart } from './meals.js';
+import { planWeekStart, foodDbOf, withMacros } from './meals.js';
 import { adherenceFromTaps, MODE_LABEL } from './phase.js';
 import {
   baseCardio, nextCardio, rxForWeek, cardioItems, cardioForDay, parseHrZones, parseRunZones, zone2, cardioText,
@@ -153,7 +153,7 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
   const r = readiness({ today, health, activities, dayName: day ? day.name : null, history: state.readiness_history || [], tzHistory: settings.tz_history || [], tz });
   const prefs = Object.fromEntries(live(log.exercise_prefs).map((p) => [p.id, p]));
   const planned = day && day.exercises.length ? planDay(day, cal.sessions, {
-    mode, week: cal.week, deload: cal.deload.isDeload, liftedLess: Boolean(settings.lifted_less_since_may), prefs, readiness: r,
+    mode, week: cal.week, deload: cal.deload.isDeload, liftedLess: Boolean(settings.lifted_less_since_may) && cal.firstBlock, prefs, readiness: r,
   }) : [];
   const addons = enduranceAddons(activities, today);
   // today's cardio (spec §6.5): the week's prescription, adjusted for readiness
@@ -260,7 +260,7 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
       const currentCardio = current.cardio || baseCardio(mode);
       if (pending && pending.to !== mode) {
         const first = firstPlanForMode({ to: pending.to, current, tdee, weightLb: last ? last.trend : 170, cardioKcal: tdee ? tdee.cardio_kcal : 0, plansJson });
-        const swapped = nextPlan({ current: { plan: first.plan }, decision: { change: 0 }, flags: foods, foodDb: plansJson.food_db });
+        const swapped = nextPlan({ current: { plan: first.plan }, decision: { change: 0 }, flags: foods, foodDb: foodDbOf(plansJson) });
         plan = swapped.plan; notes = swapped.notes;
         modeSwitch = MODE_LABEL[pending.to];
         decision = { change: 0, stoppedAt: null, mode_switch: { from: mode, to: pending.to }, reason: first.why, checks: [] };
@@ -275,7 +275,7 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
         const nc = nextCardio({ mode, current: currentCardio, decision });
         decision = nc.decision;
         cardioRx = nc.cardio;
-        const np = nextPlan({ current, decision, flags: foods, foodDb: plansJson.food_db });
+        const np = nextPlan({ current, decision, flags: foods, foodDb: foodDbOf(plansJson) });
         plan = np.plan; notes = np.notes;
         if (decision.change && !np.moved) decision = { ...decision, change: 0, reason: `${decision.reason} (no carb step left to take)` };
       }
@@ -286,7 +286,7 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
         nowUtc, localDate: today, cardio: cardioRx,
       });
       writes[isPrep ? 'data/plan/current.json' : 'data/plan/next.json'] = json(record);
-      const changelog = J('data/plan/changelog.json') || { schema_version: 1, entries: [] };
+      const changelog = writes['data/plan/changelog.json'] ? JSON.parse(writes['data/plan/changelog.json']) : J('data/plan/changelog.json') || { schema_version: 1, entries: [] };
       writes['data/plan/changelog.json'] = json({
         ...changelog,
         entries: [...changelog.entries, {
@@ -303,6 +303,47 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
       if (record.changes.changed) state.last_change_week_start = weekStart;
       report.push(`Weekly step for ${weekStart}: ${n.body}`);
     }
+  }
+
+  // ---- coach plans (2026-11-14) ----
+  // A plan written from claude/NUTRITION_PLAN.md in a reviewed PR (data/coach/plans/<week_start>.json,
+  // read-only here) replaces the published plan for its week, once: from the day before the
+  // week (after that day's weekly step, so it isn't overwritten) or any day during it.
+  // Later weekly steps build on it (its own carb lever).
+  const applied = new Set(state.coach_plans_applied || []);
+  const thisWeek = planWeekStart(today, prepDow);
+  for (const path of repo.list('data/coach/plans/').filter((x) => x.endsWith('.json')).sort()) {
+    const cp = J(path);
+    if (!cp || !cp.id || !cp.week_start || !cp.plan || applied.has(cp.id)) continue;
+    if (cp.week_start < thisWeek || today < addDays(cp.week_start, -1)) continue;
+    const target = cp.week_start <= today ? 'data/plan/current.json' : 'data/plan/next.json';
+    const pending0 = writes[target] ? JSON.parse(writes[target]) : null;
+    const previous = [pending0, published.current, published.next].find((x) => x && x.week_start === cp.week_start) || inForce(addDays(cp.week_start, -1));
+    const plan = withMacros(foodDbOf(J('data/plans.json')), { ...cp.plan, id: cp.id, start: cp.week_start });
+    const decision = { change: 0, stoppedAt: null, coach_plan: cp.id, reason: cp.reason, checks: [] };
+    const record = planRecord({
+      weekStart: cp.week_start, mode: cp.mode || mode, plan, previous, decision, notes: cp.notes || [],
+      reason: cp.reason, nowUtc, localDate: today, cardio: previous && previous.cardio ? previous.cardio : null,
+    });
+    writes[target] = json(record);
+    const changelog = writes['data/plan/changelog.json'] ? JSON.parse(writes['data/plan/changelog.json']) : J('data/plan/changelog.json') || { schema_version: 1, entries: [] };
+    writes['data/plan/changelog.json'] = json({
+      ...changelog,
+      entries: [...changelog.entries, {
+        week_start: cp.week_start, local_date: today, generated_utc: nowUtc, mode: record.mode, changed: true,
+        kcal_from: record.changes.kcal.from, kcal_to: record.changes.kcal.to, delta: record.changes.kcal.delta,
+        what: `New plan: ${cp.title || cp.id}`, reason: cp.reason, stopped_at: null, coach_plan: cp.id,
+      }],
+    });
+    const day = WEEKDAYS_LONG[isoWeekday(cp.week_start) - 1];
+    notifications.push({
+      kind: 'weekly', title: 'New meal plan',
+      body: `${cp.title || 'New plan'} from ${day}: ${plan.weekly_avg.kcal.toLocaleString('en-US')} kcal, ${Math.round(plan.weekly_avg.P)} g protein. Open Meals for the prep and grocery lists.`,
+      url: './#/meals', tag: `plan-${cp.week_start}`,
+    });
+    applied.add(cp.id);
+    state.coach_plans_applied = [...applied];
+    report.push(`Coach plan ${cp.id} published for ${cp.week_start} (${target.split('/').pop()}).`);
   }
 
   // ---- check-in morning (Walter, 2026-10-09) ----

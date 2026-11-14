@@ -1,0 +1,231 @@
+{
+  "id": "DENSITY-2026-11-15",
+  "title": "Lean-gain plan",
+  "week_start": "2026-11-15",
+  "mode": "bulk",
+  "reason": "New lean-gain plan (claude/NUTRITION_PLAN.md rev 4): about 2,375 kcal on lift days, ~100 kcal over the estimated 2,300 maintenance, for +0.1–0.2 %BW a week.",
+  "notes": [
+    "Weekly changes now move lunch rice ±90 g (≈100 kcal).",
+    "Ignore the first 5–7 days on the scale: carbs and sodium shift water."
+  ],
+  "plan": {
+    "title": "Lean-gain plan",
+    "template": "DENSITY-26",
+    "phase": "Bulk",
+    "based_on": "claude/NUTRITION_PLAN.md rev 4",
+    "structure": "single",
+    "days": {
+      "MP": {
+        "M1": [
+          {
+            "food": "egg",
+            "name": "Whole egg, large",
+            "qty": 3,
+            "unit": "each"
+          },
+          {
+            "food": "daves_bread",
+            "name": "Dave’s Killer Bread 21 Whole Grains",
+            "qty": 2,
+            "unit": "slice"
+          }
+        ],
+        "Lunch": [
+          {
+            "food": "lean_beef",
+            "name": "93/7 ground beef/turkey, cooked",
+            "qty": 6,
+            "unit": "oz"
+          },
+          {
+            "food": "rice",
+            "name": "Jasmine/white rice, cooked",
+            "qty": 250,
+            "unit": "g"
+          },
+          {
+            "food": "green_veg",
+            "name": "Green beans/broccoli/asparagus",
+            "qty": 65,
+            "unit": "g"
+          }
+        ],
+        "Pre-workout": [
+          {
+            "food": "whey_iso",
+            "name": "Whey protein isolate",
+            "qty": 1,
+            "unit": "scoop"
+          },
+          {
+            "food": "banana",
+            "name": "Banana, medium",
+            "qty": 2,
+            "unit": "each"
+          },
+          {
+            "food": "applesauce",
+            "name": "Unsweetened applesauce cup",
+            "qty": 1,
+            "unit": "each"
+          }
+        ],
+        "Post-workout": [
+          {
+            "food": "chicken",
+            "name": "Chicken breast, cooked",
+            "qty": 5,
+            "unit": "oz"
+          },
+          {
+            "food": "sweet_potato",
+            "name": "Sweet potato",
+            "qty": 300,
+            "unit": "g"
+          },
+          {
+            "food": "green_veg",
+            "name": "Green beans/broccoli/asparagus",
+            "qty": 65,
+            "unit": "g"
+          }
+        ],
+        "Evening": [
+          {
+            "food": "greek_yogurt",
+            "name": "0% Greek yogurt, single-serve cup",
+            "qty": 1,
+            "unit": "cup"
+          },
+          {
+            "food": "granola_g",
+            "name": "Granola (weighed)",
+            "qty": 40,
+            "unit": "g"
+          },
+          {
+            "food": "nut_butter",
+            "name": "Natural peanut/almond butter",
+            "qty": 16,
+            "unit": "g"
+          }
+        ]
+      }
+    },
+    "options": {
+      "Pre-workout": [
+        {
+          "key": "A",
+          "label": "Whey in water, 2 bananas, applesauce cup",
+          "use": "Away from home, no prep; moist and portable.",
+          "foods": [
+            {
+              "food": "whey_iso",
+              "name": "Whey protein isolate",
+              "qty": 1,
+              "unit": "scoop"
+            },
+            {
+              "food": "banana",
+              "name": "Banana, medium",
+              "qty": 2,
+              "unit": "each"
+            },
+            {
+              "food": "applesauce",
+              "name": "Unsweetened applesauce cup",
+              "qty": 1,
+              "unit": "each"
+            }
+          ]
+        },
+        {
+          "key": "B",
+          "label": "2 instant oatmeal packets with whey stirred in",
+          "use": "At home, 90 s in the microwave. About 6 g fiber: eat it 90+ min before lifting.",
+          "foods": [
+            {
+              "food": "instant_oatmeal",
+              "name": "Instant oatmeal, flavored packet",
+              "qty": 2,
+              "unit": "each"
+            },
+            {
+              "food": "whey_iso",
+              "name": "Whey protein isolate",
+              "qty": 1,
+              "unit": "scoop"
+            }
+          ]
+        },
+        {
+          "key": "C",
+          "label": "70 g Cheerios, 1 cup fat-free milk, whey",
+          "use": "Cereal feel. Fat-free keeps pre-lift fat low (2 % adds ~5 g fat).",
+          "foods": [
+            {
+              "food": "cheerios",
+              "name": "Cheerios",
+              "qty": 70,
+              "unit": "g"
+            },
+            {
+              "food": "skim_milk",
+              "name": "Fat-free milk",
+              "qty": 1,
+              "unit": "cup"
+            },
+            {
+              "food": "whey_iso",
+              "name": "Whey protein isolate",
+              "qty": 1,
+              "unit": "scoop"
+            }
+          ]
+        }
+      ]
+    },
+    "meal_times": {
+      "M1": "7:30–8:30",
+      "Lunch": "12:00–1:00",
+      "Pre-workout": "60–90 min before lifting",
+      "Post-workout": "Within 90 min after lifting",
+      "Evening": "8:30–9:15"
+    },
+    "prep_days": 5,
+    "carb_lever": [
+      [
+        "Lunch",
+        "rice",
+        90
+      ]
+    ],
+    "carb_steps": 0,
+    "weekend": {
+      "kcal": [
+        2300,
+        2600
+      ],
+      "protein_min": 170,
+      "fat_min": 50,
+      "tips": [
+        "Anchors: M1, one prepped protein meal and the evening yogurt (≈1,350–1,500 kcal, ~105–115 g protein) leave ~900–1,100 kcal for social meals.",
+        "Get 40 g+ protein in the social meal: steak, burger, chicken or fish.",
+        "Big dinner planned? Skip the pre-workout meal for room.",
+        "Long cardio (over 60 min): add carbs ≈ half the logged kcal (an 800 kcal ride → +100 g carbs).",
+        "2–3 drinks at most, counted in the total. The muffin (689 kcal) lives here as a planned weekend treat."
+      ]
+    },
+    "timing_moves": [
+      "Lifting at lunch: M1 → pre-workout ~10:30 → post-workout ~1:30 → beef/turkey + rice as dinner ~6:00 → evening snack.",
+      "Lifting 7–8 pm: pre-workout ~5:30–6:30, post-workout by ~9:00, then fold the yogurt into the post meal or skip it.",
+      "The anchors: pre-workout 60–120 min before lifting, post-workout within ~2 h after. The daily protein total matters more than a 30-min window."
+    ],
+    "rules": [
+      "Surplus +100–200 kcal: aim for +0.1–0.2 % body weight a week (0.2–0.35 lb).",
+      "Protein ~1.0–1.1 g/lb over 5 feedings, 3–5 h apart.",
+      "About 75 % of the carbs between lunch and post-workout; pre-workout low in fat and fiber.",
+      "No meal over ~650 kcal; 3.5–4 L of fluid, mostly between meals; steady daily sodium."
+    ]
+  }
+}

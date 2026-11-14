@@ -4,7 +4,7 @@
 // local midnight of prep day, so it never goes without one, even offline.
 import { getAll, put } from './db.js';
 import { live } from './records.js';
-import { startingPlan, withMacros, diffPlans, planWeekStart, phaseWeekOf, TEMPLATE_ID } from '../coach/meals.js';
+import { startingPlan, withMacros, diffPlans, planWeekStart, phaseWeekOf, TEMPLATE_ID, foodDbOf } from '../coach/meals.js';
 import { addDays } from '../coach/time.js';
 import { currentPhase, realPhases } from '../coach/phase.js';
 
@@ -42,7 +42,7 @@ export async function ensurePlans(ctx, { now = new Date() } = {}) {
 
   if (!records.length) {
     const plan = startingPlan(plansJson, { weightLb: firstLaunchWeight(weighins, phase && phase.start), weekStart, id: `BULK-${weekStart}` });
-    const template = withMacros(plansJson.food_db, plansJson.plans.find((p) => p.id === TEMPLATE_ID));
+    const template = withMacros(foodDbOf(plansJson), plansJson.plans.find((p) => p.id === TEMPLATE_ID));
     const rec = {
       id: weekStart, week_start: weekStart, week_end: addDays(weekStart, 6), mode: settings.mode,
       plan, source: 'seed', based_on: TEMPLATE_ID, changes: diffPlans(template, plan),
@@ -73,7 +73,7 @@ export async function ensurePlans(ctx, { now = new Date() } = {}) {
   const next = records.find((r) => r.week_start > current.week_start) || null;
   const flags = Object.fromEntries(live(foodsAll).map((f) => [f.id, f]));
   const week = phase ? phaseWeekOf(current.week_start, phase.start, prepDow) : null;
-  return { current, previous, next, foodDb: plansJson.food_db, flags, week, phase, today };
+  return { current, previous, next, foodDb: foodDbOf(plansJson), flags, week, phase, today };
 }
 
 // Week-tab banner from the day before prep day until prep day (spec §8.4, channel 2).

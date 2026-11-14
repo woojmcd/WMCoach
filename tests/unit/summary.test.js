@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { weeklySummary, summaryVisibleUntil, activeSummaryCheckin, summaryPeriod } from '../../coach/summary.js';
 import { addDays } from '../../coach/time.js';
 
-const program = JSON.parse(readFileSync(new URL('../../data/program.json', import.meta.url), 'utf8'));
+const program = JSON.parse(readFileSync(new URL('../fixtures/program-c.json', import.meta.url) /* Program C, frozen: these tests use its lifts */, 'utf8'));
 const bands = { cut: { target: [-0.75, -0.5], slow_limit: -0.4, cap: -1.0 }, bulk: { target: [0.1, 0.2], cap: 0.35 }, maintenance: { target: [-0.1, 0.1] } };
 const CHECKIN = '2026-10-16'; // Friday
 

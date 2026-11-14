@@ -5,7 +5,22 @@
 import { addDays, isoWeekday } from './time.js';
 
 export const TEMPLATE_ID = 'CUT26-V4';
-export const MEAL_ORDER = ['M1', 'Pre-workout', 'Post-workout', 'M4', 'Snack'];
+export const MEAL_ORDER = ['M1', 'Lunch', 'Pre-workout', 'Post-workout', 'M4', 'Snack', 'Evening'];
+
+// Foods added after data/plans.json (a read-only seed) for the lean-gain plan
+// (claude/NUTRITION_PLAN.md rev 4, 2026-11-14). Same shape as plans.json's food_db.
+export const EXTRA_FOODS = {
+  daves_bread: { name: 'Dave’s Killer Bread 21 Whole Grains', unit: 'slice', protein_g: 6, carbs_g: 22, fat_g: 1.5, basis: 'Label: 45 g slice = 110 kcal, 6P/22C/1.5F' },
+  banana: { name: 'Banana, medium', unit: 'each', protein_g: 0.8, carbs_g: 26, fat_g: 0.3, basis: 'As plans.json "fruit" (medium banana), the plan’s model' },
+  applesauce: { name: 'Unsweetened applesauce cup', unit: 'each', protein_g: 0.2, carbs_g: 13, fat_g: 0.1, basis: '~113 g cup, label ~50 kcal' },
+  instant_oatmeal: { name: 'Instant oatmeal, flavored packet', unit: 'each', protein_g: 4, carbs_g: 32, fat_g: 2.5, basis: 'Typical flavored packet; check the label' },
+  granola_g: { name: 'Granola (weighed)', unit: 'g', protein_g: 0.1, carbs_g: 0.675, fat_g: 0.175, basis: '40 g = 4P/27C/7F (~185 kcal); check the label' },
+};
+
+// The food DB the plans use: plans.json's plus EXTRA_FOODS.
+export function foodDbOf(plansJson) {
+  return { ...(plansJson ? plansJson.food_db : {}), ...EXTRA_FOODS };
+}
 
 // Round like Python's round() so the numbers match plans.json (produced by the
 // Python pipeline): only an exact binary half goes to the even digit; anything
@@ -93,10 +108,12 @@ const stepBetween = (j) => (j >= 0 ? STEPS[j % 2] : STEPS[(-j - 1) % 2]);
 
 // One carb step up (+1) or down (−1) from the plan's current position (plan.carb_steps),
 // keeping every other food as it is (swaps, flags). Spec §8.0 order: rice, then sweet potato.
+// A plan with its own lever (plan.carb_lever, e.g. [['Lunch', 'rice', 90]] in the lean-gain
+// plan: ±90 g cooked rice ≈ ±100 kcal) moves that instead of the CUT26 steps.
 export function nextCarbStep(plan, dir) {
   const out = clone(plan);
   const k = out.carb_steps || 0;
-  const step = dir > 0 ? stepBetween(k) : stepBetween(k - 1);
+  const step = out.carb_lever || (dir > 0 ? stepBetween(k) : stepBetween(k - 1));
   let moved = false;
   for (const meals of Object.values(out.days)) {
     for (const [meal, food, d] of step) if (bump(meals, meal, food, dir > 0 ? d : -d)) moved = true;
@@ -122,7 +139,7 @@ export function applyCarbSteps(plan, n) {
 // weight is far from ~165 lb, rescale to (13.2 × weight + cardio) + 150–200 kcal by
 // picking the nearest carb-step version.
 export function startingPlan(plansJson, { weightLb = null, cardioKcal = 0, kcalPerLb = 13.2, surplus = [150, 200], weekStart, id } = {}) {
-  const foodDb = plansJson.food_db;
+  const foodDb = foodDbOf(plansJson);
   const tpl = plansJson.plans.find((p) => p.id === TEMPLATE_ID);
   if (!tpl) throw new Error(`${TEMPLATE_ID} missing from plans.json`);
   const base = { structure: 'single', days: { MP: clone(tpl.days.MP2) } };
@@ -191,12 +208,30 @@ export function diffPlans(prev, next) {
 
 // ---- prep list and grocery list ----------------------------------------------------------------
 
+// Foods every option of a meal shares at the same amount (the whey in every pre-workout):
+// prepped with the rest. The rest of each option is listed per day (optionStock).
+export function sharedOptionFoods(options) {
+  if (!options || !options.length) return [];
+  return options[0].foods.filter((it) => options.every((o) => o.foods.some((x) => x.food === it.food && x.qty === it.qty)));
+}
+
+export function optionStock(plan) {
+  return Object.entries(plan.options || {}).map(([meal, opts]) => {
+    const shared = new Set(sharedOptionFoods(opts).map((x) => x.food));
+    return { meal, options: opts.map((o) => ({ key: o.key, label: o.label, foods: o.foods.filter((x) => !shared.has(x.food)) })) };
+  });
+}
+
+// plan.prep_days: the days you cook for (5 = Mon–Fri on the lean-gain plan; weekends are
+// best effort). A meal with options (plan.options) is prepped from the foods all its
+// options share; the rest is per-day stock (optionStock).
 export function prepList(plan) {
   const counts = dayCounts(plan);
   const totals = new Map();
   for (const [dt, meals] of Object.entries(plan.days)) {
-    const days = counts[dt] || 0;
-    for (const foods of Object.values(meals)) {
+    const days = plan.prep_days ? Math.min(plan.prep_days, counts[dt] || 0) : counts[dt] || 0;
+    for (const [meal, foods0] of Object.entries(meals)) {
+      const foods = plan.options && plan.options[meal] ? sharedOptionFoods(plan.options[meal]) : foods0;
       for (const it of foods) {
         const t = totals.get(it.food) || { food: it.food, name: it.name, unit: it.unit, total: 0, by_day_type: {} };
         t.total += it.qty * days;
@@ -230,6 +265,12 @@ export const GROCERY = {
   blueberries: { group: 'Veg and fruit', label: 'Blueberries', raw: (g) => `${Math.round(g / 10) * 10} g`, note: (g) => `≈ ${Math.ceil((g / 340) * 2) / 2} pints` },
   fruit: { group: 'Veg and fruit', label: 'Apples or bananas', raw: (n) => `${n}`, note: () => '' },
   nut_butter: { group: 'Pantry', label: 'Peanut or almond butter', raw: (g) => `${Math.round(g)} g`, note: (g) => `${Math.ceil(g / 454)} jar` },
+  daves_bread: { group: 'Carbs', label: 'Dave’s Killer Bread 21 Whole Grains', raw: (n) => `${n} slices`, note: (n) => `≈ ${Math.ceil(n / 16)} loaf (~16 slices)` },
+  granola_g: { group: 'Carbs', label: 'Granola', raw: (g) => `${Math.round(g)} g`, note: () => 'weighed' },
+  banana: { group: 'Veg and fruit', label: 'Bananas', raw: (n) => `${n}`, note: () => 'medium' },
+  applesauce: { group: 'Pantry', label: 'Unsweetened applesauce cups', raw: (n) => `${n}`, note: () => '~113 g each' },
+  instant_oatmeal: { group: 'Pantry', label: 'Instant oatmeal, flavored packets', raw: (n) => `${n}`, note: () => '' },
+  skim_milk: { group: 'Dairy', label: 'Fat-free milk', raw: (n) => `${n} cup${n === 1 ? '' : 's'}`, note: () => '' },
 };
 export const GROCERY_GROUPS = ['Protein', 'Carbs', 'Veg and fruit', 'Dairy', 'Pantry', 'Other'];
 
@@ -269,6 +310,8 @@ export const SWAPS = {
   rice_cake: ['Cream of Rice: 5 cakes ≈ 70 g dry'],
   almond_milk: ['Oat milk (more carbs)'],
   cheerios: ['Another cereal with 50–70 g carbs'],
+  granola_g: ['100 g blueberries + an extra ½ tbsp peanut butter'],
+  daves_bread: ['Thin-sliced: 3 thin slices for 2 regular'],
 };
 
 export const DAY_TYPE_LABEL = DAY_LABEL;

@@ -36,5 +36,6 @@ You are Walter's daily coach run. The routine's saved prompt is one line, "Follo
 7. **Report** in a few lines: the script's report lines, the commit, and what was sent.
 
 ## Reference
-- Spec: `claude/APP_SPEC.md` §2b (timing, idempotency), §6.3 (readiness), §7 (this run), §8 (weekly macro step), §10 (check-in order).
+- Spec: `claude/APP_SPEC.md` §2b (timing, idempotency), §6.3 (readiness), §7 (this run), §8 (weekly macro step, §8.0a coach plans), §10 (check-in order).
+- Coach plans (`data/coach/plans/`) come from reviewed PRs. The script publishes them itself; never edit or move them.
 - Setup: `docs/routine.md`. The Shortcut that triggers this run: `docs/shortcut.md`.

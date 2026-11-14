@@ -8,43 +8,52 @@ import { slug } from './program.js';
 const BW_AMRAP = { type: 'amrap', scheme: { kind: 'amrap', add_load_at: 15 }, equipment: 'bodyweight', load_kind: 'bodyweight', increment_lb: 5 };
 const DB = { equipment: 'dumbbell', load_kind: 'external' };
 
-// slot id → { name, alternates, ...overrides }. A slot not listed keeps its exercise (it
-// already works with dumbbells or bodyweight), still on a travel history.
+// slot id → { name, alternates, cue?, ...overrides } for Program E (2026-11-14). A slot not
+// listed keeps its exercise (it already works with dumbbells or bodyweight), still on a
+// travel history. Program E's banned lifts stay banned on the road: no dips, no pullovers,
+// no hinges, nothing overhead for triceps, flyes stop at the shoulder line.
+const STOP = 'Stop at the shoulder line: no deep stretch.';
 export const TRAVEL = {
-  // Push #1
-  'mon-flat-db-bench': { name: 'Flat DB Bench', alternates: ['Feet-Elevated Push-ups'] },
-  'mon-chest-dips': { name: 'Chest Dips', alternates: ['Bench Dips', 'Deficit Push-ups'] },
+  // Push A
+  'mon-rope-face-pulls': { name: 'Prone Reverse DB Flyes', alternates: ['Band Pull-Aparts'], ...DB, cue: 'Primer: chest on an incline bench, light, 2 s squeeze.' },
   'mon-single-cable-lateral-raise': { name: 'Lean-Away DB Lateral Raise', alternates: ['Standing Lateral DB Raises'], ...DB },
-  'mon-rope-tricep-extensions': { name: 'Overhead DB Tricep Extensions', alternates: ['Incline DB Skullcrushers'], ...DB },
-  'mon-rope-pushdowns': { name: 'DB Kickbacks', alternates: ['Close-Grip Push-ups'], ...DB },
-  'mon-cable-ab-crunches': { name: 'Weighted Crunches (DB)', alternates: ['Lying Leg Raises'], ...DB },
-  // Pull #1
-  'tue-assisted-pullups': { name: 'Pull-ups', alternates: ['Inverted Rows', 'Pull-up Negatives'], ...BW_AMRAP, rir: [1, 1] },
-  'tue-hammer-pulldowns': { name: 'Single Arm DB Rows', alternates: ['Chest-Supported DB Rows'], ...DB },
-  'tue-cable-lat-pullovers': { name: 'DB Pullovers', ...DB },
+  'mon-pec-deck-flyes': { name: 'Flat DB Flyes', alternates: ['Feet-Elevated Push-ups'], ...DB, cue: STOP },
+  'mon-rope-pushdowns': { name: 'DB Kickbacks', ...DB },
+  'mon-straight-bar-pushdowns': { name: 'Close-Grip Push-ups', alternates: ['DB Kickbacks'] },
+  'mon-machine-hip-abduction': { name: 'Side-Lying Hip Abduction', alternates: ['Banded Lateral Walks'] },
+  // Pull A
+  'tue-chest-supported-machine-row': { name: 'Chest-Supported DB Rows', alternates: ['Single Arm DB Rows'], ...DB, cue: 'Chest on an incline bench, neutral grip, 2 s squeeze.' },
+  'tue-neutral-grip-pulldown': { name: 'Neutral-Grip Pull-ups', alternates: ['Single Arm DB Rows'] },
+  'tue-wide-grip-cable-rows': { name: 'Wide Incline DB Rows', alternates: ['Reverse DB Flyes'], ...DB, cue: 'Chest on an incline bench, elbows about 75°.' },
+  'tue-kneeling-cable-crunches': { name: 'Weighted Crunches (DB)', alternates: ['Bench Reverse Crunch'], ...DB },
+  'tue-reverse-pec-deck-flyes': { name: 'Reverse DB Flyes', ...DB },
   'tue-reverse-cable-curls': { name: 'Reverse-Grip DB Curls', ...DB },
   'tue-cable-bar-curls': { name: 'DB Curls', ...DB },
   // Legs and abs
-  'wed-hamstring-hyperextensions': { name: 'Single-Leg Hip Thrusts', alternates: ['Glute Bridges'] },
-  'wed-machine-adductors': { name: 'Sumo Goblet Squats', alternates: ['Cossack Squats'], ...DB },
-  'wed-single-leg-press': { name: 'Bulgarian Split Squats (DB)', alternates: ['DB Reverse Lunges'], ...DB },
-  'wed-bb-squats': { name: 'Goblet Squats', alternates: ['DB Front Squats'], ...DB },
-  'wed-seated-hamstring-curls': { name: 'DB Romanian Deadlifts', alternates: ['Single-Leg DB RDL', 'Slider Leg Curls'], ...DB },
-  'wed-hanging-leg-raises': { name: 'Hanging Leg Raises', alternates: ['Lying Leg Raises'] },
-  // Upper Push #2
-  'thu-pec-deck-flyes': { name: 'Flat DB Flyes', alternates: ['Incline DB Flyes'], ...DB },
-  'thu-flat-smith-machine-bench': { name: 'Flat DB Bench', alternates: ['Feet-Elevated Push-ups'], ...DB },
-  'thu-single-arm-cable-pushdowns': { name: 'Single Arm DB Kickbacks', alternates: ['Overhead DB Tricep Extensions'], ...DB },
-  // Upper Pull #2
-  'fri-reverse-pec-deck-flyes': { name: 'Reverse DB Flyes', ...DB },
-  'fri-cable-lat-pullovers': { name: 'DB Pullovers', ...DB },
-  'fri-single-arm-cable-pulldowns': { name: 'Chest-Supported DB Rows', alternates: ['Pull-ups'], ...DB },
-  'fri-hammer-rope-curls': { name: 'DB Hammer Curls', ...DB },
-  'fri-cable-ab-crunches': { name: 'Weighted Crunches (DB)', alternates: ['Lying Leg Raises'], ...DB },
+  'wed-machine-hip-abduction': { name: 'Side-Lying Hip Abduction', alternates: ['Banded Lateral Walks'] },
+  'wed-close-stance-chain-squat': { name: 'Heel-Elevated Goblet Squats', alternates: ['DB Front Squats'], ...DB, cue: 'Knees over toes. Exhale on the way up; no breath-hold.' },
+  'wed-leg-press': { name: 'Bulgarian Split Squats (DB)', alternates: ['DB Reverse Lunges'], ...DB },
+  'wed-leg-extensions': { name: 'Sissy Squats', alternates: ['Heel-Elevated Goblet Squats'] },
+  'wed-seated-hamstring-curls': { name: 'Slider Leg Curls', alternates: ['Swiss Ball Leg Curls'] },
+  'wed-standing-cable-hip-abduction': { name: 'Banded Lateral Walks', alternates: ['Side-Lying Hip Abduction'] },
+  'wed-heavy-cable-crunches': { name: 'Weighted Crunches (DB)', alternates: ['Bench Reverse Crunch'], ...DB },
+  // Push B
+  'thu-rope-face-pulls': { name: 'Prone Reverse DB Flyes', alternates: ['Band Pull-Aparts'], ...DB, cue: 'Primer: chest on an incline bench, light, 2 s squeeze.' },
+  'thu-converging-machine-chest-press': { name: 'Flat DB Bench', alternates: ['Feet-Elevated Push-ups'], ...DB },
+  'thu-pec-deck-flyes': { name: 'Flat DB Flyes', alternates: ['Feet-Elevated Push-ups'], ...DB, cue: STOP },
+  'thu-cable-y-raises': { name: 'Prone Incline Y-Raises', ...DB },
+  'thu-cable-shrugs': { name: 'Seated DB Shrugs', ...DB },
+  'thu-single-arm-cable-pushdowns': { name: 'Single Arm DB Kickbacks', ...DB },
+  // Pull B
+  'fri-single-arm-cable-pulldowns': { name: 'Neutral-Grip Pull-ups', alternates: ['Single Arm DB Rows'] },
+  'fri-chest-supported-wide-grip-rows': { name: 'Wide Incline DB Rows', ...DB, cue: 'Chest on an incline bench, elbows about 75°, 2 s squeeze.' },
+  'fri-single-cable-lateral-raise': { name: 'Lean-Away DB Lateral Raise', alternates: ['Standing Lateral DB Raises'], ...DB },
+  'fri-cable-woodchops': { name: 'DB Woodchops', ...DB },
+  'fri-kb-suitcase-carry': { name: 'KB Suitcase Carry', alternates: ['DB Suitcase Carry'] },
 };
 
 // Alternatives done with body weight (logged as reps, +lb only if weighted), whatever slot they fill.
-const BODYWEIGHT = new Set(['Feet-Elevated Push-ups', 'Deficit Push-ups', 'Close-Grip Push-ups', 'Bench Dips', 'Chest Dips', 'Pull-ups', 'Inverted Rows', 'Pull-up Negatives', 'Lying Leg Raises', 'Hanging Leg Raises', 'Glute Bridges', 'Single-Leg Hip Thrusts', 'Slider Leg Curls', 'Cossack Squats']);
+const BODYWEIGHT = new Set(['Feet-Elevated Push-ups', 'Close-Grip Push-ups', 'Pull-ups', 'Neutral-Grip Pull-ups', 'Inverted Rows', 'Pull-up Negatives', 'Hanging Knee Raises', 'Bench Reverse Crunch', 'Slider Leg Curls', 'Swiss Ball Leg Curls', 'Sissy Squats', 'Side-Lying Hip Abduction', 'Banded Lateral Walks', 'Band Pull-Aparts']);
 export const isBodyweightLift = (name) => BODYWEIGHT.has(name);
 
 export const travelMovement = (name) => `travel-${slug(name)}`;
@@ -55,7 +64,7 @@ export const isTravelMovement = (m) => String(m || '').startsWith('travel-');
 export function travelExercise(ex, name = null) {
   const t = TRAVEL[ex.id] || { name: ex.name };
   const pick = name || t.name;
-  const { name: _n, alternates = [], ...over } = t;
+  const { name: _n, alternates = [], cue: tcue, ...over } = t;
   const bw = isBodyweightLift(pick) && ex.load_kind !== 'bodyweight' ? BW_AMRAP : {};
   return {
     ...ex, ...over, ...bw,
@@ -64,6 +73,7 @@ export function travelExercise(ex, name = null) {
     travel_of: ex.name,
     alternates: [...new Set([t.name, ...alternates, ex.name])].filter((n) => n !== pick),
     cue: !TRAVEL[ex.id] ? ex.cue
+      : tcue && pick === t.name ? tcue
       : (bw.load_kind || over.load_kind) === 'bodyweight' ? 'Same effort as the gym lift: hit the RIR. Too easy? Slow the lowering to 3 s or pause at the hardest point.'
         : 'Same effort as the gym lift: hit the RIR. If the dumbbells top out, add reps or slow the lowering to 3 s.',
   };

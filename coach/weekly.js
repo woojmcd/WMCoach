@@ -2,7 +2,7 @@
 // day before prep day. Stop at the first failing check; then at most one change,
 // ≤ 150 kcal, carbs first, as food-weight changes in his staple foods.
 import { rateStatus } from './trend.js';
-import { withMacros, nextCarbStep, applyCarbSteps, diffPlans, TEMPLATE_ID } from './meals.js';
+import { withMacros, nextCarbStep, applyCarbSteps, diffPlans, TEMPLATE_ID, foodDbOf } from './meals.js';
 import { addDays, daysBetween, formatDayMonth, WEEKDAYS, isoWeekday } from './time.js';
 import { cardioText } from './cardio.js';
 
@@ -148,7 +148,7 @@ export function nearestSteps(plan, target, foodDb, range = 4) {
 
 // First plan for a new mode (spec §8.3).
 export function firstPlanForMode({ to, current, tdee, weightLb, cardioKcal = 0, plansJson }) {
-  const foodDb = plansJson.food_db;
+  const foodDb = foodDbOf(plansJson);
   const maint = tdee && Number.isFinite(tdee.estimate_kcal) ? tdee.estimate_kcal : 13.2 * weightLb + cardioKcal;
   if (to === 'cut') {
     // ~300–500 under maintenance, carbs first; CUT26-V4's carb cycle is the template
@@ -175,6 +175,9 @@ export function firstPlanForMode({ to, current, tdee, weightLb, cardioKcal = 0, 
 // Apply a weekly decision to this week's plan → next week's plan (+ GI swaps).
 export function nextPlan({ current, decision, flags, foodDb }) {
   let plan = clone(current.plan);
+  // a plan's own note belongs to that week (BULK-2026-11-08 still said "+1 carb step to fit
+  // 2488 kcal" under a −1 decision); the record's reason explains each week
+  delete plan.coach_note;
   let moved = false;
   if (decision.change) {
     const r = nextCarbStep(plan, decision.change);

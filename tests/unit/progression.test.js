@@ -5,7 +5,7 @@ import {
   targetFor, planDay, historyFor, deloadStatus, programWeek, roundToIncrement, describeEntry,
 } from '../../coach/progression.js';
 
-const program = JSON.parse(readFileSync(new URL('../../data/program.json', import.meta.url), 'utf8'));
+const program = JSON.parse(readFileSync(new URL('../fixtures/program-c.json', import.meta.url) /* Program C, frozen: these tests use its lifts */, 'utf8'));
 const ex = Object.fromEntries(program.days.flatMap((d) => d.exercises.map((e) => [e.id, e])));
 const day = (dow) => program.days.find((d) => d.dow === dow);
 

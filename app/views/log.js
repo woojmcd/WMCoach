@@ -41,6 +41,9 @@ function rirText(rir) {
   return `RIR ${rir[0] === rir[1] ? rir[0] : `${rir[0]}–${rir[1]}`}`;
 }
 
+// carries are logged in metres (scheme.unit 'm'); everything else in reps
+const unitOf = (pex) => (pex && pex.scheme && pex.scheme.unit) || 'reps';
+
 function targetLine(e, pex) {
   const first = e.sets.find((s) => !s.skipped) || e.sets[0];
   if (!first) return '';
@@ -48,8 +51,8 @@ function targetLine(e, pex) {
   if (e.type === 'timed') return `${e.sets.length} × ${t.seconds} s`;
   if (e.type === 'superset_same_weight') return `Same weight · to failure${first.target.aim ? ` · beat ${e.sets.reduce((a, s) => a + (s.target.aim || 0), 0)}` : ''}`;
   if (e.type === 'amrap') return e.reason && e.reason.startsWith('Beat') ? `${fmtLoad(t.load, pex)} · ${e.reason.toLowerCase()}` : `${fmtLoad(t.load, pex)} × as many as possible`;
-  if (e.calibration) return `Calibrate · ${repsText(t)} reps ${rirText(t.rir)}`;
-  return `Target ${fmtLoad(t.load, pex)} × ${repsText(t)} ${rirText(t.rir)}`.trim();
+  if (e.calibration) return `Calibrate · ${repsText(t)} ${unitOf(pex)} ${rirText(t.rir)}`.trim();
+  return `Target ${fmtLoad(t.load, pex)} × ${repsText(t)}${unitOf(pex) === 'm' ? ' m each side' : ''} ${rirText(t.rir)}`.trim();
 }
 
 // Display order: superset partners interleave (A1·1, A2·1, A1·2, …).
@@ -113,6 +116,12 @@ export async function render(screen, ctx) {
   const label = `Today · ${WEEKDAYS[isoWeekday(today) - 1]} ${formatDayMonth(today)} · ${training.week === 0 ? 'lead-in week' : `week ${training.week}`}`;
   const change = h('button', { type: 'button', class: 'icon-btn', 'aria-label': 'Change workout', onClick: () => chooseDay(ctx, today) }, icon('week'));
   screen.append(header({ label: session.travel ? `${label} · travel` : label, title: day.name, right: change }));
+  // Program E: the day's focus and the program's four rules, one tap away (2026-11-14)
+  if (day.focus || (ctx.program.rules || []).length) {
+    screen.append(h('div', { class: 'focus-row' },
+      day.focus ? h('span', { class: 'muted small grow' }, day.focus) : h('span', { class: 'grow' }),
+      (ctx.program.rules || []).length ? h('button', { type: 'button', class: 'link-btn', onClick: () => rulesSheet(ctx, day) }, `${ctx.program.name} rules`) : null));
+  }
   // switching to another day's workout, as on open days (Walter, 2026-10-13); once a set is
   // logged the session is under way, so the switch stays in the calendar icon only
   if (session.status === 'draft') {
@@ -139,7 +148,7 @@ export async function render(screen, ctx) {
   }
   if (session.travel && session.status !== 'finished') notices.push(['Travel workout', 'Comparable dumbbell and bodyweight lifts, same sets and effort. They progress from your last travel workout; your gym targets stay where they are. Swap any lift (•••) to fit what’s there.']);
   if (session.deload) notices.push(['Deload week', 'Half the sets, same loads, RIR 3+; finishers stop 2 short of failure.']);
-  if (ctx.settings.lifted_less_since_may && training.week <= 2 && !session.deload) notices.push(['Easing back in', training.week <= 1 ? 'One rep further from failure (RIR +1), no load increases this week.' : 'One rep further from failure (RIR +1) this week.']);
+  if (ctx.settings.lifted_less_since_may && training.firstBlock !== false && training.week <= 2 && !session.deload) notices.push(['Easing back in', training.week <= 1 ? 'One rep further from failure (RIR +1), no load increases this week.' : 'One rep further from failure (RIR +1) this week.']);
   const calibrating = session.exercises.filter((e) => e.calibration && !e.skipped).length;
   if (calibrating && session.status !== 'finished') {
     const all = calibrating === session.exercises.filter((e) => e.type !== 'timed').length;
@@ -338,7 +347,7 @@ function setEditor(ctx, { session, i, k, pidx, idxs, save }) {
       const unit = pex.load_kind === 'bodyweight' ? '+lb' : pex.load_kind === 'assistance' ? 'assist' : 'lb';
       grid.append(stepper({ value: load, step: inc, min: 0, max: 1000, decimals: inc % 1 ? 1 : 0, unit, compact: true, label: `${e.name} weight`, placeholder: s.target.load ?? '', onChange: (v) => { load = v; } }));
     }
-    grid.append(stepper({ value: reps, step: 1, min: 0, max: 100, unit: 'reps', compact: true, label: `${e.name} reps`, placeholder: s.target.aim ?? s.target.reps_min ?? '', onChange: (v) => { reps = v; } }));
+    grid.append(stepper({ value: reps, step: unitOf(pex) === 'm' ? 5 : 1, min: 0, max: unitOf(pex) === 'm' ? 200 : 100, unit: unitOf(pex), compact: true, label: `${e.name} ${unitOf(pex) === 'm' ? 'metres' : 'reps'}`, placeholder: s.target.aim ?? s.target.reps_min ?? '', onChange: (v) => { reps = v; } }));
     kids.push(grid);
     if (showRir) {
       kids.push(h('div', { class: 'rir-row' }, h('span', { class: 'label' }, 'RIR'),
@@ -471,6 +480,20 @@ function travelSwapSheet(ctx, { session, i, training, save }) {
   });
 }
 
+function rulesSheet(ctx, day) {
+  const p = ctx.program;
+  const items = (p.rules || []).map((r, i) => h('li', {}, h('strong', {}, `${i + 1}. `), r));
+  openSheet({
+    title: `${p.name} rules`,
+    subtitle: p.title || null,
+    body: h('div', { class: 'stack-sm' },
+      h('ol', { class: 'rules-list' }, items),
+      day.dow === 3 ? h('p', { class: 'small', style: 'margin:0' }, 'Legs day: keep hard or long runs at least 48 h after this session. Easy runs are fine.') : null,
+      p.stop_rule ? h('p', { class: 'small warn-text', style: 'margin:0' }, p.stop_rule) : null),
+    actions: [{ label: 'Close', kind: 'outline' }],
+  });
+}
+
 // ---- choosing a different program day, open days, next targets -----------------------------
 
 function chooseDay(ctx, today) {
@@ -503,10 +526,11 @@ export function planTargetText(p) {
   const first = t.sets[0];
   if (!first) return '';
   if (p.ex.type === 'timed') return `${t.sets.length} × ${first.seconds} s`;
-  if (t.calibration) return 'calibrate';
+  const m = unitOf(p.ex) === 'm' ? ' m each side' : '';
+  if (t.calibration) return m ? `calibrate · ${repsText(first)}${m}` : 'calibrate';
   if (p.ex.type === 'superset_same_weight') return `same weight${first.aim ? ` · beat ${t.sets.reduce((a, x) => a + (x.aim || 0), 0)}` : ''}`;
   if (p.ex.type === 'amrap') return t.reason;
-  return `${fmtLoad(t.load, p.ex)} × ${repsText(first)}`;
+  return `${fmtLoad(t.load, p.ex)} × ${repsText(first)}${m}`;
 }
 
 export function planItem(p) {

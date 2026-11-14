@@ -13,7 +13,7 @@ const TYPES = {
 };
 
 export function startServer({ port = 8080, prefix = '/WMCoach/', root = fileURLToPath(new URL('../', import.meta.url)) } = {}) {
-  const state = { versionOverride: null };
+  const state = { versionOverride: null, rewrite: {} }; // rewrite: { 'data/program.json': 'tests/fixtures/program-c.json' }
   const server = createServer(async (req, res) => {
     const url = new URL(req.url, 'http://localhost');
     if (!url.pathname.startsWith(prefix)) {
@@ -23,7 +23,7 @@ export function startServer({ port = 8080, prefix = '/WMCoach/', root = fileURLT
     }
     let rel = decodeURIComponent(url.pathname.slice(prefix.length)) || 'index.html';
     if (rel.endsWith('/')) rel += 'index.html';
-    const file = normalize(join(root, rel));
+    const file = normalize(join(root, state.rewrite[rel] || rel));
     if (!file.startsWith(normalize(root)) || rel.startsWith('.git') || rel.startsWith('node_modules')) {
       res.writeHead(404); res.end(); return;
     }

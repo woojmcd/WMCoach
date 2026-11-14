@@ -217,10 +217,13 @@ export function targetFor(ex, history, ctx = {}) {
   if (!ws.length) {
     const what = ex.load_kind === 'assistance' ? 'the least assistance' : 'a weight';
     const rirText = rir ? ` at RIR ${rir[0] === rir[1] ? rir[0] : `${rir[0]}–${rir[1]}`}` : '';
-    return build(null, null, { calibration: true, reason: `Calibration: pick ${what} for ${min === max ? min : `${min}–${max}`} reps${rirText}` });
+    const cap = ex.max_load_lb ? `, no more than ${ex.max_load_lb} lb` : '';
+    return build(null, null, { calibration: true, reason: `Calibration: pick ${what} for ${min === max ? min : `${min}–${max}`} ${ex.scheme.unit || 'reps'}${rirText}${cap}` });
   }
 
-  const load = mainLoad(ws);
+  // a load ceiling (Program E's chain squat, 225 lb): never targeted above it
+  const cap = ex.max_load_lb || null;
+  const load = cap ? Math.min(mainLoad(ws), cap) : mainLoad(ws);
   const aimsUp = Array(nWork).fill(min);
   const aimsMore = Array.from({ length: nWork }, (_, i) => {
     const r = ws[i] ? ws[i].reps : ws[ws.length - 1].reps;
@@ -247,6 +250,10 @@ export function targetFor(ex, history, ctx = {}) {
   const recent = hist.slice(-needed);
   const ready = recent.length === needed && recent.every((e) => sameLoad(e) && hitTop(e));
 
+  if (ready && !ctx.deload && !ctx.noIncrease && cap && load + inc > cap) {
+    if (load < cap) return build(cap, aimsUp, { change: 'up', delta_lb: cap - load, reason: `All sets hit ${max}: up to the ${cap} lb ceiling, back to ${min}` });
+    return build(load, aimsMore, { change: 'hold', reason: `At the ${cap} lb ceiling: progress with a slower lowering (4 s) and a pause, never more load` });
+  }
   if (ready && !ctx.deload && !ctx.noIncrease) {
     const next = load + inc;
     return build(next, aimsUp, {
@@ -335,17 +342,29 @@ export function planDay(day, sessions, opts = {}) {
 // The training calendar from the logged sessions (shared by the phone and the daily run):
 // program start, program week, and this week's deload status (§6.4).
 const byStart = (a, b) => (a.local_date === b.local_date ? ((a.started_utc || '') < (b.started_utc || '') ? -1 : 1) : a.local_date < b.local_date ? -1 : 1);
+// Sessions before program_id existed were Program C's.
+export const LEGACY_PROGRAM_ID = 'TRAIN-CUT26';
+export const programOf = (s) => s.program_id || LEGACY_PROGRAM_ID;
+
+// programStart: the first logged session of any program (days before it are never "missed").
+// A new program starts a new block (2026-11-14): its weeks and deloads count from its own
+// first session (today, before there is one), so Program E opens at week 1, not in Program
+// C's week-6 deload with every lift still to calibrate.
 export function trainingCalendar(sessions, program, today) {
   const live = sessions.filter((s) => !s.deleted).sort(byStart);
   const programStart = live.length ? live[0].local_date : null;
-  const week = programWeek(today, programStart || today);
-  const deloadWeeks = [...new Set(live.filter((s) => s.deload).map((s) => s.week))];
+  const mine = program && program.id ? live.filter((s) => programOf(s) === program.id) : live;
+  const blockStart = mine.length ? mine[0].local_date : live.length ? today : null;
+  const week = programWeek(today, blockStart || today);
+  const deloadWeeks = [...new Set(mine.filter((s) => s.deload).map((s) => s.week))];
   const mainHistories = {};
   if (program) {
     for (const d of program.days) {
       for (const ex of d.exercises) if (ex.main_lift) mainHistories[ex.id] = historyFor(live, ex.id, ex.movement).filter((e) => !e.deload);
     }
   }
-  const deload = deloadStatus({ today, programStart: programStart || today, deloadWeeks, mainHistories });
-  return { sessions: live, programStart, week, deload };
+  const deload = deloadStatus({ today, programStart: blockStart || today, deloadWeeks, mainHistories });
+  // "lifted less since May" eases the app's first block only, not every new program
+  const firstBlock = mine.length === live.length;
+  return { sessions: live, programStart, blockStart, week, deload, firstBlock };
 }

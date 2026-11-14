@@ -7,7 +7,7 @@ import { weeklySummary } from '../../coach/summary.js';
 
 const program = JSON.parse(readFileSync(new URL('../../data/program.json', import.meta.url), 'utf8'));
 const slots = program.days.flatMap((d) => d.exercises);
-const GYM_ONLY = ['machine', 'cable', 'smith_upper', 'smith_lower', 'assisted'];
+const GYM_ONLY = ['machine', 'cable', 'smith_upper', 'smith_lower', 'assisted', 'barbell'];
 
 test('every travel swap names a real slot, and no travel lift needs a machine, cable or Smith', () => {
   const ids = new Set(slots.map((e) => e.id));
@@ -20,9 +20,9 @@ test('every travel swap names a real slot, and no travel lift needs a machine, c
     assert.equal(t.sets, ex.sets, 'same sets');
     assert.ok(!t.alternates.includes(t.name));
   }
-  const pull = travelExercise(slots.find((e) => e.id === 'tue-assisted-pullups'));
-  assert.deepEqual([pull.name, pull.type, pull.load_kind], ['Pull-ups', 'amrap', 'bodyweight']);
-  const push = travelExercise(slots.find((e) => e.id === 'mon-flat-db-bench'), 'Feet-Elevated Push-ups');
+  const pull = travelExercise(slots.find((e) => e.id === 'tue-neutral-grip-pulldown'));
+  assert.deepEqual([pull.name, pull.type, pull.load_kind], ['Neutral-Grip Pull-ups', 'amrap', 'bodyweight']);
+  const push = travelExercise(slots.find((e) => e.id === 'thu-converging-machine-chest-press'), 'Feet-Elevated Push-ups');
   assert.deepEqual([push.load_kind, push.type], ['bodyweight', 'amrap'], 'a bodyweight alternative is logged as reps');
 });
 
@@ -31,8 +31,8 @@ const sets = (load, reps, n = 2) => Array.from({ length: n }, () => ({ kind: 'wo
 
 test('a travel workout progresses from the last travel workout and never moves the gym targets', () => {
   const mon = program.days.find((d) => d.dow === 1);
-  const bench = mon.exercises.find((e) => e.id === 'mon-flat-db-bench');
-  const flyes = mon.exercises.find((e) => e.id === 'mon-incline-db-flyes');
+  const bench = mon.exercises.find((e) => e.id === 'mon-low-incline-db-press');
+  const flyes = mon.exercises.find((e) => e.id === 'mon-pec-deck-flyes');
   const gym = session('2026-10-12', 1, [{ slot_id: flyes.id, movement: flyes.movement, name: flyes.name, sets: sets(30, 10, 3) }]);
   const before = planDay(mon, [gym], { mode: 'bulk', week: 2 }).find((p) => p.ex.id === flyes.id).target;
   // on the road: much lighter dumbbells, logged as the travel version
@@ -45,6 +45,8 @@ test('a travel workout progresses from the last travel workout and never moves t
   assert.equal(tf.movement, tFlyes.movement);
   assert.equal(tf.target.calibration, false, 'the second travel workout has a target');
   assert.ok(tf.target.load >= 15 && tf.target.load <= 20, `from the last travel load (got ${tf.target.load})`);
+  assert.equal(tFlyes.name, 'Flat DB Flyes');
+  assert.match(tFlyes.cue, /shoulder line/, 'Program E: flyes stop at the shoulder line on the road too');
   assert.equal(travelPlan.find((p) => p.ex.id === bench.id).target.calibration, true, 'first time on the road: calibrate');
   assert.equal(historyFor([gym, trip], flyes.id, flyes.movement).length, 1);
 });
@@ -63,4 +65,12 @@ test('the Week in review counts a travel workout as done and says so', () => {
   const t = s.points.find((p) => p.key === 'training').text;
   assert.match(t, /^5 of 5 sessions\. Travel workout: Legs and abs \(done with comparable lifts; strength is judged on gym days\)\./);
   assert.doesNotMatch(t, /Missed/);
+});
+
+test('Program E’s banned lifts stay off the travel list', () => {
+  const banned = /dip|pullover|deadlift|\bRDL\b|good morning|overhead|upright row|hyperextension|smith/i;
+  for (const ex of slots) {
+    const t = travelExercise(ex);
+    for (const n of [t.name, ...t.alternates]) assert.doesNotMatch(n, banned, `${ex.id}: ${n}`);
+  }
 });

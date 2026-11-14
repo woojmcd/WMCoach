@@ -3,7 +3,7 @@
 Walter's personal coaching PWA (iPhone, GitHub Pages). Before building or changing anything, read:
 1. `claude/APP_SPEC.md`: what to build, how it behaves, and how updates must work (§12a). It wins on app behaviour, cadence and the training program.
 2. `claude/AGENT_BRIEF.md`: history, metabolism priors, TDEE and nutrition math. It wins on energy-expenditure math and macro floors.
-3. `claude/TRAINING_HISTORY.md` + `data/training_history.json`: Program C (`TRAIN-CUT26`) is the program the app runs.
+3. `claude/PROGRAM_E.md`: **Program E (`TRAIN-E26`) is the program the app runs** (since 0.9.0, 2026-11-14), built from `data/programs/TRAIN-E26.json`. `claude/NUTRITION_PLAN.md`: the lean-gain meal plan. `claude/TRAINING_HISTORY.md` + `data/training_history.json`: history, including Program C (`TRAIN-CUT26`), which ran Oct–Nov 2026.
 
 Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.json`, `training_history.json`. The other files listed in the brief's §0 (daily_timeline.csv, health_daily.csv, workouts.csv, the scripts, the .xlsx) are **not** in this repo; don't assume them. Their findings are already summarized in the brief and `metabolic_profile.json`.
 
@@ -33,7 +33,7 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 | `scripts/` | Node scripts: generators, the dev server, and the daily routine's `daily.mjs` / `send_push.mjs` (`scripts/lib/`: disk repo adapter, Web Push). |
 | `ops/` | `daily_prompt.md`: the routine's instructions (its saved prompt is just "Follow ops/daily_prompt.md."). |
 | `tests/unit/`, `tests/migration/`, `tests/e2e/`, `tests/fixtures/` | Tests. |
-| `data/` | Seed history (read-only), generated `program.json`, and one writer per path (spec §2): `log/` (phone), `health/` (Shortcut), `strava/`, `targets/`, `plan/`, `model/` (routine). |
+| `data/` | Seed history (read-only), generated `program.json` (from `programs/`), coach plans (`coach/plans/`, written in PRs, read by the routine), and one writer per path (spec §2): `log/` (phone), `health/` (Shortcut), `strava/`, `targets/`, `plan/`, `model/` (routine). |
 | `docs/` | Guides for Walter, plus PR screenshots in `docs/screenshots/<stage>/`. |
 
 ## Commands
@@ -41,7 +41,7 @@ Data available in `data/`: `weight_daily.csv`, `plans.json`, `metabolic_profile.
 - `npm test`: unit + migration tests. `npm run test:migration`: migration test only.
 - `npm run e2e`: headless Chromium at 375 × 812 covering every stage so far (install, onboarding, tabs, Body flows, timezone, export/import, offline, update flow, upgrade from an older database). Each screenshot is tagged with the stage it documents; a run writes only `$E2E_STAGE`'s (default: the newest stage) to `docs/screenshots/<stage>/`. When you add a stage, bump the default and tag its new shots. In Claude Code cloud sessions Chromium is preinstalled; don't run `playwright install`.
 - `npm run serve`: the app at `http://localhost:8080/WMCoach/`, the same path as GitHub Pages.
-- `npm run build:program`: regenerate `data/program.json` from `training_history.json` (a test fails if it's stale).
+- `npm run build:program`: regenerate `data/program.json` from `data/programs/TRAIN-E26.json` (a test fails if it's stale). Program C is frozen in `tests/fixtures/program-c.json`; unit tests and the e2e scenarios up to stage 8 use it (the e2e server swaps it in via `state.rewrite`), stage 9 uses the real program.
 - `node scripts/daily.mjs --preflight` / `--dry-run [--now <ISO>] [--strava file]`: what the daily run would do, without writing. Never run it without `--dry-run` in a dev session: it writes routine-owned files.
 - `node scripts/vapid_keys.mjs <file outside the repo>`: a new Web Push key pair (public key → `app/push-config.js`; private key → the routine environment's `VAPID_PRIVATE_KEY` only).
 - `npm run fixture`: regenerate `tests/fixtures/backup-sample.json` (current schema, with records in every store). Prefer a real export from Walter when he provides one. Older fixtures (`backup-v1.json`, …) are **frozen**: they prove an old phone's data still upgrades. Never regenerate or delete them.
@@ -72,6 +72,13 @@ The new service worker installs in the background and waits. Walter sees "Update
 - Nothing is hard-deleted in the app. `removeRecord()` leaves a tombstone (`deleted: true`, `deleted_utc`) so sync and a newer-wins merge can't resurrect it. Read with `live()`.
 - The weigh-in and "On plan?" inputs live in `app/views/day-log.js`, shared by the Body tab (today) and the Week tab's day sheets (any day up to today), so a forgotten day can be filled in later (Walter, 2026-10-17). An earlier day edits the entry it already has, in that entry's zone.
 - Mode switches never change the current week: they're saved to `mode_changes` and `settings.pending_mode`, and `applyPendingMode()` (`coach/phase.js`) makes them take effect on-device on the next prep day.
+
+## Program E and the lean-gain plan (stage 9, 0.9.0)
+- Program E: `buildProgramFromSource()` (`coach/program.js`); equipment `barbell` and `kettlebell` added. `max_load_lb` caps a target (chain squat 225 lb; at the cap: tempo, not load). `scheme.unit: 'm'` logs metres (carry). Lifts kept from C keep their names, so their history carries over.
+- A new program starts a new block: `trainingCalendar()` counts weeks/deloads from the program's own first session (`sessions[].program_id`, legacy = `TRAIN-CUT26`); `firstBlock` limits "lifted less since May" easing to the first block. `programStart` (any program) still decides what counts as missed.
+- The travel map (`coach/travel.js`) is Program E's and respects its banned list.
+- Meals: `EXTRA_FOODS` + `foodDbOf()` (plans.json is read-only), `MEAL_ORDER` has Lunch and Evening, `plan.options` (pre-workout A/B/C), `plan.meal_times`, `plan.prep_days`, `plan.weekend`, `plan.carb_lever` (lunch rice ±90 g), `optionStock()`.
+- Coach plans: `data/coach/plans/<week_start>.json`; `dailyRun()` publishes each once (from the eve, after the weekly step), changelog entry with `coach_plan`, "New meal plan" push, `state.coach_plans_applied`.
 
 ## Training (stage 3)
 - Progression is pure code in `coach/progression.js` (`targetFor`, `planDay`, `deloadStatus`, `programWeek`), covering every spec §6.2 type, stalls, the cut rule, deloads (§6.4) and the "lifted less since May" easing (§2a). The daily routine must reuse it, not re-implement it.

@@ -8,8 +8,8 @@ const history = JSON.parse(read('data/training_history.json'));
 const program = buildProgram(history);
 const byId = Object.fromEntries(program.days.flatMap((d) => d.exercises.map((e) => [e.id, e])));
 
-test('committed data/program.json is up to date', () => {
-  assert.deepEqual(JSON.parse(read('data/program.json')), JSON.parse(JSON.stringify(program)));
+test('Program C still builds from training_history.json exactly as frozen in tests/fixtures/program-c.json', () => {
+  assert.deepEqual(JSON.parse(read('tests/fixtures/program-c.json')), JSON.parse(JSON.stringify(program)));
 });
 
 test('split: Mon–Fri sessions, open weekend', () => {

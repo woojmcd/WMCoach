@@ -17,7 +17,7 @@ export async function loadTraining(ctx) {
   ]);
   const prefs = Object.fromEntries(prefsAll.map((p) => [p.id, p]));
   const today = ctx.today();
-  const { sessions, programStart, week, deload } = trainingCalendar(live(sAll), ctx.program, today);
+  const { sessions, programStart, week, deload, firstBlock } = trainingCalendar(live(sAll), ctx.program, today);
   // today's readiness from the daily run (spec §6.3), if it has run today
   const remote = await remoteState(ctx.db);
   const targets = todaysTargets(remote, today);
@@ -25,7 +25,7 @@ export async function loadTraining(ctx) {
   const readiness = targets ? targets.readiness : null;
   const addons = targets ? targets.addons || [] : [];
   return {
-    sessions, prefs, stairs, today, programStart, week, deload,
+    sessions, prefs, stairs, today, programStart, week, deload, firstBlock,
     readiness, addons, healthMissing: healthMissing(remote, today), healthUrl: healthShortcut(remote, today),
     // yesterday in review + today's focus, from this morning's run (Walter, 2026-10-13)
     daily: targets && targets.daily ? targets.daily : null,
@@ -59,7 +59,7 @@ export function planOptions(ctx, training) {
     mode: ctx.settings.mode,
     week: training.week,
     deload: training.deload.isDeload,
-    liftedLess: Boolean(ctx.settings.lifted_less_since_may),
+    liftedLess: Boolean(ctx.settings.lifted_less_since_may) && training.firstBlock !== false,
     readiness: training.readiness,
     prefs: training.prefs,
   };
@@ -116,6 +116,7 @@ export function draftSession(ctx, training, day, now = new Date(), { travel = fa
     day_dow: day.dow, day_name: day.name, program_id: ctx.program.id,
     week: training.week, deload: training.deload.isDeload,
     ...(travel ? { travel: true } : {}),
+    program_id: ctx.program.id, // a new program starts a new block (trainingCalendar)
     exercises: planFor(ctx, training, day, { travel }).map(exerciseFromPlan),
     note: null, updated_utc: at.utc,
   };

@@ -6,11 +6,11 @@ import { remoteState, todaysTargets } from '../remote.js';
 import { put } from '../db.js';
 import { ensurePlans } from '../meal-plans.js';
 import {
-  MEAL_ORDER, prepList, groceryList, GROCERY_GROUPS, ozToG, SWAPS, dayCounts,
+  MEAL_ORDER, prepList, groceryList, GROCERY_GROUPS, ozToG, SWAPS, dayCounts, mealMacros, optionStock,
 } from '../../coach/meals.js';
 import { formatDayMonth, WEEKDAYS, isoWeekday } from '../../coach/time.js';
 
-const ui = { dayType: null };
+const ui = { dayType: null, option: {} };
 
 // Food names as Walter's coach wrote them: [singular, plural] for counted units.
 const NAMES = {
@@ -18,7 +18,10 @@ const NAMES = {
   rice_cake: ['rice cake', 'rice cakes'], whey_iso: ['scoop whey isolate', 'scoops whey isolate'], greek_yogurt: ['Greek yogurt cup', 'Greek yogurt cups'],
   granola: ['granola portion', 'granola portions'], fruit: ['apple or banana', 'apples or bananas'], pb_cup: ['PB cup', 'PB cups'],
   turkey_bacon: ['slice turkey bacon', 'slices turkey bacon'], cappuccino: ['cappuccino', 'cappuccinos'], protein_yogurt: ['protein yogurt', 'protein yogurts'],
-  almond_milk: ['cup almond milk', 'cups almond milk'], skim_milk: ['cup skim milk', 'cups skim milk'],
+  almond_milk: ['cup almond milk', 'cups almond milk'], skim_milk: ['cup fat-free milk', 'cups fat-free milk'],
+  daves_bread: ['slice Dave’s Killer Bread', 'slices Dave’s Killer Bread'], banana: ['banana', 'bananas'],
+  applesauce: ['unsweetened applesauce cup', 'unsweetened applesauce cups'], instant_oatmeal: ['instant oatmeal packet', 'instant oatmeal packets'],
+  granola_g: 'granola (weighed)',
   chicken: 'chicken (cooked)', lean_beef: '93/7 beef or turkey (cooked)', rice: 'jasmine rice (cooked)', sweet_potato: 'sweet potato',
   green_veg: 'green veg', blueberries: 'blueberries', nut_butter: 'nut butter', cream_rice: 'Cream of Rice (dry)', cheerios: 'Cheerios', egg_white_oz: 'liquid egg whites',
 };
@@ -26,9 +29,9 @@ const NAMES = {
 const PREP = {
   ezekiel: ['Ezekiel bread', 'slice', 'slices'], whey_iso: ['Whey isolate', 'scoop', 'scoops'], greek_yogurt: ['Greek yogurt', 'cup', 'cups'],
   granola: ['Granola', 'portion', 'portions'], turkey_bacon: ['Turkey bacon', 'slice', 'slices'], almond_milk: ['Almond milk', 'cup', 'cups'],
-  skim_milk: ['Skim milk', 'cup', 'cups'],
+  skim_milk: ['Fat-free milk', 'cup', 'cups'], daves_bread: ['Dave’s Killer Bread', 'slice', 'slices'],
 };
-const SHORT = { rice: 'rice', sweet_potato: 'sweet potato', rice_cake: 'rice cakes', chicken: 'chicken', lean_beef: 'beef/turkey', egg: 'eggs', ezekiel: 'Ezekiel', nut_butter: 'nut butter', whey_iso: 'whey', green_veg: 'green veg', greek_yogurt: 'yogurt', granola: 'granola', blueberries: 'blueberries' };
+const SHORT = { granola_g: 'granola', daves_bread: 'Dave’s bread', rice: 'rice', sweet_potato: 'sweet potato', rice_cake: 'rice cakes', chicken: 'chicken', lean_beef: 'beef/turkey', egg: 'eggs', ezekiel: 'Ezekiel', nut_butter: 'nut butter', whey_iso: 'whey', green_veg: 'green veg', greek_yogurt: 'yogurt', granola: 'granola', blueberries: 'blueberries' };
 
 const fmtQty = (q) => (Number.isInteger(q) ? String(q) : String(Math.round(q * 10) / 10));
 
@@ -87,9 +90,12 @@ export async function render(screen, ctx) {
   const ch = current.changes;
   if (ch && ch.changed) {
     const vs = current.source === 'seed' ? `vs ${current.based_on}, your last coach plan` : 'vs last week';
+    // a whole new plan (data/coach/plans/) says so in one line instead of every food
+    const whole = current.decision && current.decision.coach_plan;
     const lines = [
+      whole ? h('div', { class: 'item' }, h('span', { class: 'grow' }, `New plan: ${plan.title || current.decision.coach_plan}. Every meal is new: prep from the list below.`)) : null,
       ch.structure ? h('div', { class: 'item' }, h('span', { class: 'grow' }, ch.structure)) : null,
-      ...ch.items.map((c) => h('div', { class: 'item' }, h('span', { class: 'grow num' }, changeLine(c), c.where ? h('span', { class: 'muted xsmall' }, ` · ${c.where}`) : null))),
+      ...(whole ? [] : ch.items).map((c) => h('div', { class: 'item' }, h('span', { class: 'grow num' }, changeLine(c), c.where ? h('span', { class: 'muted xsmall' }, ` · ${c.where}`) : null))),
       ch.kcal.delta ? h('div', { class: 'item' }, h('span', { class: 'grow' }, 'Daily average'), h('span', { class: 'value num' }, `${fmtInt(ch.kcal.from)} → ${fmtInt(ch.kcal.to)} kcal (${ch.kcal.delta > 0 ? '+' : ''}${ch.kcal.delta})`)) : null,
     ];
     screen.append(h('div', { class: 'card changed' },
@@ -125,13 +131,40 @@ export async function render(screen, ctx) {
   screen.append(sectionLabel('Meals'));
   const meals = plan.days[dt];
   const order = [...MEAL_ORDER.filter((x) => meals[x]), ...Object.keys(meals).filter((x) => !MEAL_ORDER.includes(x))];
+  const foodBtn = (it) => h('button', { type: 'button', class: `food${flags[it.food] && flags[it.food].gi_flag ? ' flagged' : ''}`, onClick: () => foodSheet(ctx, it, foodDb, flags) },
+    h('span', { class: 'grow' }, foodText(it)), flags[it.food] && flags[it.food].gi_flag ? h('span', { class: 'flag' }, 'GI') : null);
   screen.append(h('div', { class: 'card flush' }, order.map((meal) => {
+    const time = plan.meal_times && plan.meal_times[meal];
+    const opts = plan.options && plan.options[meal];
+    // a meal with options (the lean-gain plan's pre-workout A/B/C): pick one to see it; any is on plan
+    if (opts && opts.length) {
+      const key = opts.some((o) => o.key === ui.option[meal]) ? ui.option[meal] : opts[0].key;
+      const o = opts.find((x) => x.key === key);
+      const om = mealMacros(foodDb, o.foods);
+      return h('div', { class: 'meal' },
+        h('div', { class: 'row between' }, h('span', { class: 'meal-name' }, meal), h('span', { class: 'muted xsmall num' }, `${Math.round(om.kcal)} kcal · ${Math.round(om.P)} g P`)),
+        time ? h('div', { class: 'muted xsmall meal-time' }, time) : null,
+        h('div', { class: 'meal-options' }, segmented(opts.map((x) => ({ value: x.key, label: `Option ${x.key}` })), key, (v) => { ui.option[meal] = v; ctx.refresh(); }, { label: `${meal} option` })),
+        h('div', { class: 'foods' }, o.foods.map(foodBtn)),
+        o.use ? h('p', { class: 'muted xsmall', style: 'margin:6px 0 0' }, o.use) : null);
+    }
     const pm = m.per_meal[meal];
     return h('div', { class: 'meal' },
       h('div', { class: 'row between' }, h('span', { class: 'meal-name' }, meal), h('span', { class: 'muted xsmall num' }, `${pm.kcal} kcal · ${Math.round(pm.P)} g P`)),
-      h('div', { class: 'foods' }, meals[meal].map((it) => h('button', { type: 'button', class: `food${flags[it.food] && flags[it.food].gi_flag ? ' flagged' : ''}`, onClick: () => foodSheet(ctx, it, foodDb, flags) },
-        h('span', { class: 'grow' }, foodText(it)), flags[it.food] && flags[it.food].gi_flag ? h('span', { class: 'flag' }, 'GI') : null))));
+      time ? h('div', { class: 'muted xsmall meal-time' }, time) : null,
+      h('div', { class: 'foods' }, meals[meal].map(foodBtn)));
   })));
+  if (plan.options) {
+    const alt = Object.entries(plan.options).map(([meal, opts]) => {
+      const ks = opts.map((o) => Math.round(mealMacros(foodDb, o.foods).kcal));
+      return `${meal}: day totals use option ${opts[0].key}; ${opts.slice(1).map((o, i) => `${o.key} adds ~${ks[i + 1] - ks[0]} kcal`).join(', ')}. Rotate freely.`;
+    });
+    screen.append(h('p', { class: 'muted xsmall', style: 'margin:8px 0 0' }, alt.join(' ')));
+  }
+
+  // weekend guardrails and timing (lean-gain plan): Mon–Fri is the plan, weekends best effort
+  if (plan.weekend) screen.append(weekendCard(plan, ctx.today()));
+  if (plan.timing_moves || plan.rules) screen.append(guideCard(plan));
 
   // prep list (cooked weights for the week)
   screen.append(sectionLabel('Prep for the week'));
@@ -148,7 +181,15 @@ export async function render(screen, ctx) {
       ? `low days ${fmtQty(p.by_day_type.MP1)} · high days ${fmtQty(p.by_day_type.MP2)}` : null;
     return h('div', { class: 'item' }, h('span', { class: 'grow' }, h('div', {}, label), split ? h('div', { class: 'muted xsmall' }, split) : null), h('span', { class: 'value num' }, amount));
   })));
-  screen.append(h('p', { class: 'muted xsmall', style: 'margin:8px 0 0' }, `${plan.structure === 'carb_cycle' ? `${counts.MP2} high + ${counts.MP1} low days` : '7 days'} · meats and rice weighed cooked`));
+  const stock = optionStock(plan);
+  for (const st of stock) {
+    screen.append(h('p', { class: 'label', style: 'margin:12px 0 6px' }, `${st.meal}: stock per day of each option`));
+    screen.append(h('div', { class: 'card flush list' }, st.options.map((o) => h('div', { class: 'item' },
+      h('span', { class: 'grow' }, h('div', {}, `Option ${o.key}`), h('div', { class: 'muted xsmall' }, o.label)),
+      h('span', { class: 'value' }, o.foods.map(foodText).join(' + '))))));
+  }
+  const prepDays = plan.prep_days ? `${plan.prep_days} days (Mon–Fri)` : plan.structure === 'carb_cycle' ? `${counts.MP2} high + ${counts.MP1} low days` : '7 days';
+  screen.append(h('p', { class: 'muted xsmall', style: 'margin:8px 0 0' }, `${prepDays} · meats and rice weighed cooked${stock.length ? ' · whey in every option is in the prep list' : ''}`));
 
   // grocery list (raw / store units), tick off while shopping
   screen.append(sectionLabel('Grocery list'));
@@ -173,6 +214,26 @@ export async function render(screen, ctx) {
     })));
   }
   screen.append(h('p', { class: 'muted xsmall', style: 'margin:8px 0 0' }, `Raw meat ≈ cooked ÷ 0.75; dry rice ≈ cooked ÷ 3. Plan locked ${WEEKDAYS[isoWeekday(current.week_start) - 1]} ${formatDayMonth(current.week_start)} – ${WEEKDAYS[isoWeekday(current.week_end) - 1]} ${formatDayMonth(current.week_end)}.`));
+}
+
+function weekendCard(plan, today) {
+  const w = plan.weekend;
+  const wkend = isoWeekday(today) >= 6;
+  return h('div', { class: `card stack-sm${wkend ? ' changed' : ''}`, style: 'margin-top:16px', 'aria-label': 'Weekend guardrails' },
+    h('div', { class: 'row between' }, h('p', { class: 'label', style: wkend ? 'color:var(--accent);margin:0' : 'margin:0' }, 'Sat–Sun: best effort'),
+      h('span', { class: 'muted xsmall num' }, `${fmtInt(w.kcal[0])}–${fmtInt(w.kcal[1])} kcal`)),
+    h('p', { class: 'small', style: 'margin:0' }, `Protein ${w.protein_min} g+, fat ${w.fat_min} g+, the rest flexible.`),
+    h('ul', { class: 'tips' }, w.tips.map((t) => h('li', {}, t))));
+}
+
+function guideCard(plan) {
+  const body = h('div', { class: 'stack-sm' },
+    plan.rules ? h('div', {}, h('p', { class: 'label' }, 'Rules'), h('ul', { class: 'tips' }, plan.rules.map((t) => h('li', {}, t)))) : null,
+    plan.timing_moves ? h('div', {}, h('p', { class: 'label' }, 'If the gym time moves'), h('ul', { class: 'tips' }, plan.timing_moves.map((t) => h('li', {}, t)))) : null);
+  return h('button', {
+    type: 'button', class: 'link-btn', style: 'margin-top:12px',
+    onClick: () => openSheet({ title: plan.title || 'This plan', subtitle: plan.based_on || null, body, actions: [{ label: 'Close', kind: 'outline' }] }),
+  }, 'Plan rules and timing');
 }
 
 function travelCard(plan) {
