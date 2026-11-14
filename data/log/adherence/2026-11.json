@@ -107,9 +107,18 @@
       "local_date": "2026-11-13",
       "utc": "2026-11-13T20:39:14.861Z",
       "tz": "America/Los_Angeles",
+      "status": "off",
+      "kcal": null,
+      "updated_utc": "2026-11-14T16:23:47.305Z"
+    },
+    {
+      "id": "plan-66fba22e-ac8b-41de-b065-e6d48a35c5d8",
+      "local_date": "2026-11-14",
+      "utc": "2026-11-14T16:23:53.106Z",
+      "tz": "America/Los_Angeles",
       "status": "yes",
       "kcal": null,
-      "updated_utc": "2026-11-13T20:39:14.861Z"
+      "updated_utc": "2026-11-14T16:23:53.106Z"
     }
   ]
 }
