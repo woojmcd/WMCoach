@@ -1,0 +1,124 @@
+{
+  "schema_version": 4,
+  "store": "adherence",
+  "partition": "2026-11",
+  "records": [
+    {
+      "id": "plan-3b8498ba-9b35-46d6-8cc6-c1100e452610",
+      "local_date": "2026-11-02",
+      "utc": "2026-11-03T00:32:33.629Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-03T00:32:33.629Z"
+    },
+    {
+      "id": "plan-72f6553f-a50e-4461-af10-fad994ee93ed",
+      "local_date": "2026-11-03",
+      "utc": "2026-11-03T17:48:17.218Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-03T17:48:17.218Z"
+    },
+    {
+      "id": "plan-59cece69-93c2-4402-8dd6-df513e6af06f",
+      "local_date": "2026-11-04",
+      "utc": "2026-11-06T19:03:55.605Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-06T19:03:55.605Z"
+    },
+    {
+      "id": "plan-34f21e5d-fcae-425b-a03f-fbe73867dcba",
+      "local_date": "2026-11-05",
+      "utc": "2026-11-06T19:03:46.915Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-06T19:03:46.915Z"
+    },
+    {
+      "id": "plan-382a233f-ddec-4eaa-b1b5-4b25a6e1092c",
+      "local_date": "2026-11-06",
+      "utc": "2026-11-06T19:03:43.465Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-06T19:03:43.465Z"
+    },
+    {
+      "id": "plan-87541633-d4f7-4983-b609-38081ee192e8",
+      "local_date": "2026-11-07",
+      "utc": "2026-11-08T21:38:58.956Z",
+      "tz": "America/Los_Angeles",
+      "status": "off",
+      "kcal": null,
+      "updated_utc": "2026-11-08T21:38:58.956Z"
+    },
+    {
+      "id": "plan-f1df6289-bfc6-464b-96a7-71e7f92e0f4b",
+      "local_date": "2026-11-08",
+      "utc": "2026-11-08T21:39:02.198Z",
+      "tz": "America/Los_Angeles",
+      "status": "partial",
+      "kcal": null,
+      "updated_utc": "2026-11-08T21:39:03.833Z"
+    },
+    {
+      "id": "plan-a734067c-21cd-49f9-ab35-dbd4e9f2f403",
+      "local_date": "2026-11-09",
+      "utc": "2026-11-09T23:24:45.758Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-09T23:24:45.758Z"
+    },
+    {
+      "id": "plan-f39f2e08-3242-4582-90d7-60f3b94550c9",
+      "local_date": "2026-11-10",
+      "utc": "2026-11-10T20:20:41.351Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-10T20:20:41.351Z"
+    },
+    {
+      "id": "plan-66d98dc6-b31b-4885-88ee-a0cb944ba52b",
+      "local_date": "2026-11-11",
+      "utc": "2026-11-11T16:39:20.709Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-11T16:39:20.709Z"
+    },
+    {
+      "id": "plan-fc7bbe6d-3694-4b57-bc06-0f35919da99a",
+      "local_date": "2026-11-12",
+      "utc": "2026-11-12T14:34:26.160Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-12T14:34:26.160Z"
+    },
+    {
+      "id": "plan-d6097d9a-a439-45ca-a9c7-a5820749e45b",
+      "local_date": "2026-11-13",
+      "utc": "2026-11-13T20:39:14.861Z",
+      "tz": "America/Los_Angeles",
+      "status": "off",
+      "kcal": null,
+      "updated_utc": "2026-11-14T16:23:47.305Z"
+    },
+    {
+      "id": "plan-66fba22e-ac8b-41de-b065-e6d48a35c5d8",
+      "local_date": "2026-11-14",
+      "utc": "2026-11-14T16:23:53.106Z",
+      "tz": "America/Los_Angeles",
+      "status": "yes",
+      "kcal": null,
+      "updated_utc": "2026-11-14T16:23:53.106Z"
+    }
+  ]
+}

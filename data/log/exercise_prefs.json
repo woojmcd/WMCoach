@@ -123,6 +123,12 @@
       "updated_utc": "2026-10-14T01:22:58.683Z"
     },
     {
+      "id": "tue-cable-lat-pullovers",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-10-28T00:49:37.929Z"
+    },
+    {
       "id": "tue-hammer-pulldowns",
       "increment_lb": 5,
       "alternates": [],

@@ -1,0 +1,117 @@
+{
+  "schema_version": 4,
+  "store": "weighins",
+  "partition": "2026-11",
+  "records": [
+    {
+      "id": "w-cd42fccd-92be-448c-b47e-8a4bcd7790ec",
+      "local_date": "2026-11-02",
+      "utc": "2026-11-03T00:32:33.051Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 182.4,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-03T00:32:33.051Z"
+    },
+    {
+      "id": "w-6f2b162f-6fea-49c0-8e2f-f89a1eb4e35a",
+      "local_date": "2026-11-03",
+      "utc": "2026-11-03T17:48:15.921Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 180,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-03T17:48:15.921Z"
+    },
+    {
+      "id": "w-27efcf64-a094-4239-b8c6-37482c9236ed",
+      "local_date": "2026-11-04",
+      "utc": "2026-11-04T22:16:03.684Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 179.6,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-04T22:16:03.684Z"
+    },
+    {
+      "id": "w-87054054-ba1a-485e-92a8-c4f9c1037781",
+      "local_date": "2026-11-05",
+      "utc": "2026-11-06T19:04:08.744Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 179.6,
+      "source": "app",
+      "backdated": true,
+      "updated_utc": "2026-11-06T19:04:08.744Z"
+    },
+    {
+      "id": "w-87c9e0c5-bc6c-42fa-9d49-8512d0e7de6c",
+      "local_date": "2026-11-06",
+      "utc": "2026-11-06T19:03:42.002Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 180.4,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-06T19:03:42.002Z"
+    },
+    {
+      "id": "w-5a16315e-d65c-4056-aa80-ac6f7f3a822f",
+      "local_date": "2026-11-09",
+      "utc": "2026-11-09T23:24:45.196Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 180,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-09T23:24:45.196Z"
+    },
+    {
+      "id": "w-ce2ad281-452d-412a-ae31-ca8cace10d9b",
+      "local_date": "2026-11-10",
+      "utc": "2026-11-10T20:20:44.729Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 181.2,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-10T20:20:44.729Z"
+    },
+    {
+      "id": "w-ef19f83a-12f4-4c16-9ea1-35a4d64ee3c0",
+      "local_date": "2026-11-11",
+      "utc": "2026-11-11T16:39:19.750Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 180.2,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-11T16:39:19.750Z"
+    },
+    {
+      "id": "w-3e15f4c2-bc2f-472b-8e07-f2a364b9222f",
+      "local_date": "2026-11-12",
+      "utc": "2026-11-12T14:34:28.179Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 180.6,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-12T14:34:28.179Z"
+    },
+    {
+      "id": "w-9ca57d6f-8ad5-476b-be6b-45314a84b463",
+      "local_date": "2026-11-13",
+      "utc": "2026-11-13T20:39:13.625Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 180.6,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-13T20:39:13.625Z"
+    },
+    {
+      "id": "w-d69eea2a-78c8-49c4-8735-8a40448deb6f",
+      "local_date": "2026-11-14",
+      "utc": "2026-11-14T16:23:55.556Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 179.4,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-14T16:23:56.439Z"
+    }
+  ]
+}

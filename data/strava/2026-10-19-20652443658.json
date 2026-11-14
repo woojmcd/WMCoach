@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20652443658",
+  "name": "Zoomies",
+  "type": "Run",
+  "start_local": "2026-10-19T13:17:19",
+  "local_date": "2026-10-19",
+  "duration_s": 1857,
+  "elapsed_s": 2217,
+  "distance_km": 6.45,
+  "elevation_m": 8,
+  "avg_hr": 166,
+  "max_hr": 179,
+  "hr_zones_s": null,
+  "relative_effort": 72,
+  "kcal": 475,
+  "location": "San Diego, California",
+  "source": "strava"
+}

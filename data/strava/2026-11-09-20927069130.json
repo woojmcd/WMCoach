@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20927069130",
+  "name": "Afternoon Weight Training",
+  "type": "WeightTraining",
+  "start_local": "2026-11-09T15:25:01",
+  "local_date": "2026-11-09",
+  "duration_s": 2597,
+  "elapsed_s": 2597,
+  "distance_km": 0,
+  "elevation_m": 0,
+  "avg_hr": null,
+  "max_hr": null,
+  "hr_zones_s": null,
+  "relative_effort": 8,
+  "kcal": 305,
+  "location": null,
+  "source": "strava"
+}

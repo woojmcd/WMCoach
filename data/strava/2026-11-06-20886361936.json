@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20886361936",
+  "name": "Lunch Weight Training",
+  "type": "WeightTraining",
+  "start_local": "2026-11-06T11:07:22",
+  "local_date": "2026-11-06",
+  "duration_s": 2306,
+  "elapsed_s": 2306,
+  "distance_km": 0,
+  "elevation_m": 0,
+  "avg_hr": null,
+  "max_hr": null,
+  "hr_zones_s": null,
+  "relative_effort": 6,
+  "kcal": 266,
+  "location": null,
+  "source": "strava"
+}

@@ -44,6 +44,27 @@
       "note": null,
       "measurement_id": "meas-31aaefde-3bda-468b-872b-d1048c1fb855",
       "updated_utc": "2026-10-20T15:39:01.135Z"
+    },
+    {
+      "id": "ci-19f8f4a5-f916-46f3-a4e3-f9fd9241e629",
+      "local_date": "2026-10-29",
+      "utc": "2026-10-29T19:51:27.739Z",
+      "tz": "America/Los_Angeles",
+      "week": "2026-W44",
+      "due_date": "2026-10-27",
+      "adherence_pct": 93,
+      "adherence_auto_pct": 93,
+      "adherence_taps": 7,
+      "biofeedback": {
+        "hunger": 5,
+        "energy": 5,
+        "sleep": 5,
+        "stress": 5,
+        "digestion": 4
+      },
+      "note": null,
+      "measurement_id": "meas-f56d8ac2-3713-444c-bc38-27df1f5f2a01",
+      "updated_utc": "2026-10-29T19:51:27.739Z"
     }
   ]
 }

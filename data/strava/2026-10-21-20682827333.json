@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "20682827333",
+  "name": "PB Run Club!",
+  "type": "Run",
+  "start_local": "2026-10-21T18:24:35",
+  "local_date": "2026-10-21",
+  "duration_s": 1949,
+  "elapsed_s": 2986,
+  "distance_km": 4.96,
+  "elevation_m": 20,
+  "avg_hr": 127,
+  "max_hr": 156,
+  "hr_zones_s": null,
+  "relative_effort": 8,
+  "kcal": 366,
+  "location": "San Diego, California",
+  "source": "strava"
+}
