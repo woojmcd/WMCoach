@@ -68,3 +68,33 @@ test('a plan’s own note isn’t carried into the next week (BULK-2026-11-08 ke
   assert.equal(r.plan.days.MP.Lunch[1].qty, 160);
   assert.deepEqual(r.plan.options, plan.options, 'options and the rest of the plan carry');
 });
+
+test('adherence on the lean-gain plan: 5 on-plan days make a full week; weekends are best effort', async () => {
+  const { adherenceFromTaps, planAdherenceDays } = await import('../../coach/phase.js');
+  assert.equal(cp.plan.adherence_days, 5);
+  assert.equal(planAdherenceDays({ plan: cp.plan }), 5);
+  assert.equal(planAdherenceDays({ plan: { days: {} } }), null);
+  const week = (statuses) => statuses.map((status, i) => ({ local_date: `2026-11-${String(16 + i).padStart(2, '0')}`, status, updated_utc: 'x' })).filter((t) => t.status);
+  const end = '2026-11-22';
+  const t5 = { targetDays: 5 };
+  // Mon–Fri on plan, weekend off: a full week (the old average said 71 %)
+  assert.equal(adherenceFromTaps(week(['yes', 'yes', 'yes', 'yes', 'yes', 'off', 'off']), end, 7, t5).pct, 100);
+  assert.equal(adherenceFromTaps(week(['yes', 'yes', 'yes', 'yes', 'yes', 'off', 'off']), end).pct, 71, 'every-day average without the rule');
+  // weekend Partial, one weekday missed: 4 + ½ + ½ = 5
+  assert.equal(adherenceFromTaps(week(['yes', 'yes', 'off', 'yes', 'yes', 'partial', 'partial']), end, 7, t5).pct, 100);
+  // 4 on-plan days: 80 %, under the 90 % bar, so no macro change
+  const four = adherenceFromTaps(week(['yes', 'yes', 'partial', 'off', 'yes', 'yes', null]), end, 7, t5);
+  assert.deepEqual([four.pct, four.on_days], [90, 4.5]);
+  assert.equal(adherenceFromTaps(week(['yes', 'yes', 'off', 'off', 'yes', 'yes', 'off']), end, 7, t5).pct, 80);
+  assert.equal(adherenceFromTaps([], end, 7, t5).pct, null);
+});
+
+test('the Week in review says the on-plan days when the plan counts them', async () => {
+  const { weeklySummary } = await import('../../coach/summary.js');
+  const program = read('tests/fixtures/program-c.json');
+  const s = weeklySummary({
+    checkin: { local_date: '2026-11-24', adherence_pct: 100, adherence_on_days: 5, adherence_target_days: 5, biofeedback: { hunger: 4, energy: 4, sleep: 4, stress: 4, digestion: 4 } },
+    sessions: [], program, weighins: [], measurements: [], bands: { bulk: { target: [0.1, 0.2], cap: 0.35 } }, today: '2026-11-24',
+  });
+  assert.match(s.points.find((p) => p.key === 'adherence').text, /^100 % \(5 of 5 on-plan days\)\. That’s the foundation/);
+});

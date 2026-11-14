@@ -12,7 +12,7 @@ import { trendChart } from '../chart.js';
 import { trendFromEntries, rateOverDays, rateStatus } from '../../coach/trend.js';
 import { SITES, siteAverages, navyBodyFat } from '../../coach/body.js';
 import {
-  MODES, MODE_LABEL, describeSwitch, requestModeChange, currentPhase, phaseStatus, checkinState, adherenceFromTaps, realPhases,
+  MODES, MODE_LABEL, describeSwitch, requestModeChange, currentPhase, phaseStatus, checkinState, adherenceFromTaps, planAdherenceDays, realPhases,
 } from '../../coach/phase.js';
 import {
   addDays, daysBetween, formatDayMonth, formatLong, isoWeekday, isoWeekId, WEEKDAYS,
@@ -54,10 +54,12 @@ export async function render(screen, ctx) {
   const tz = ctx.tz();
   if (!ui.weightDate || ui.weightDate > today) ui.weightDate = today;
 
-  const [wAll, phasesAll, mAll, cAll, tAll, model, lastExport, remote] = await Promise.all([
+  const [wAll, phasesAll, mAll, cAll, tAll, model, lastExport, remote, pAll] = await Promise.all([
     getAll(db, 'weighins'), getAll(db, 'phases'), getAll(db, 'measurements'), getAll(db, 'checkins'), getAll(db, 'adherence'),
-    getMeta(db, 'model'), getMeta(db, 'last_export'), remoteState(db),
+    getMeta(db, 'model'), getMeta(db, 'last_export'), remoteState(db), getAll(db, 'plans'),
   ]);
+  // the plan in force today decides how adherence is counted (lean-gain plan: 5 on-plan days)
+  const planToday = live(pAll).filter((p) => p.week_start <= today && today <= p.week_end).sort((a, b) => ((a.updated_utc || '') < (b.updated_utc || '') ? -1 : 1)).pop() || null;
   const weighins = live(wAll);
   const phases = realPhases(phasesAll);
   const measurements = live(mAll).sort((a, b) => (a.local_date < b.local_date ? -1 : 1));
@@ -102,7 +104,7 @@ export async function render(screen, ctx) {
   const openCheckin = () => { ui.forceCheckin = true; ui.focusCheckin = true; ctx.refresh(); };
   if (ui.forceCheckin) {
     screen.append(h('div', { id: 'checkin' }, sectionLabel(ci.late && !ci.done ? `Measurements & check-in · due ${dayText(ci.due, today)}` : 'Measurements & check-in')),
-      checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }));
+      checkinCard(ctx, { ci, today, tz, measurements, checkins, taps, targetDays: planAdherenceDays(planToday) }));
   } else if (ci.open && !ci.done) {
     screen.append(h('div', { class: 'stack-sm', style: 'margin-top:16px' },
       h('button', { type: 'button', class: 'btn primary block', onClick: openCheckin }, icon('body', { size: 20 }), 'Log measurements & check-in'),
@@ -239,7 +241,9 @@ function weightCard(ctx, { weighins, today, lastTrend }) {
 
 // ---- 3 + 4. measurements and check-in ------------------------------------------------------
 
-function checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }) {
+const fmtDays = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
+
+function checkinCard(ctx, { ci, today, tz, measurements, checkins, taps, targetDays = null }) {
   const lenUnit = ctx.lengthUnit();
   const editing = ui.forceCheckin && ci.done ? ci.done : null;
   const editingM = editing && editing.measurement_id ? measurements.find((m) => m.id === editing.measurement_id) : null;
@@ -263,7 +267,7 @@ function checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }) {
     return h('div', { class: 'site-row' }, h('span', { class: 'site' }, site.label), el, h('small', { class: 'landmark' }, site.landmark));
   });
 
-  const auto = adherenceFromTaps(taps, today);
+  const auto = adherenceFromTaps(taps, today, 7, { targetDays });
   let adherence = editing ? editing.adherence_pct : auto.pct;
   const adherenceField = stepper({ value: adherence, step: 5, min: 0, max: 100, unit: '%', compact: true, label: 'Adherence this week', placeholder: '90', onChange: (v) => { adherence = v; } });
   const bio = editing ? { ...editing.biofeedback } : {};
@@ -293,7 +297,7 @@ function checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }) {
     }
     const fields = {
       week: isoWeekId(ci.due), due_date: ci.due,
-      adherence_pct: adherence, adherence_auto_pct: auto.pct, adherence_taps: auto.tapped,
+      adherence_pct: adherence, adherence_auto_pct: auto.pct, adherence_taps: auto.tapped, ...(targetDays ? { adherence_on_days: auto.on_days, adherence_target_days: targetDays } : {}),
       biofeedback: { ...bio }, note: note.value.trim() || null, measurement_id: measurementId,
     };
     if (editing) await put(ctx.db, 'checkins', { ...editing, ...fields, updated_utc: now.toISOString() });
@@ -313,9 +317,11 @@ function checkinCard(ctx, { ci, today, tz, measurements, checkins, taps }) {
     h('div', { class: 'field' },
       h('span', { class: 'label' }, 'Adherence this week'),
       adherenceField,
-      h('p', { class: 'muted xsmall', style: 'margin:8px 0 0' }, auto.tapped
-        ? `From ${auto.tapped} of 7 daily “On plan” taps (${auto.pct} %). Edit if it’s off.`
-        : 'No daily “On plan” taps this week: enter your estimate.')),
+      h('p', { class: 'muted xsmall', style: 'margin:8px 0 0' }, !auto.tapped
+        ? 'No daily “On plan” taps this week: enter your estimate.'
+        : targetDays
+          ? `${fmtDays(auto.on_days)} of ${targetDays} on-plan days (${auto.pct} %): ${targetDays} days on plan is a full week; weekends are best effort (Partial counts ½). Edit if it’s off.`
+          : `From ${auto.tapped} of 7 daily “On plan” taps (${auto.pct} %). Edit if it’s off.`)),
     h('div', {}, h('span', { class: 'label' }, 'Biofeedback · 1 = poor, 5 = great'), bioRows),
     note,
     save,

@@ -6,7 +6,8 @@
   "reason": "New lean-gain plan (claude/NUTRITION_PLAN.md rev 4): about 2,375 kcal on lift days, ~100 kcal over the estimated 2,300 maintenance, for +0.1–0.2 %BW a week.",
   "notes": [
     "Weekly changes now move lunch rice ±90 g (≈100 kcal).",
-    "Ignore the first 5–7 days on the scale: carbs and sodium shift water."
+    "Ignore the first 5–7 days on the scale: carbs and sodium shift water.",
+    "Adherence now counts on-plan days against 5: Mon–Fri on plan is 100 %. Tap weekends Partial with your estimate rather than Off, so the calorie math sees them."
   ],
   "plan": {
     "title": "Lean-gain plan",
@@ -226,6 +227,7 @@
       "Protein ~1.0–1.1 g/lb over 5 feedings, 3–5 h apart.",
       "About 75 % of the carbs between lunch and post-workout; pre-workout low in fat and fiber.",
       "No meal over ~650 kcal; 3.5–4 L of fluid, mostly between meals; steady daily sodium."
-    ]
+    ],
+    "adherence_days": 5
   }
 }

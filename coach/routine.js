@@ -18,7 +18,7 @@ import {
 import { mainLiftChanges } from './summary.js';
 import { dailySummary } from './daily.js';
 import { planWeekStart, foodDbOf, withMacros } from './meals.js';
-import { adherenceFromTaps, MODE_LABEL } from './phase.js';
+import { adherenceFromTaps, planAdherenceDays, MODE_LABEL } from './phase.js';
 import {
   baseCardio, nextCardio, rxForWeek, cardioItems, cardioForDay, parseHrZones, parseRunZones, zone2, cardioText,
 } from './cardio.js';
@@ -240,7 +240,7 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
       const checkins = live(log.checkins).filter((c) => c.local_date > addDays(today, -7) && c.local_date <= today).sort((a, b) => (a.local_date < b.local_date ? 1 : -1));
       const ci = checkins[0] || null;
       const taps = live(log.adherence);
-      const adherencePct = ci && Number.isFinite(ci.adherence_pct) ? ci.adherence_pct : adherenceFromTaps(taps, today).pct;
+      const adherencePct = ci && Number.isFinite(ci.adherence_pct) ? ci.adherence_pct : adherenceFromTaps(taps, today, 7, { targetDays: planAdherenceDays(current) }).pct;
       const bio = ci ? Object.values(ci.biofeedback || {}).filter(Number.isFinite) : [];
       const steps = Object.entries(health).filter(([d, h]) => d > addDays(today, -7) && Number.isFinite(h.steps)).map(([, h]) => h.steps);
       const washout = Boolean(current.changes && current.changes.changed && current.source !== 'carry' && daysBetween(current.week_start, today) < 7);

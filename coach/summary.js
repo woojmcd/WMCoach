@@ -74,9 +74,15 @@ export function activeSummaryCheckin(checkins, today, prepDow) {
   return today <= summaryVisibleUntil(latest.local_date, prepDow) ? latest : null;
 }
 
-function adherencePoint(pct) {
+function adherencePoint(pct, days = null) {
   if (pct === null || pct === undefined) {
     return { key: 'adherence', tone: 'warn', title: 'Adherence', text: 'Not logged. Without it nothing else can be judged: tap “On plan” every day.' };
+  }
+  // the lean-gain plan counts on-plan days against 5 (weekends best effort)
+  if (days && Number.isFinite(days.on) && days.target) {
+    const p = adherencePoint(pct);
+    const n = Number.isInteger(days.on) ? days.on : days.on.toFixed(1);
+    return { ...p, text: p.text.replace(`${pct} %`, `${pct} % (${n} of ${days.target} on-plan days)`) };
   }
   if (pct >= 95) return { key: 'adherence', tone: 'good', title: 'Adherence', text: `${pct} %. That’s the foundation, so the numbers below are a fair test of the plan.` };
   if (pct >= ADHERENCE_MIN) return { key: 'adherence', tone: 'good', title: 'Adherence', text: `${pct} %. Over the ${ADHERENCE_MIN} % bar, so the plan got a fair test.` };
@@ -328,7 +334,7 @@ export function weeklySummary({
     observeOnly = Boolean(inForce && inForce.changes && inForce.changes.changed && inForce.source !== 'carry' && daysBetween(inForce.week_start, checkin.local_date) < 7);
   }
   const adh = { pct: checkin.adherence_pct ?? null };
-  const adhPoint = adherencePoint(adh.pct);
+  const adhPoint = adherencePoint(adh.pct, checkin.adherence_target_days ? { on: checkin.adherence_on_days, target: checkin.adherence_target_days } : null);
   const weight = weightPoint({ weighins, period, mode, bands, units, observeOnly });
   const training = trainingPoint({ sessions, program, period, today: today || checkin.local_date });
   const body = bodyPoint({ measurements, checkin, phase, mode, units });

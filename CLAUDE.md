@@ -78,6 +78,7 @@ The new service worker installs in the background and waits. Walter sees "Update
 - A new program starts a new block: `trainingCalendar()` counts weeks/deloads from the program's own first session (`sessions[].program_id`, legacy = `TRAIN-CUT26`); `firstBlock` limits "lifted less since May" easing to the first block. `programStart` (any program) still decides what counts as missed.
 - The travel map (`coach/travel.js`) is Program E's and respects its banned list.
 - Meals: `EXTRA_FOODS` + `foodDbOf()` (plans.json is read-only), `MEAL_ORDER` has Lunch and Evening, `plan.options` (pre-workout A/B/C), `plan.meal_times`, `plan.prep_days`, `plan.weekend`, `plan.carb_lever` (lunch rice ±90 g), `optionStock()`.
+- Adherence: `adherenceFromTaps(taps, end, 7, { targetDays })` with `planAdherenceDays(planRecord)` (lean-gain plan: 5 → on-plan days ÷ 5, capped at 100 %; Partial = ½). Used by the check-in (plan in force today) and the routine's fallback; the check-in stores `adherence_on_days` / `adherence_target_days` for the review text.
 - Coach plans: `data/coach/plans/<week_start>.json`; `dailyRun()` publishes each once (from the eve, after the weekly step), changelog entry with `coach_plan`, "New meal plan" push, `state.coach_plans_applied`.
 
 ## Training (stage 3)
