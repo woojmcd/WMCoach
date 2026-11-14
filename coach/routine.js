@@ -10,7 +10,7 @@ import { trendFromEntries, rateOverDays } from './trend.js';
 import { planDay, trainingCalendar } from './progression.js';
 import { dayForWeekday } from './program.js';
 import { readiness, normalizeHealth, hasRecovery, healthSettled } from './readiness.js';
-import { normalizeFetch, stravaPath, enduranceAddons, cardioByDate } from './strava.js';
+import { normalizeFetch, stravaPath, enduranceAddons, cardioByDate, parseBestEfforts } from './strava.js';
 import { estimateTdee, planKcalByDate, intakeByDate } from './tdee.js';
 import {
   weeklyDecision, observeOnly, nextPlan, firstPlanForMode, planRecord, weeklyNotification, changeText,
@@ -113,7 +113,9 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
   // ---- Strava → data/strava/ (new files only) ----
   const program = J('data/program.json');
   const existing = new Set(repo.list('data/strava/'));
-  const fresh = kind === 'daily' && stravaFetched ? normalizeFetch(stravaFetched) : [];
+  // heart-rate zones first, so each new session's HR stream becomes minutes per zone
+  const zonesNow = (kind === 'daily' && stravaFetched && !Array.isArray(stravaFetched) ? parseHrZones(stravaFetched.zones) : null) || (state.hr_zones ? state.hr_zones.zones : null);
+  const fresh = kind === 'daily' && stravaFetched ? normalizeFetch(stravaFetched, { hrZones: zonesNow }) : [];
   for (const a of fresh) {
     const path = stravaPath(a);
     if (!existing.has(path) && !writes[path]) writes[path] = json(a);
@@ -146,6 +148,9 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
   if (zonesFetched) state.hr_zones = { zones: zonesFetched, updated_local_date: today };
   const runZonesFetched = kind === 'daily' && stravaFetched && !Array.isArray(stravaFetched) ? parseRunZones(stravaFetched.zones) : null;
   if (runZonesFetched) state.run_zones = { zones: runZonesFetched, updated_local_date: today };
+  // running best efforts (get_athlete_best_efforts), kept for the 3-mile pace baseline
+  const bestFetched = kind === 'daily' && stravaFetched && !Array.isArray(stravaFetched) ? parseBestEfforts(stravaFetched.best_efforts) : [];
+  if (bestFetched.length) state.best_efforts = { efforts: bestFetched, updated_local_date: today };
 
   // ---- readiness + today's targets (spec §6.3, §6.2) ----
   const day = program ? dayForWeekday(program, isoWeekday(today)) : null;
@@ -173,7 +178,7 @@ export function dailyRun({ repo, now = new Date(), stravaFetched = null }) {
     date: yesterday, today, program, sessions: live(log.sessions), programStart: cal.programStart, activities,
     stairs: live(log.stairs), health, readiness: r, weighins: [...appWeighins, ...healthWeights], series,
     taps: live(log.adherence), plans: allPlans, rx: rxForWeek(allPlans, yesterday, mode), hr: cardioToday.hr,
-    runZones: state.run_zones ? state.run_zones.zones : null,
+    runZones: state.run_zones ? state.run_zones.zones : null, bestEfforts: state.best_efforts ? state.best_efforts.efforts : [],
     mode, units: settings.units || 'lb', stepFloor: settings.step_floor || 8000,
     todayPlan: { day, planned, deload: cal.deload.isDeload, cardio: cardioToday },
   });

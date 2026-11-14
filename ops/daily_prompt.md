@@ -16,9 +16,12 @@ You are Walter's daily coach run. The routine's saved prompt is one line, "Follo
    - `rerun` true: today's Health file has new numbers since today's run (it arrived late, or was re-synced). Skip step 3 and run step 4 without `--strava`. The script recomputes readiness, targets and the daily summary only (at most 3 times a day).
 3. **Strava** (only when `run` is true). Use the Strava connector:
    - `list_activities` with `range_start` / `range_end` from the preflight and `first: 50`. Follow `end_cursor` while `has_next_page` is true.
-   - For each activity of 20 min or more, except WeightTraining, call `get_activity_performance` (average and max heart rate).
+   - For each activity of 20 min or more, except WeightTraining:
+     - `get_activity_performance` (average and max heart rate);
+     - `get_activity_streams` with `streams: ["time", "heart_rate"]` and `resolution: 300` (the script turns it into minutes per heart-rate zone). Skip it if the activity has no heart rate.
    - Call `get_athlete_zones` once (no arguments). Its heart-rate zone 2 is the cardio target heart rate (spec §6.5); its run pace zones back up the 3-mile pace (spec §6.6).
-   - Save what the tools returned, unedited, as `.coach/strava.json`: `{ "activities": [ …list items… ], "performance": { "<activity id>": { …performance… } }, "zones": { …get_athlete_zones result… } }`. If `get_athlete_zones` fails, leave `zones` out; the script keeps the last known zones.
+   - Call `get_athlete_best_efforts` once with `sports: ["Run"]`, `best_effort_types: ["FastestMile", "Fastest2Mile", "Fastest5k"]`, `years: [<this year>, <last year>]`, `top_n: 1` (the 3-mile pace baseline when there's no recent 3-mile run).
+   - Save what the tools returned, unedited, as `.coach/strava.json`: `{ "activities": [ …list items… ], "performance": { "<activity id>": { …performance… } }, "streams": { "<activity id>": { …streams result… } }, "zones": { …get_athlete_zones result… }, "best_efforts": { …get_athlete_best_efforts result… } }`. If a call fails, leave its key out; the script keeps the last known zones and best efforts.
    - If the Strava tools aren't available in this session, say so in the report and go on without `--strava`. A green run status doesn't prove the connector loaded; the transcript must show the Strava tools.
 4. **Run.** `node scripts/daily.mjs --strava .coach/strava.json` (drop `--strava` if step 3 was skipped).
    - The script prints a short report and either `SKIP` or `COMMIT: <message>`.

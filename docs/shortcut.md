@@ -4,7 +4,13 @@ Each morning this Shortcut does two things:
 1. It copies last night's recovery data from Apple Health into the repo, as `data/health/<date>.json`.
 2. It starts the daily coach run.
 
-It runs on your **first unlocked use of the phone**, not at a fixed early time. iOS blocks Health reads while the iPhone is locked ("Protected health data is inaccessible"), so a 04:30 automation would fail every night (spec §12).
+It runs when you **close the Oura app** in the morning, not at a fixed time. Two things have to be true for a sync to work, and a clock trigger guarantees neither:
+- **The phone is unlocked.** iOS blocks Health reads while the iPhone is locked ("Protected health data is inaccessible").
+- **Oura has sent last night to Apple Health.** It only does that when its app opens and syncs.
+
+What went wrong before (checked 2026-11-14): from 20 Oct to 14 Nov, 10 of the 16 syncs came from the 07:00 clock trigger. On 4 of those 10 mornings Oura hadn't sent the night yet, so the file went up with no sleep. The old step 5 then stopped every later run that day, because "today's file exists". That left only the Sync Health chip, which is why it felt like running it by hand every morning. On the 10 days with no sync at all, the phone was most likely still locked at 07:00 and no other trigger fired.
+
+This version fixes both. It stops early only when today's file already has last night's sleep. It refuses to upload a file without sleep, and tells you to open Oura instead. And it can replace an incomplete file.
 
 **Before you start, have these ready:**
 - **A GitHub token** with *Contents: Read and write* on WMCoach only. The one you made for the app works (`docs/github-sync.md`). A second one named `WMCoach Shortcut` is fine too.
@@ -15,15 +21,20 @@ The tokens live only in this Shortcut and in the app's settings, never in the re
 ## Build the Shortcut
 Shortcuts app → **+** → name it exactly **`WMCoach Health`**. The app's **Sync Health** chip opens it by that name.
 
-**0. Stop if today is already done.** This makes every trigger safe to fire many times a day.
+**0. Stop only if today is already complete.** Every trigger is then safe to fire many times a day, and an incomplete file still gets fixed.
 1. **Format Date**: Current Date, Date Format *Custom* `yyyy-MM-dd`. Rename the result **Today**.
 2. **Format Date**: Current Date, Custom `VV` (gives your time zone, e.g. `America/Los_Angeles`). Rename it **Zone**.
 3. **Get Contents of URL**:
    - URL: `https://api.github.com/repos/woojmcd/WMCoach/contents/data/health/`**Today**`.json`
    - Method **GET**.
    - Headers: `Authorization` = `Bearer <your GitHub token>`, `Accept` = `application/vnd.github+json`.
-4. **Get Dictionary Value**: *Value* for key `sha` in Contents of URL.
-5. **If** Dictionary Value *has any value* → **Stop This Shortcut**. End If.
+4. **Get Dictionary Value**: *Value* for key `sha` in Contents of URL. Rename it **Existing** (it's empty when today has no file yet).
+5. **If** **Existing** *has any value*:
+   - **Get Dictionary Value**: *Value* for key `content` in Contents of URL.
+   - **Base64 Decode** it, then **Get Dictionary from Input**.
+   - **Get Dictionary Value**: *Value* for key `sleep_samples`.
+   - **If** it *has any value* → **Stop This Shortcut** (today's file already has last night). **End If**.
+   - **End If**.
 
 **1. Read Health.** Allow each type when iOS asks the first time.
 
@@ -44,6 +55,10 @@ The **"in the last 1 day"** filter counts from midnight at the start of *yesterd
      - **Text**: `Repeat Item`'s **Start Date**, then `|`, then `Repeat Item`'s **End Date**, then `|`, then `Repeat Item`'s **Value**. To pick each one, tap the Repeat Item variable and choose the property; for both dates set **Date Format** to **ISO 8601**. One line looks like `2026-10-20T00:23:30-07:00|2026-10-20T07:46:30-07:00|In Bed`.
      - **Add to Variable**: name it **Sleep Rows**.
    - **End Repeat.** Then **Combine Text**: **Sleep Rows**, with **New Lines**. Rename the result **Sleep Samples**.
+   - **No night yet? Don't upload.** Right after the Find Health Samples above, add **Count** (Items) of Health Samples, then **If** Count *is* 0:
+     - **Show Notification**: "Last night isn't in Apple Health yet. Open Oura, let it sync, then close it."
+     - **Stop This Shortcut**. **End If**.
+     - (Put this before the Repeat.) A file without sleep was the root of the old trouble. The next Oura-close runs the Shortcut again.
 8. **Heart rate samples.** Resting HR is the lowest heart rate *inside the night*, like Oura's "lowest heart rate".
    - **Find Health Samples** where (all): *Type is Heart Rate*, *Source is Oura*, *Start Date is after* **Sleep Window**. **Limit off.** With a limit on, it sees only the latest readings. That's the likely reason the old step sent 61–87 for nights whose lowest was 52–58.
    - **Repeat with Each**: **Text** = `Repeat Item`'s **Start Date** (ISO 8601), `|`, `Repeat Item`'s **Value**. **Add to Variable** **HR Rows**.
@@ -72,14 +87,14 @@ The **"in the last 1 day"** filter counts from midnight at the start of *yesterd
 
 **3. Commit it to GitHub.**
 
-13. **Get Contents of URL**:
-    - URL: the same address as step 3.
-    - Method **PUT**.
-    - Headers: the same as step 3.
-    - Request Body **JSON**:
+13. **If** **Existing** *has any value* (today's file is there but incomplete: replace it):
+    - **Get Contents of URL**: URL the same as step 3, Method **PUT**, Headers the same as step 3, Request Body **JSON**:
       - `message` (Text) = `health ` + Today
       - `content` (Text) = Base64 Encoded
       - `branch` (Text) = `main`
+      - `sha` (Text) = **Existing** (GitHub only replaces a file when it gets this ID)
+    - **Otherwise** (no file yet): the same **Get Contents of URL**, without the `sha` field.
+    - **End If**.
 
 **4. Start the coach run.**
 
@@ -97,31 +112,33 @@ Tap ▶︎ once to test. Then check two things:
 - `data/health/<today>.json` appears in the repo.
 - A new `coach-daily` run starts at claude.ai/code/routines.
 
-A second tap should stop at step 5.
+A second tap should stop at step 5 (today's file already has sleep).
 
 ## The Resync copy: "WMCoach Health Resync"
-The morning Shortcut stops once today's file exists. That's on purpose, so every trigger is safe. But an early sync can arrive before Oura has written last night. For that, keep a second copy that overwrites today's file:
-1. Long-press **WMCoach Health** → **Duplicate**. Rename the copy exactly **`WMCoach Health Resync`**.
-2. In the copy, delete step 5 (the **If**, **Stop This Shortcut** and **End If**). Keep steps 3 and 4.
-3. In the copy's step 13 (the PUT), add a fourth Request Body field: `sha` (Text) = the **Dictionary Value** variable from step 4. GitHub only replaces an existing file when it gets that ID.
+The app's **Sync Health** chip opens this copy when today's file exists. It forces a fresh upload, for example after Oura has revised last night.
+1. Delete the old **WMCoach Health Resync**.
+2. Long-press the new **WMCoach Health** → **Duplicate**. Rename the copy exactly **`WMCoach Health Resync`**.
+3. In the copy, delete the inner **If** in step 5 (the one that stops when `sleep_samples` has a value). Keep everything else; step 13 already replaces the file.
 
-When today's file is missing or has no sleep or heart-rate data, the app shows a **Sync Health** chip on the Log and Body tabs. It opens the Resync copy when today's file exists, and the main Shortcut when it doesn't. A re-sync with new numbers makes the next coach run redo today's readiness, targets and daily summary, up to 3 times a day.
-
-After changing the morning Shortcut, delete the old **WMCoach Health Resync** and make it again from the new one (the three steps above), so both send the samples.
+A re-sync with new numbers makes the next coach run redo today's readiness, targets and daily summary, up to 3 times a day.
 
 ## Triggers
-Shortcuts → **Automation** → **+** → **Create Personal Automation**. Set every automation to **Run Immediately** and turn **Notify When Run** off.
+Shortcuts → **Automation** → **+** → **Create Personal Automation**. On every automation:
+- Choose **Run Immediately**, not **Run After Confirmation**. With "after confirmation", iOS shows a notification you have to tap, so it feels like running it by hand.
+- Turn **Notify When Run** off.
 
 | Trigger | Set up | Why |
 |---|---|---|
-| **App → Oura → Is Closed** | Oura only. Best one. | Checking Oura makes it send last night to Health; closing it is the moment the data is there. |
-| **App → Is Opened** | Pick 1–3 apps you open every morning (e.g. Messages, Mail, Strava). | The phone is unlocked by definition, so this is the reliable one. Step 0 makes repeats harmless. |
-| **Time of Day** | Daily, about 07:15 (just after you're usually up). | A second chance. It works only if the phone happens to be unlocked; when it fails, nothing breaks. |
-| **Manual** | Nothing to set up. | When today's file is missing, the app's Log and Body tabs show a **Sync Health** chip that runs this Shortcut. |
+| **App → Oura → Is Closed** | Oura only. **The main one.** | Checking Oura makes it send last night to Health, and closing it is the moment the data is there. The phone is unlocked by definition. |
+| **App → Is Opened** | 1–2 apps you open every morning after Oura (e.g. Messages, Strava). | A backup. Step 0 makes repeats harmless, and an early run without sleep just says "open Oura". |
+| **Time of Day** | Optional, about 09:00. Delete the 07:00 one. | Works only if the phone happens to be unlocked. At 07:00 Oura rarely had last night in Health yet. |
+| **Manual** | Nothing to set up. | When today's file is missing or incomplete, the app's Log and Body tabs show **Sync Health**. |
 
 ## When something's off
 - **The Sync Health chip stays:** open Oura so it syncs last night to Health, then tap the chip (or run the Resync copy). If step 13 fails, the GitHub token has expired: make a new one and paste it in steps 3 and 13 of both Shortcuts.
 - **Sleep reads about double (e.g. 14 h):** the old In Bed − Awake sums counted a night Oura had written twice. Steps 7–8 above fix it; until then the coach ignores any sleep over 12 h and shows the **Sync Health** chip.
 - **No sleep, odd resting HR:** Oura hadn't sent the night to Health yet. Open Oura, wait for it to sync, then tap **Sync Health**.
-- **"Protected health data is inaccessible":** the phone was locked. The App-opened trigger covers it.
+- **"Protected health data is inaccessible":** the phone was locked. The Oura-closed trigger covers it.
+- **It still asks before running:** open the automation and switch it to **Run Immediately**.
+- **"Last night isn't in Apple Health yet":** open Oura, wait for the sync to finish, then close it.
 - **Travel:** nothing to change. The Shortcut uses the phone's clock and zone, so it runs in your morning wherever you are.
