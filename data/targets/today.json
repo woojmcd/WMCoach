@@ -2,20 +2,27 @@
   "schema_version": 1,
   "local_date": "2026-11-14",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-11-14T17:08:58.315Z",
+  "generated_utc": "2026-11-14T19:37:49.228Z",
   "readiness": {
     "status": "green",
     "flags": [],
-    "reason": "no recovery data",
-    "missing": true,
-    "travel": null
+    "reason": "recovery normal",
+    "missing": false,
+    "travel": null,
+    "hrv_ms": null,
+    "resting_hr": 60,
+    "sleep_h": 6.65,
+    "baseline": {
+      "hrv_ms": null,
+      "resting_hr": null
+    }
   },
   "day": {
     "dow": 6,
     "name": "Open: cardio / social",
     "rest_day": true
   },
-  "program_week": 5,
+  "program_week": 0,
   "deload": {
     "active": false,
     "reason": null
@@ -92,9 +99,9 @@
     "points": [
       {
         "key": "recovery",
-        "tone": "warn",
-        "title": "Recovery",
-        "text": "No recovery data from this morning’s Health sync. If the chip shows on the Log tab, tap Sync Health."
+        "tone": "good",
+        "title": "Last night",
+        "text": "6.7 h sleep, a bit short of 7. Resting HR 60 (your average builds over the first few nights). 3,673 steps yesterday. Readiness green."
       },
       {
         "key": "weight",
@@ -112,7 +119,7 @@
         "key": "cardio",
         "tone": "info",
         "title": "Cardio",
-        "text": "Nothing prescribed or done. 3-mile pace today: steady, 8:58–9:18/mi (about 27:24). Readiness not in yet. Baseline 9:08/mi from your last 5 3-mile runs."
+        "text": "Nothing prescribed or done. 3-mile pace today: steady, 8:58–9:18/mi (about 27:24). Readiness green. Baseline 9:08/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",
