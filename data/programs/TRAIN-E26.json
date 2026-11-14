@@ -1,0 +1,922 @@
+{
+  "id": "TRAIN-E26",
+  "name": "Program E",
+  "title": "Functional bodybuilding hybrid",
+  "source": "claude/PROGRAM_E.md (approved 2026-11-14)",
+  "rules": [
+    "Exhale through the hard part: no breath-hold, no belt. The set ends at any waistband or groin pinch.",
+    "Squats stay at or under 225 lb at the top, 6+ reps, 3 in reserve. No maxes, no grinding.",
+    "Ribs down, pelvis neutral: no rep finishes in a low-back arch.",
+    "Pull beats push: every upper day opens with a primer."
+  ],
+  "stop_rule": "A bulge that won’t go back in, or sharp or worsening pain: stop and call your surgeon the same day.",
+  "days": [
+    {
+      "day": "Mon",
+      "name": "Push A",
+      "focus": "Side delts + upper-chest press",
+      "est_min": 60,
+      "exercises": [
+        {
+          "name": "Rope Face Pulls",
+          "sets": 2,
+          "type": "fixed",
+          "scheme": {
+            "kind": "fixed",
+            "reps": 15
+          },
+          "rir": [
+            3,
+            3
+          ],
+          "rest_s": 60,
+          "equipment": "cable",
+          "muscle": "rear_delts",
+          "alternates": [
+            "Band Pull-Aparts"
+          ],
+          "cue": "Primer: finish rotated out (thumbs back), 2 s squeeze. 2-0-1-2."
+        },
+        {
+          "name": "Single Cable Lateral Raise",
+          "sets": 4,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15,
+            "per_side": true
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "side_delts",
+          "alternates": [
+            "Machine Lateral Raise"
+          ],
+          "cue": "Lean away; raise about 30° in front of the body. 2-0-1-1."
+        },
+        {
+          "name": "Low-Incline DB Press",
+          "sets": 3,
+          "type": "top_backoff",
+          "scheme": {
+            "kind": "top_backoff",
+            "top_sets": 2,
+            "min": 8,
+            "max": 10,
+            "backoff": {
+              "sets": 1,
+              "min": 12,
+              "max": 12,
+              "load_factor": 0.7,
+              "rir": [
+                0,
+                1
+              ]
+            }
+          },
+          "rir": [
+            1,
+            2
+          ],
+          "rest_s": 120,
+          "equipment": "dumbbell",
+          "muscle": "chest",
+          "main_lift": true,
+          "alternates": [
+            "Plate-Loaded Incline Press"
+          ],
+          "cue": "15–30° bench. Kick-up: DBs on thighs, exhale as you rock back. Stop each rep at the shoulder line. 3-1-1-0."
+        },
+        {
+          "name": "Pec Deck Flyes",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "machine",
+          "muscle": "chest",
+          "alternates": [
+            "Single-Arm Cable Fly"
+          ],
+          "cue": "Stop at the shoulder line: no deep stretch. 3-0-1-1."
+        },
+        {
+          "name": "Seated Lateral DB Raises",
+          "sets": 3,
+          "type": "superset_lead",
+          "scheme": {
+            "kind": "fixed",
+            "reps": 10
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "equipment": "dumbbell",
+          "muscle": "side_delts",
+          "group": "Mon-A",
+          "cue": "Same dumbbells for the standing set."
+        },
+        {
+          "name": "Standing Lateral DB Raises",
+          "sets": 3,
+          "type": "superset_same_weight",
+          "scheme": {
+            "kind": "amrap"
+          },
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "equipment": "dumbbell",
+          "muscle": "side_delts",
+          "group": "Mon-A"
+        },
+        {
+          "name": "Rope Pushdowns",
+          "sets": 3,
+          "type": "superset_lead",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "equipment": "cable",
+          "muscle": "triceps",
+          "group": "Mon-B",
+          "cue": "Same weight for the straight bar."
+        },
+        {
+          "name": "Straight-Bar Pushdowns",
+          "sets": 3,
+          "type": "superset_same_weight",
+          "scheme": {
+            "kind": "amrap"
+          },
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "triceps",
+          "group": "Mon-B"
+        },
+        {
+          "name": "Hanging Knee Raises",
+          "sets": 3,
+          "type": "amrap",
+          "scheme": {
+            "kind": "amrap",
+            "add_load_at": 15
+          },
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 15,
+          "equipment": "bodyweight",
+          "muscle": "abs",
+          "group": "Mon-C",
+          "alternates": [
+            "Bench Reverse Crunch"
+          ],
+          "cue": "Strict: curl the pelvis up, never swing. 8–15 reps; once 3 × 15 is clean, hold a DB between the feet."
+        },
+        {
+          "name": "Machine Hip Abduction",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 15,
+            "max": 20
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "machine",
+          "muscle": "abductors",
+          "group": "Mon-C",
+          "cue": "Second weekly abductor hit."
+        }
+      ]
+    },
+    {
+      "day": "Tue",
+      "name": "Pull A",
+      "focus": "Traps + upper-back thickness",
+      "est_min": 58,
+      "exercises": [
+        {
+          "name": "Chest-Supported Machine Row",
+          "sets": 4,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "rir": [
+            1,
+            2
+          ],
+          "rest_s": 90,
+          "equipment": "machine",
+          "muscle": "upper_back",
+          "main_lift": true,
+          "alternates": [
+            "Chest-Supported T-Bar Row"
+          ],
+          "cue": "Neutral grip, chest on the pad. 2 s squeeze at the top. 2-0-1-2."
+        },
+        {
+          "name": "Neutral-Grip Pulldown",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "lats",
+          "alternates": [
+            "Single Arm Cable Pulldowns"
+          ],
+          "cue": "Start each rep by pulling the shoulder blades down. No stretch at the top. 2-0-1-1."
+        },
+        {
+          "name": "Seated DB Shrugs",
+          "sets": 4,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "dumbbell",
+          "muscle": "traps",
+          "alternates": [
+            "Machine Shrug"
+          ],
+          "cue": "Seated, back against the bench. 2 s hold at the top, no bouncing. 1-0-1-2."
+        },
+        {
+          "name": "Wide-Grip Cable Rows",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "upper_back",
+          "alternates": [
+            "Wide High-Row Machine"
+          ],
+          "cue": "Pull to the upper chest, elbows about 75°. Upright torso, no swing."
+        },
+        {
+          "name": "Prone Incline Y-Raises",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "equipment": "dumbbell",
+          "muscle": "lower_traps",
+          "group": "Tue-A",
+          "alternates": [
+            "Cable Y-Raises"
+          ],
+          "cue": "Chest on an incline bench, thumbs up."
+        },
+        {
+          "name": "Kneeling Cable Crunches",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "abs",
+          "group": "Tue-A",
+          "alternates": [
+            "Plate-Weighted Floor Crunch"
+          ],
+          "cue": "Light ab day: add load at 15. Curl the spine toward the pelvis, exhale."
+        },
+        {
+          "name": "Reverse Pec Deck Flyes",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "machine",
+          "muscle": "rear_delts",
+          "alternates": [
+            "Single-Arm Reverse Cable Fly"
+          ],
+          "cue": "2-0-1-1."
+        },
+        {
+          "name": "Reverse Cable Curls",
+          "sets": 3,
+          "type": "superset_lead",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "equipment": "cable",
+          "muscle": "forearms",
+          "group": "Tue-B",
+          "cue": "Elbows pinned, no hip drive. Same weight for the bar curls."
+        },
+        {
+          "name": "Cable Bar Curls",
+          "sets": 3,
+          "type": "superset_same_weight",
+          "scheme": {
+            "kind": "amrap"
+          },
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "biceps",
+          "group": "Tue-B"
+        }
+      ]
+    },
+    {
+      "day": "Wed",
+      "name": "Legs and abs",
+      "focus": "Outer quad + abductors",
+      "est_min": 60,
+      "exercises": [
+        {
+          "name": "Machine Hip Abduction",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "machine",
+          "muscle": "abductors",
+          "cue": "Lean the torso forward (upper glute). Last set: add partials. 2-0-1-1."
+        },
+        {
+          "name": "Close-Stance Chain Squat",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "rir": [
+            3,
+            3
+          ],
+          "rest_s": 120,
+          "equipment": "barbell",
+          "muscle": "quads",
+          "max_load_lb": 225,
+          "alternates": [
+            "Heel-Elevated KB Goblet Squat"
+          ],
+          "cue": "Knees over toes. No more than 225 lb at the top, 3 reps in reserve: never ground out. Exhale through the hard part: no breath-hold, no belt. Stop the set at any waistband or groin pinch. 3-0-1-0."
+        },
+        {
+          "name": "Leg Press (feet low, narrow)",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "rir": [
+            1,
+            2
+          ],
+          "rest_s": 120,
+          "equipment": "machine",
+          "muscle": "quads",
+          "main_lift": true,
+          "alternates": [
+            "Single Leg Press"
+          ],
+          "cue": "Feet low and narrow, deep knee bend. Waistband pinch → switch to single-leg. 3-1-1-0."
+        },
+        {
+          "name": "Leg Extensions",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "machine",
+          "muscle": "quads",
+          "cue": "Last set: rest-pause, 2 mini-sets 15 s apart. 2-0-1-1."
+        },
+        {
+          "name": "Seated Hamstring Curls",
+          "sets": 3,
+          "type": "top_backoff",
+          "scheme": {
+            "kind": "top_backoff",
+            "top_sets": 2,
+            "min": 8,
+            "max": 10,
+            "backoff": {
+              "sets": 1,
+              "min": 12,
+              "max": 15,
+              "load_factor": 0.7,
+              "rir": [
+                0,
+                1
+              ]
+            }
+          },
+          "rir": [
+            1,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "machine",
+          "muscle": "hamstrings",
+          "alternates": [
+            "Lying Leg Curl"
+          ],
+          "cue": "3-0-1-1."
+        },
+        {
+          "name": "Standing Cable Hip Abduction",
+          "sets": 4,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15,
+            "per_side": true
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "equipment": "cable",
+          "muscle": "abductors",
+          "group": "Wed-A"
+        },
+        {
+          "name": "Heavy Cable Crunches",
+          "sets": 4,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 12
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "abs",
+          "group": "Wed-A",
+          "cue": "Heavy ab day: add load at 12. Full spinal curl, forceful exhale."
+        }
+      ]
+    },
+    {
+      "day": "Thu",
+      "name": "Push B",
+      "focus": "Side delts + traps",
+      "est_min": 58,
+      "exercises": [
+        {
+          "name": "Rope Face Pulls",
+          "sets": 2,
+          "type": "fixed",
+          "scheme": {
+            "kind": "fixed",
+            "reps": 15
+          },
+          "rir": [
+            3,
+            3
+          ],
+          "rest_s": 60,
+          "equipment": "cable",
+          "muscle": "rear_delts",
+          "alternates": [
+            "Band Pull-Aparts"
+          ],
+          "cue": "Primer before pressing."
+        },
+        {
+          "name": "Seated Lateral DB Raises",
+          "sets": 4,
+          "type": "superset_lead",
+          "scheme": {
+            "kind": "fixed",
+            "reps": 10
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "equipment": "dumbbell",
+          "muscle": "side_delts",
+          "group": "Thu-A",
+          "cue": "Same dumbbells for the standing set."
+        },
+        {
+          "name": "Standing Lateral DB Raises",
+          "sets": 4,
+          "type": "superset_same_weight",
+          "scheme": {
+            "kind": "amrap",
+            "partials": "5+"
+          },
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "equipment": "dumbbell",
+          "muscle": "side_delts",
+          "group": "Thu-A",
+          "cue": "To failure, then 5+ partials."
+        },
+        {
+          "name": "Converging Machine Chest Press",
+          "sets": 3,
+          "type": "top_backoff",
+          "scheme": {
+            "kind": "top_backoff",
+            "top_sets": 2,
+            "min": 8,
+            "max": 10,
+            "backoff": {
+              "sets": 1,
+              "amrap": true,
+              "load_factor": 0.7,
+              "rir": [
+                0,
+                0
+              ]
+            }
+          },
+          "rir": [
+            1,
+            2
+          ],
+          "rest_s": 120,
+          "equipment": "machine",
+          "muscle": "chest",
+          "main_lift": true,
+          "alternates": [
+            "Flat DB Bench"
+          ],
+          "cue": "Back pad, no unrack: work hard with no brace. 3-1-1-0."
+        },
+        {
+          "name": "Pec Deck Flyes",
+          "sets": 2,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "machine",
+          "muscle": "chest",
+          "cue": "Stop at the shoulder line."
+        },
+        {
+          "name": "Cable Y-Raises",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "lower_traps",
+          "alternates": [
+            "Prone Incline Y-Raises"
+          ],
+          "cue": "2-0-1-1."
+        },
+        {
+          "name": "Cable Shrugs",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "traps",
+          "alternates": [
+            "DB Shrugs"
+          ],
+          "cue": "Low pulley, bar. 2 s hold at the top. 1-0-1-2."
+        },
+        {
+          "name": "Single Arm Cable Pushdowns",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12,
+            "per_side": true
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "equipment": "cable",
+          "muscle": "triceps",
+          "group": "Thu-B"
+        },
+        {
+          "name": "Incline DB Skullcrushers",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "dumbbell",
+          "muscle": "triceps",
+          "group": "Thu-B",
+          "cue": "Stretch the long head without going fully overhead."
+        }
+      ]
+    },
+    {
+      "day": "Fri",
+      "name": "Pull B",
+      "focus": "Lats + carries + obliques",
+      "est_min": 58,
+      "exercises": [
+        {
+          "name": "Single Arm Cable Pulldowns",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12,
+            "per_side": true
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "lats",
+          "alternates": [
+            "Neutral-Grip Pulldown"
+          ],
+          "cue": "Half-kneeling, glute squeezed. Drive the elbow down into your side. 2-0-1-1."
+        },
+        {
+          "name": "Single Arm DB Rows",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10,
+            "per_side": true
+          },
+          "rir": [
+            1,
+            2
+          ],
+          "rest_s": 90,
+          "equipment": "dumbbell",
+          "muscle": "lats",
+          "main_lift": true,
+          "alternates": [
+            "Single-Arm Machine Row"
+          ],
+          "cue": "Hand and knee on the bench. Start the DB from the bench, not the floor."
+        },
+        {
+          "name": "Chest-Supported Wide-Grip Rows",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "machine",
+          "muscle": "upper_back",
+          "alternates": [
+            "Incline DB Rows"
+          ],
+          "cue": "Elbows about 75°, 2 s squeeze. 2-0-1-2."
+        },
+        {
+          "name": "Single Cable Lateral Raise",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 12,
+            "max": 15,
+            "per_side": true
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 90,
+          "equipment": "cable",
+          "muscle": "side_delts",
+          "cue": "Third side-delt day."
+        },
+        {
+          "name": "Incline DB Curls",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 8,
+            "max": 10
+          },
+          "rir": [
+            0,
+            0
+          ],
+          "rest_s": 90,
+          "equipment": "dumbbell",
+          "muscle": "biceps",
+          "cue": "To failure. 3-0-1-1."
+        },
+        {
+          "name": "Cable Woodchops (high to low)",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 10,
+            "max": 12,
+            "per_side": true
+          },
+          "rir": [
+            0,
+            1
+          ],
+          "rest_s": 15,
+          "equipment": "cable",
+          "muscle": "obliques",
+          "group": "Fri-A",
+          "cue": "Add load at 12 each side."
+        },
+        {
+          "name": "KB Suitcase Carry",
+          "sets": 3,
+          "type": "range",
+          "scheme": {
+            "kind": "range",
+            "min": 30,
+            "max": 40,
+            "per_side": true,
+            "unit": "m"
+          },
+          "rir": null,
+          "rest_s": 90,
+          "equipment": "kettlebell",
+          "muscle": "traps",
+          "group": "Fri-A",
+          "cue": "Heaviest you can carry with zero waistband pinch. Walk tall, ribs down, breathe the whole way."
+        }
+      ]
+    }
+  ]
+}

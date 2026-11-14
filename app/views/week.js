@@ -31,6 +31,10 @@ export async function render(screen, ctx) {
   const dayOf = (date) => (ctx.program ? dayForWeekday(ctx.program, isoWeekday(date)) : null);
   const todayDay = dayOf(today);
   const sessionsOn = (date) => training.sessions.filter((x) => x.local_date === date);
+  // this day's workout done on another day this week ("Lift today instead" / "Switch workout")
+  const movedFor = (date) => (sessionsOn(date).length ? null
+    : training.sessions.find((x) => x.local_date !== date && dates.includes(x.local_date) && x.day_dow === isoWeekday(date) && x.status !== 'draft'
+      && !sessionsOn(x.local_date).some((y) => y !== x && y.day_dow === isoWeekday(x.local_date))) || null);
   const stairsOn = (date) => training.stairs.filter((x) => x.local_date === date).pop() || null;
 
   const cardioLine = (date) => {
@@ -60,6 +64,11 @@ export async function render(screen, ctx) {
       openSheet({ title: `${title} · Open day`, subtitle: stairs && !cardioLine(date) ? `Stairs ${stairs.minutes} min logged.` : OPEN_DAY, body: sheetBody(date, cardioLine(date)), actions: [{ label: 'Close', kind: 'outline' }] });
       return;
     }
+    const moved = movedFor(date);
+    if (moved) {
+      openSheet({ title: `${title} · ${day.name}`, subtitle: `Done ${WEEKDAYS[isoWeekday(moved.local_date) - 1]} ${formatDayMonth(moved.local_date)} instead.`, body: sheetBody(date, cardioLine(date), sessionList(moved, ctx.program)), actions: [{ label: 'Close', kind: 'outline' }] });
+      return;
+    }
     if (date < today) {
       openSheet({ title: `${title} · ${day.name}`, subtitle: 'No session logged.', body: sheetBody(date, cardioLine(date)), actions: [{ label: 'Close', kind: 'outline' }] });
       return;
@@ -76,7 +85,7 @@ export async function render(screen, ctx) {
   const strip = h('div', { class: 'weekstrip', role: 'group', 'aria-label': 'This week' },
     dates.map((d) => {
       const day = dayOf(d);
-      const done = sessionsOn(d).length > 0 || stairsOn(d) || (training.cardio && training.cardio.week.items.some((i) => i.local_date === d));
+      const done = sessionsOn(d).length > 0 || movedFor(d) || stairsOn(d) || (training.cardio && training.cardio.week.items.some((i) => i.local_date === d));
       const cls = [d === today ? 'today' : '', d < today ? 'past' : ''].filter(Boolean).join(' ');
       return h('button', {
         type: 'button', class: cls, 'aria-current': d === today ? 'date' : null,
@@ -94,7 +103,9 @@ export async function render(screen, ctx) {
     if (logged.length) {
       const sx = logged[logged.length - 1];
       const p = progressCount(sx);
-      meta = sx.status === 'finished' ? `Done · ${p.done} sets${sx.day_dow !== isoWeekday(d) ? ` · did ${sx.day_name}` : ''}` : `In progress · ${p.done} of ${p.total} sets`;
+      meta = sx.status === 'finished' ? `Done · ${p.done} sets${sx.travel ? ' · travel' : ''}${sx.day_dow !== isoWeekday(d) ? ` · did ${sx.day_name}` : ''}` : `In progress · ${p.done} of ${p.total} sets`;
+    } else if (day && day.exercises.length && movedFor(d)) {
+      meta = `Moved · done ${WEEKDAYS[isoWeekday(movedFor(d).local_date) - 1]}`;
     } else if (day && day.exercises.length) {
       meta = `${day.exercises.length} exercises${day.est_min ? ` · ~${day.est_min} min` : ''}`;
     } else {
@@ -107,7 +118,7 @@ export async function render(screen, ctx) {
       h('span', { class: 'when' }, WEEKDAYS[isoWeekday(d) - 1]),
       h('span', { class: 'grow' }, h('div', { class: 'name' }, day ? day.name : '—'), h('div', { class: 'meta' }, meta), cm ? h('div', { class: `meta cardio ${cm.state}` }, cm.text) : null,
         lm ? h('div', { class: `meta daylog${lm.complete ? '' : ' missing'}` }, lm.text) : null),
-      logged.length && logged[logged.length - 1].status === 'finished' ? h('span', { class: 'accent' }, icon('check', { size: 18 })) : null);
+      (logged.length && logged[logged.length - 1].status === 'finished') || (!logged.length && movedFor(d)) ? h('span', { class: 'accent' }, icon('check', { size: 18 })) : null);
   }));
 
   const s = ctx.settings;

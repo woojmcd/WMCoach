@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { weeklySummary, summaryVisibleUntil, activeSummaryCheckin, summaryPeriod } from '../../coach/summary.js';
 import { addDays } from '../../coach/time.js';
 
-const program = JSON.parse(readFileSync(new URL('../../data/program.json', import.meta.url), 'utf8'));
+const program = JSON.parse(readFileSync(new URL('../fixtures/program-c.json', import.meta.url) /* Program C, frozen: these tests use its lifts */, 'utf8'));
 const bands = { cut: { target: [-0.75, -0.5], slow_limit: -0.4, cap: -1.0 }, bulk: { target: [0.1, 0.2], cap: 0.35 }, maintenance: { target: [-0.1, 0.1] } };
 const CHECKIN = '2026-10-16'; // Friday
 
@@ -107,6 +107,23 @@ test('missed sessions and strength down on 3+ main lifts', () => {
   assert.match(t.text, /^4 of 5 sessions\. Missed Thu \(Upper Push #2\)\./);
   assert.match(t.text, /Down: .*70×10 → 70×7/);
   assert.match(s.headline, /Strength dropped on \d main lifts/);
+});
+
+test('a workout moved to another day in the window counts as done (Walter, 2026-10-20)', () => {
+  // check-in Tue 20 Oct: Wed legs, Thu push, Fri's Upper Pull #2 done Sat with "Lift today instead", Mon push
+  const all = sessions('2026-10-05', '2026-10-19').map((x) => ({ ...x, day_dow: ((new Date(`${x.local_date}T12:00:00Z`).getUTCDay() + 6) % 7) + 1 }));
+  const fri = all.find((x) => x.local_date === '2026-10-16');
+  const ss = [...all.filter((x) => x !== fri), { ...fri, id: 's-moved', local_date: '2026-10-17' }];
+  const day = '2026-10-20';
+  const s = weeklySummary(base({ sessions: ss, checkin: { ...goodCheckin, local_date: day }, today: day, weighins: weighins('2026-09-25', day, 0.15) }));
+  const t = s.points.find((p) => p.key === 'training');
+  assert.match(t.text, /^4 of 4 sessions\. Moved: Upper Pull #2 to Sat\./);
+  assert.doesNotMatch(t.text, /Missed/);
+  assert.notEqual(t.tone, 'warn');
+  // Fri did a different workout (Push #1 again): that day still counts as trained
+  const swapped = [...all.filter((x) => x !== fri), { ...all.find((x) => x.local_date === '2026-10-19'), id: 's-dup', local_date: '2026-10-16' }];
+  const s2 = weeklySummary(base({ sessions: swapped, checkin: { ...goodCheckin, local_date: day }, today: day, weighins: weighins('2026-09-25', day, 0.15) }));
+  assert.match(s2.points.find((p) => p.key === 'training').text, /^4 of 4 sessions\. Up/, 'something was done that day');
 });
 
 test('calibration week: baselines, not progress', () => {

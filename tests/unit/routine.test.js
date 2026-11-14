@@ -28,6 +28,7 @@ const at = (date) => new Date(`${date}T15:00:00Z`); // 08:00 in Los Angeles
 function phone({ settings = {}, weight = () => 175, until = '2026-11-08' } = {}) {
   const files = {};
   for (const p of ['data/program.json', 'data/plans.json', 'data/weight_daily.csv', 'data/metabolic_profile.json']) files[p] = disk(p);
+  files['data/program.json'] = disk('tests/fixtures/program-c.json'); // Program C, frozen: these tests use its lifts
   // a freshly seeded model (the committed one is the live routine's by now)
   const profile = JSON.parse(disk('data/metabolic_profile.json'));
   files['data/model/state.json'] = `${JSON.stringify(seedModelState(profile, { weighins: historyWeighins(parseWeightCsv(disk('data/weight_daily.csv'))), phases: historyPhases(profile), generatedUtc: '2026-10-09T16:00:00Z' }), null, 2)}\n`;
@@ -143,6 +144,24 @@ test('Health re-syncs (Walter, 2026-10-13): an empty file counts as missing; new
   assert.equal(run(repo, '2026-10-14').status, 'skip', 'three reruns a day at most');
 });
 
+test('a double-counted night (14.3 h) is ignored and flagged; the Resync\'s real number reruns the day', () => {
+  const repo = phone();
+  for (let i = 1; i <= 7; i += 1) repo.files[`data/health/${addDays('2026-10-14', -i)}.json`] = JSON.stringify({ resting_hr: 62, sleep_h: 7.2 });
+  repo.files['data/health/2026-10-14.json'] = JSON.stringify({ hrv_ms: '', resting_hr: '61', sleep_h: '14.325', steps: '8943' });
+  run(repo, '2026-10-14');
+  let t = J(repo, 'data/targets/today.json');
+  assert.equal(t.readiness.sleep_h, null);
+  assert.equal(J(repo, 'data/model/state.json').health_missing_on, '2026-10-14');
+  const rec = t.daily.points.find((p) => p.key === 'recovery');
+  assert.equal(rec.tone, 'warn');
+  assert.match(rec.text, /^Sleep read 14\.3 h, which means the sync ran while Oura was still writing the night: run WMCoach Health Resync\./);
+  assert.doesNotMatch(t.daily.headline, /14\.3 h/);
+  repo.files['data/health/2026-10-14.json'] = JSON.stringify({ hrv_ms: '', resting_hr: '61', sleep_h: '7.175', steps: '8943' });
+  assert.equal(run(repo, '2026-10-14').status, 'rerun');
+  t = J(repo, 'data/targets/today.json');
+  assert.match(t.daily.points.find((p) => p.key === 'recovery').text, /^7\.2 h sleep\./);
+});
+
 test('daily summary: yesterday reviewed in today\'s targets, with today\'s focus', () => {
   const repo = phone();
   run(repo, '2026-10-12');
@@ -182,6 +201,40 @@ test('weekly step on Saturday, swap on Sunday; observe-only start, then the firs
   assert.equal(st.last_weekly_run_week, '2026-11-01');
   assert.equal(st.tdee.method, 'blend');
   assert.ok(st.tdee.estimate_kcal > 2100 && st.tdee.estimate_kcal < 2900, `${st.tdee.estimate_kcal}`);
+});
+
+test('a coach plan (data/coach/plans/) replaces the published plan for its week, once, and the next weekly step builds on it', () => {
+  const repo = phone();
+  const cp = JSON.parse(disk('data/coach/plans/2026-11-15.json'));
+  repo.files['data/coach/plans/2026-10-25.json'] = JSON.stringify({ ...cp, id: 'DENSITY-2026-10-25', week_start: '2026-10-25' });
+  const notes = {};
+  for (let d = '2026-10-10'; d <= '2026-11-07'; d = addDays(d, 1)) {
+    const r = run(repo, d);
+    if (r.notifications.length) notes[d] = r.notifications.map((n) => n.title);
+    if (d === '2026-10-23') assert.notEqual((J(repo, 'data/plan/next.json') || {}).id, 'DENSITY-2026-10-25', 'not before the eve');
+    if (d === '2026-10-24') {
+      const next = J(repo, 'data/plan/next.json');
+      assert.equal(next.plan.id, 'DENSITY-2026-10-25', 'the eve: after the weekly step, the coach plan wins');
+      assert.equal(next.plan.weekly_avg.kcal, 2373);
+      assert.deepEqual(Object.keys(next.plan.days.MP), ['M1', 'Lunch', 'Pre-workout', 'Post-workout', 'Evening']);
+      assert.equal(next.plan.options['Pre-workout'].length, 3);
+      assert.ok(next.changes.changed);
+      assert.equal(next.decision.coach_plan, 'DENSITY-2026-10-25');
+      assert.match(next.reason, /^New lean-gain plan/);
+      assert.ok(notes[d].includes('New meal plan'));
+    }
+  }
+  assert.equal(J(repo, 'data/plan/current.json').week_start, '2026-11-01');
+  assert.equal(J(repo, 'data/plan/current.json').plan.based_on, 'claude/NUTRITION_PLAN.md rev 4', 'built on the coach plan');
+  assert.equal(J(repo, 'data/plan/current.json').plan.coach_note, undefined);
+  // the Oct 31 weekly step moves lunch rice if it changes anything (never the CUT26 rice cakes)
+  const nov = J(repo, 'data/plan/next.json');
+  assert.deepEqual(Object.keys(nov.plan.days.MP), ['M1', 'Lunch', 'Pre-workout', 'Post-workout', 'Evening']);
+  for (const c of nov.changes.items) assert.deepEqual([c.meal, c.food], ['Lunch', 'rice']);
+  assert.ok(Math.abs(nov.changes.kcal.delta || 0) <= 150);
+  assert.deepEqual(J(repo, 'data/model/state.json').coach_plans_applied, ['DENSITY-2026-10-25']);
+  const log = J(repo, 'data/plan/changelog.json').entries.filter((e) => e.coach_plan);
+  assert.deepEqual(log.map((e) => [e.week_start, e.what]), [['2026-10-25', 'New plan: Lean-gain plan']]);
 });
 
 test('a missed Saturday: the first run on prep day does the weekly step before the swap', () => {

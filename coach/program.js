@@ -1,4 +1,7 @@
-// Builds data/program.json from TRAIN-CUT26 in data/training_history.json (spec §5).
+// Builds data/program.json. Since 2026-11-14 the app runs Program E (TRAIN-E26), written out
+// in data/programs/TRAIN-E26.json (buildProgramFromSource). Program C (TRAIN-CUT26) is still
+// built from data/training_history.json by buildProgram(); tests keep it as a fixture.
+// Program C (spec §5):
 // Sets, rest, superset groups, cues and alternates come from the coach's
 // transcription. Exercise type, rep scheme and target RIR follow the spec §5
 // table, because the coach's free-text rep strings are ambiguous to parse.
@@ -15,12 +18,14 @@ export const INCREMENTS_LB = {
   cable: 5, // next pin
   bodyweight: 5, // belt load once reps are high
   assisted: 10, // one pin less assistance
+  barbell: 10, // 5 lb a side
+  kettlebell: 10, // next bell (~4 kg)
   none: 0,
 };
 
 const LOAD_KIND = {
   dumbbell: 'external', smith_upper: 'external', smith_lower: 'external', machine: 'external', cable: 'external',
-  bodyweight: 'bodyweight', assisted: 'assistance', none: 'none',
+  bodyweight: 'bodyweight', assisted: 'assistance', none: 'none', barbell: 'external', kettlebell: 'external',
 };
 
 const R = (min, max, extra = {}) => ({ kind: 'range', min, max, ...extra });
@@ -81,7 +86,7 @@ export function slug(s) {
 }
 
 export function prescriptionText(sets, scheme) {
-  const side = scheme.per_side ? ' each side' : '';
+  const side = `${scheme.unit ? ` ${scheme.unit}` : ''}${scheme.per_side ? ' each side' : ''}`;
   switch (scheme.kind) {
     case 'range':
       if (scheme.open) return `${sets} × ${scheme.min}+`;
@@ -176,4 +181,72 @@ export function weeklySetsByMuscle(program) {
 
 export function dayForWeekday(program, isoDow) {
   return program.days.find((d) => d.dow === isoDow) || null;
+}
+
+// Program E and later: the source lists each lift with its type, scheme and RIR already
+// decided (claude/PROGRAM_E.md). Same derived fields as buildProgram, so the app and the
+// progression code read it the same way. A lift kept from Program C on the same day keeps
+// its name, so its id and movement (and so its history) carry over.
+export function buildProgramFromSource(src, { defaultRestS = 90 } = {}) {
+  const days = src.days.map((d) => {
+    const groupCount = new Map();
+    const exercises = d.exercises.map((e, i) => {
+      if (!LOAD_KIND[e.equipment]) throw new Error(`Unknown equipment ${e.equipment} (${e.name})`);
+      let label = null;
+      if (e.group) {
+        const n = (groupCount.get(e.group) || 0) + 1;
+        groupCount.set(e.group, n);
+        label = `${e.group.split('-').pop()}${n}`;
+      }
+      return {
+        id: `${d.day.toLowerCase()}-${slug(e.name)}`,
+        movement: slug(e.name),
+        name: e.name,
+        source_name: e.name,
+        order: i + 1,
+        group: e.group || null,
+        label,
+        sets: e.sets,
+        type: e.type,
+        scheme: e.scheme,
+        prescription: prescriptionText(e.sets, e.scheme),
+        rir: e.rir ?? null,
+        rest_s: e.rest_s ?? defaultRestS,
+        cue: e.cue || null,
+        equipment: e.equipment,
+        load_kind: LOAD_KIND[e.equipment],
+        increment_lb: INCREMENTS_LB[e.equipment],
+        muscle: e.muscle,
+        main_lift: Boolean(e.main_lift),
+        alternates: e.alternates || [],
+        ...(e.max_load_lb ? { max_load_lb: e.max_load_lb } : {}),
+      };
+    });
+    const ids = new Set();
+    for (const ex of exercises) {
+      if (ids.has(ex.id)) throw new Error(`Duplicate slot ${ex.id}`);
+      ids.add(ex.id);
+      if (ex.type === 'superset_same_weight') {
+        const lead = exercises.find((x) => x.group === ex.group && x.type === 'superset_lead');
+        ex.same_load_as = lead ? lead.id : null;
+      }
+    }
+    return { dow: DOW[d.day], day: d.day, name: d.name, focus: d.focus || null, est_min: d.est_min || null, exercises };
+  });
+  for (const day of ['Sat', 'Sun']) {
+    if (!days.some((d) => d.day === day)) days.push({ dow: DOW[day], day, name: DAY_NAMES[day], focus: null, est_min: null, exercises: [] });
+  }
+  days.sort((a, b) => a.dow - b.dow);
+  return {
+    schema_version: PROGRAM_SCHEMA_VERSION,
+    id: src.id,
+    name: src.name,
+    title: src.title || null,
+    source: src.source,
+    generated_by: 'scripts/build_program.mjs',
+    defaults: { rest_s: defaultRestS, superset_rest_s: 15 },
+    rules: src.rules || [],
+    stop_rule: src.stop_rule || null,
+    days,
+  };
 }

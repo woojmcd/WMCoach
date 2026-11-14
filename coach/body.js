@@ -10,7 +10,7 @@ export const SITES = [
 
 export const IN_TO_CM = 2.54;
 
-// Two readings per site, averaged. One reading is used as-is; none -> null.
+// The reading per site: one since 2026-10-20 (older entries have two, averaged); none -> null.
 export function averageReadings(readings) {
   const vals = (readings || []).filter((v) => Number.isFinite(v) && v > 0);
   if (!vals.length) return null;

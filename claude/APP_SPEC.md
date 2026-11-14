@@ -83,7 +83,7 @@ Everything that means "today", "this morning" or "Saturday" is in **Walter's cur
   - Primary: the iOS Shortcut fires the routine's API trigger right after its Health commit, on Walter's first unlocked use of the phone each morning (§12). Automations follow the phone's clock, so this happens in his morning wherever he is.
   - Backup: two schedule triggers (e.g. 10:07 and 18:07 in his home zone, America/Los_Angeles). These cover a day the Shortcut didn't run. They must not be earlier than his usual wake time, or they would claim the day before the Health data arrives.
   - Every run is **idempotent**: it reads the current zone from `settings.json`, computes Walter's local date, and exits early if `last_daily_run_local_date` already equals it. Backup runs do nothing on normal days.
-  - Exception: when today's Health file has **new numbers** since the day's run (it arrived late, or was re-synced), the next fire recomputes **readiness, today's targets and the daily summary only** (no plan or model changes), at most 3 times a day. A file without sleep, resting HR or HRV counts as missing: an early sync can come before Oura has written the night (Walter, 2026-10-13). The phone shows the Sync Health chip for a missing or empty file; it opens the "WMCoach Health Resync" Shortcut when the file exists (§12).
+  - Exception: when today's Health file has **new numbers** since the day's run (it arrived late, or was re-synced), the next fire recomputes **readiness, today's targets and the daily summary only** (no plan or model changes), at most 3 times a day. A file without sleep, resting HR or HRV counts as missing: an early sync can come before Oura has written the night (Walter, 2026-10-13). A sync right after waking can also catch the night twice (14.3 h for 7.2 h on 2026-10-17), so sleep over 12 h is dropped as unsettled. Since 2026-10-20 the Shortcut sends the raw sleep and heart-rate samples (`sleep_samples`, `hr_samples`) and the coach computes sleep (asleep stages minus Awake, each stretch counted once, inside the main In Bed window) and resting HR (the lowest heart rate inside that window). A file with no sleep means Oura hasn't sent the night yet, so its resting HR is ignored too. For any remaining case: readiness uses the rest, the daily summary says to re-sync, and the chip shows until the real number arrives. The phone shows the Sync Health chip for a missing, empty or unsettled file; it opens the "WMCoach Health Resync" Shortcut when the file exists (§12).
 - **Weekly step:** runs inside the daily run when the local weekday is the day before prep day (default Saturday) and `last_weekly_run_week` isn't this week. Missing Saturday entirely (e.g. no signal) → the first run on prep day does it, before the swap.
 - **Readiness baselines** use nightly values regardless of zone. On the first 2 nights after a shift of ≥ 3 h, flag "travel" and cap readiness at Amber instead of Red: jet lag skews HRV and sleep, and the data isn't telling us about training fatigue.
 - **Travel mode** (§4.4) is separate from the timezone and is still a manual toggle.
@@ -147,6 +147,7 @@ Dark only (no light theme). The feel is a premium instrument: quiet, precise, lo
 ### 4.1 Week
 - Mon–Sun strip for the current week in local time; today highlighted. Mon–Fri show the session name (Push #1, Pull #1, Legs and abs, Upper Push #2, Upper Pull #2); Sat/Sun show "Open: cardio / social" plus any Strava activity logged.
 - Tap a day to open that day's workout (logging view for today; read-only for past days; preview of targets for future days).
+- A workout done on another day (Log tab → **Switch workout** / **Lift today instead**) counts for its own day: the day's row says "Moved · done Sat", and the Week in review counts it done ("Moved: Upper Pull #2 to Sat."), matched by program day within the 7-day window (Walter, 2026-10-20).
 - Every day up to today also shows its weight and food ("176.0 lb · On plan", or "No weigh-in · Food not logged" in amber), and its sheet opens with the Body tab's weight and "On plan?" inputs, so a forgotten day can be filled in or corrected later. Saving again edits that day's entry (Walter, 2026-10-17).
 - A banner area for plan notices (see §8.4).
 
@@ -171,13 +172,14 @@ Backoff      [ 55] [12 ]             ✓
 - "Finish session" saves the log, and the app immediately computes the baseline next-session targets on-device (§6.2), so progression works offline even if the daily run never comes.
 - Cardio is recorded in Strava only; the Log tab has no cardio logging (Walter, 2026-10-13). Older Stairs ✓ taps still count.
 - Lift days show **Switch workout** under the title until the first set is logged, to do another day's session (open days have "Lift today instead").
+- **Travel workout** (Walter, 2026-10-20), next to Switch workout until the first set: the same day done with comparable dumbbell and bodyweight lifts (machines, cables and the Smith swapped out; `coach/travel.js`), same sets, rest and RIR. Each travel lift has its own history (`travel-…` movement), so it progresses from the last travel workout and never moves the gym targets. Any lift can be swapped for another travel option or a typed name. The session is saved with `travel: true`; it counts as done in the Week in review ("Travel workout: Legs and abs"), the daily review and the Week tab ("Done · 22 sets · travel"), and isn't used to judge strength.
 - Every day, a cardio card shows the coach's cardio for today with the lifts (§6.5).
 
 ### 4.3 Body
 Top to bottom (order changed 2026-10-15: "On plan today?" first so it's tapped daily, the phase selector last):
 1. A daily **"On plan today?"** tap: Yes / Partial / Off (optional kcal estimate). This feeds the adherence gate.
 2. **Daily weight** entry: one field defaulting to today (local date); can backdate for missed days; morning fasted, after the bathroom.
-3. **Weekly measurements card** (appears on check-in day, Friday; collapses once logged): waist, neck, chest, arm, thigh (§9), each entered twice and averaged automatically. Placeholders show last week's values.
+3. **Weekly measurements card** (appears on check-in day, Friday; collapses once logged): waist, neck, chest, arm, thigh (§9), one tape reading each (Walter, 2026-10-20; older entries hold two, averaged). Placeholders show last week's values.
 4. **Weekly check-in form** (Friday, same card): adherence this week (auto-filled from daily on-plan taps, editable), biofeedback 1–5 for hunger, energy, sleep, stress and digestion, and an optional note.
 5. **Trend graph:**
    - Faint raw weigh-in dots with the EWMA trend line on top (half-life 7 d).
@@ -204,7 +206,18 @@ Top to bottom (order changed 2026-10-15: "On plan today?" first so it's tapped d
 
 ---
 
-## 5. Training program: Program C (current; stays fixed unless Walter changes it)
+## 5. Training program: Program E (since 0.9.0, 2026-11-14)
+
+**Program E (`TRAIN-E26`) is the program the app runs**, approved by Walter on 2026-11-14. Full write-up: `claude/PROGRAM_E.md` (goals, the four mechanical rules, banned lifts, every lift's sets, tempo and reasoning). Source the app builds from: `data/programs/TRAIN-E26.json` → `npm run build:program` → `data/program.json`.
+- Same skeleton as Program C: Mon Push A · Tue Pull A · Wed Legs and abs · Thu Push B · Fri Pull B; weekends open. Supersets, top + backoff sets, 90 s rest (60 s primers, 120 s main presses, leg press and the chain squat).
+- Main lifts: Mon low-incline DB press, Tue chest-supported machine row, Wed leg press (feet low, narrow), Thu converging machine chest press, Fri single-arm DB row.
+- Close-stance chain squat: `max_load_lb: 225`, RIR 3. Targets never go above 225 lb; at the ceiling it progresses with tempo, not load (§6.2).
+- KB suitcase carry: logged in metres (`scheme.unit: 'm'`, 30–40 m each side).
+- A lift kept from Program C on the same day keeps its name, so its slot id, movement and history carry over (e.g. Reverse Cable Curls → Cable Bar Curls, Seated Hamstring Curls, Thu lateral superset, Single Arm DB Rows, Incline DB Curls). New lifts start with a calibration.
+- **A new program starts a new block** (`trainingCalendar`): its weeks and deloads count from its own first session (`sessions[].program_id`; sessions without one were Program C's). Program E's week 1 is Mon 16 Nov, not Program C's week-6 deload. "Lifted less since May" easing applied to the first block only.
+- The Log tab shows the day's focus and a **Program E rules** sheet (the four rules and the stop rule). The travel workout (§4.2) maps Program E's lifts and keeps its banned list.
+
+### Program C (Oct–Nov 2026, kept for reference; frozen in `tests/fixtures/program-c.json`)
 
 Source of truth: `TRAIN-CUT26` in `data/training_history.json` (full prescriptions, rest, groups, cues, alternates). Generate `data/program.json` from it. Walter's favourite split; he ran it through the 2026 cut and since. He'll ask when he wants it changed.
 
@@ -366,7 +379,20 @@ Each morning the Week tab opens on **Yesterday · <date>**: an executive summary
 
 Walter preps food **once a week**. A plan that moves mid-week is useless to him.
 
-### 8.0 Starting plan: Bulk, grown from CUT26-V4
+### 8.0a Lean-gain plan (since 0.9.0, week of Sun 15 Nov 2026)
+
+`claude/NUTRITION_PLAN.md` rev 4, approved 2026-11-14. In the repo as a **coach plan**, `data/coach/plans/2026-11-15.json` (written in a reviewed PR; read-only to the routine).
+- **Publishing:** the daily run publishes a coach plan for its week once, from the day before the week (after that day's weekly step) or any day during it, as `data/plan/current.json` or `next.json`, appends the changelog and sends a "New meal plan" notification (`state.coach_plans_applied`). The phone shows "New plan: Lean-gain plan" instead of every food change.
+- **Mon–Fri: ~2,375 kcal, 184 P / 287 C / 55 F.** M1 3 eggs + 2 slices Dave's Killer Bread · Lunch 6 oz 93/7 beef/turkey + 250 g rice + 65 g veg · Pre-workout option A/B/C · Post-workout 5 oz chicken + 300 g sweet potato + 65 g veg · Evening Greek yogurt + 40 g granola + 16 g peanut butter. Meal windows show under each meal.
+- **Pre-workout options** (`plan.options`): A whey + 2 bananas + applesauce (~385, used for the day totals), B 2 instant oatmeal + whey (~+55), C 70 g Cheerios + 1 cup fat-free milk + whey (~+90). The Meals tab switches between them; any is on plan.
+- **Prep** covers Mon–Fri (`plan.prep_days: 5`). Whey (in every option) is prepped; the rest of each option is listed as per-day stock.
+- **Weekends:** a "Sat–Sun: best effort" card (2,300–2,600 kcal, protein 170 g+, fat 50 g+, and the plan's tips). "Plan rules and timing" opens the rules and the if-the-gym-time-moves notes.
+- **Adherence counts on-plan days against 5** (`plan.adherence_days: 5`, Walter 2026-11-14): Yes = 1 day, Partial = ½, Off = 0 over the 7 days, so five on-plan days are 100 % and an off-plan weekend doesn't pull the week under the 90 % bar. 4 on-plan days = 80 % (no macro change). The check-in shows "4.5 of 5 on-plan days (90 %)" and the Week in review says it too. Weekends are best tapped Partial with an estimated kcal rather than Off: Off removes the day from the expenditure math while its weight stays on the scale.
+- **Weekly changes** move lunch rice ±90 g (≈ ±100–115 kcal, `plan.carb_lever`) instead of the CUT26 steps; the 150 kcal cap and §8.2 rules are unchanged.
+- New foods are `EXTRA_FOODS` in `coach/meals.js` (plans.json stays read-only); `foodDbOf()` merges them.
+- A plan's `coach_note` no longer carries into later weeks (BULK-2026-11-08 still said "+1 carb step to fit 2488 kcal" under a −1 decision).
+
+### 8.0 Starting plan: Bulk, grown from CUT26-V4 (Oct 2026)
 
 He continues from his most recent coach plan (CUT26-V4, carb cycle, weekly avg 2,192 kcal). That plan sits at about base maintenance at ~165 lb (brief §6), and his history says a bulk should start at maintenance + 150–200 kcal, not the 2,500 that drove +1.34 lb/wk in Oct 2025 (2,299 held flat; 2,388 gained +0.53 lb/wk).
 
@@ -420,7 +446,7 @@ On a day with a ride > 2 h or a long run (or the day after, if it was late): add
 | Arm | mid upper arm, relaxed, same side each week |
 | Thigh | midway between hip crease and top of kneecap, same side |
 
-**Protocol:** Friday morning, fasted, after the weigh-in, before training. Tape snug, not compressing. Two readings per site, averaged by the app.
+**Protocol:** Friday morning, fasted, after the weigh-in, before training. Tape snug, not compressing. One reading per site (Walter, 2026-10-20).
 
 **Body-fat estimate:** US Navy circumference formula (men: waist, neck, height). Display it as a trend only (±3–4 % absolute error). Smart-scale body-fat readings from Health are also trend-only and never trigger a change.
 

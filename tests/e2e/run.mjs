@@ -8,18 +8,21 @@ import assert from 'node:assert/strict';
 import { startServer } from '../../scripts/serve.mjs';
 import { DB_VERSION } from '../../app/db.js';
 import { FakeGitHub } from '../fixtures/fake-github.mjs';
-import { startingPlan, nextCarbStep, withMacros } from '../../coach/meals.js';
+import { startingPlan, nextCarbStep, withMacros, foodDbOf } from '../../coach/meals.js';
 import { planRecord } from '../../coach/weekly.js';
 import { baseCardio, cardioForDay, cardioItems } from '../../coach/cardio.js';
 import { dailySummary } from '../../coach/daily.js';
 
-const STAGE = process.env.E2E_STAGE || 'stage-8';
+const STAGE = process.env.E2E_STAGE || 'stage-9';
 const OUT = new URL(`../../docs/screenshots/${STAGE}/`, import.meta.url).pathname;
 const PORT = Number(process.env.E2E_PORT || 4173);
 await mkdir(OUT, { recursive: true });
 const tmp = await mkdtemp(join(tmpdir(), 'wmcoach-e2e-'));
 
 const { server, state, url } = await startServer({ port: PORT });
+// The scenarios up to stage 8 document Program C, so the server hands the phone the frozen
+// copy; the last scenario switches to the real data/program.json (Program E, stage 9).
+state.rewrite['data/program.json'] = 'tests/fixtures/program-c.json';
 const browser = await chromium.launch();
 const errors = [];
 const DEVICE = { viewport: { width: 375, height: 812 }, deviceScaleFactor: 2, isMobile: true, hasTouch: true, acceptDownloads: true };
@@ -241,14 +244,11 @@ try {
   }
   assert.ok(!(await page.locator('main').innerText()).includes('null'), 'no stray "null" text');
 
-  step('Body: measurements (two readings, averaged) + check-in');
+  step('Body: measurements (one reading per site) + check-in');
   await page.locator('.site-row input').first().waitFor();
-  const tape = { Waist: [32.1, 32.3], Neck: [15.2, 15.2], Chest: [40, 40.2], Arm: [14.1, 14.1], Thigh: [22.5, 22.7] };
-  for (const [site, [a, b]] of Object.entries(tape)) {
-    await page.getByLabel(`${site} reading 1`).fill(String(a));
-    await page.getByLabel(`${site} reading 2`).fill(String(b));
-  }
-  await page.locator('.site-row', { hasText: 'Waist' }).locator('.avg', { hasText: '32.2' }).waitFor();
+  assert.equal(await page.locator('.site-row:not(.site-head) input').count(), 5, 'one tape input per site (Walter, 2026-10-20)');
+  const tape = { Waist: 32.2, Neck: 15.2, Chest: 40.1, Arm: 14.1, Thigh: 22.6 };
+  for (const [site, v] of Object.entries(tape)) await page.getByLabel(`${site} reading`, { exact: true }).fill(String(v));
   const save = page.getByRole('button', { name: 'Save check-in' });
   assert.equal(await save.isDisabled(), true, 'biofeedback required');
   for (const [i, bio] of ['Hunger', 'Energy', 'Sleep', 'Stress', 'Digestion'].entries()) {
@@ -264,7 +264,7 @@ try {
   assert.equal(ci.adherence_pct, 50, 'auto-filled from the one Partial tap');
   assert.equal(ci.measurement_id, meas.id);
   assert.equal(meas.avg.waist, 32.2);
-  assert.deepEqual(meas.readings.waist, [32.1, 32.3]);
+  assert.deepEqual(meas.readings.waist, [32.2]);
   if (await page.getByText('Back up this week?').count()) {
     await page.evaluate(() => document.getElementById('app').scrollTo(0, 0));
     await page.waitForTimeout(3000);
@@ -851,6 +851,7 @@ try {
     await p.getByRole('button', { name: 'Switch workout' }).click();
     await p.locator('.sheet.show .item', { hasText: 'Pull #1' }).first().click();
     await p.locator('.title', { hasText: 'Pull #1' }).waitFor();
+    // the travel workout is covered on Program E (stage 9)
 
     await tab(p, 'Week');
     // each day's cardio on its own line under the workout; no separate weekly box
@@ -874,7 +875,7 @@ try {
   step('Daily summary: yesterday in review + today\'s focus on the Week tab; an empty Health file shows Sync Health → Resync');
   {
     const wed = '2026-10-21';
-    const program = JSON.parse(await readFile(new URL('../../data/program.json', import.meta.url), 'utf8'));
+    const program = JSON.parse(await readFile(new URL('../fixtures/program-c.json', import.meta.url), 'utf8'));
     const pull = program.days.find((d) => d.dow === 2);
     const legs = program.days.find((d) => d.dow === 3);
     const set = (load, reps) => ({ kind: 'work', load, reps, rir: 1, done: true, skipped: false });
@@ -1181,6 +1182,93 @@ try {
   assert.equal(info.weighins, v1.stores.weighins.length);
   for (const store of ['mode_changes', 'measurements', 'checkins', 'adherence', 'sessions', 'stairs', 'exercise_prefs', 'plans', 'foods']) assert.ok(info.stores.includes(store), store);
   await old.close();
+
+  const S9 = { stage: 'stage-9' };
+  step('Program E on the Log tab (focus, rules, carries) and the lean-gain plan on Meals (options A/B/C, weekend, Mon–Fri prep)');
+  {
+    state.rewrite = {}; // the app's real program from here on
+    const cpDoc = JSON.parse(await readFile(new URL('../../data/coach/plans/2026-11-15.json', import.meta.url), 'utf8'));
+    const plansJson = JSON.parse(await readFile(new URL('../../data/plans.json', import.meta.url), 'utf8'));
+    const db = foodDbOf(plansJson);
+    const old = withMacros(db, startingPlan(plansJson, { weekStart: '2026-11-08' }));
+    const lean = withMacros(db, { ...cpDoc.plan, id: cpDoc.id, start: cpDoc.week_start });
+    gh.externalCommit('data/plan/current.json', JSON.stringify(planRecord({
+      weekStart: '2026-11-15', mode: 'bulk', plan: lean, previous: { id: '2026-11-08', plan: old },
+      decision: { change: 0, stoppedAt: null, coach_plan: cpDoc.id, reason: cpDoc.reason, checks: [] }, notes: cpDoc.notes,
+      reason: cpDoc.reason, nowUtc: '2026-11-15T15:00:00Z', localDate: '2026-11-15',
+    })), 'daily 2026-11-15 (America/Los_Angeles)');
+    const c = await browser.newContext({ ...DEVICE, timezoneId: 'America/Los_Angeles', storageState: synced });
+    await routeGitHub(c, gh);
+    const p = await c.newPage();
+    watch(p);
+    await p.clock.install({ time: new Date('2026-11-16T16:00:00Z') }); // Mon 08:00 in LA
+    await p.goto(`${url}#/log`);
+    await p.getByText('Continue in Safari (testing only)').click();
+    await p.locator('.title', { hasText: 'Push A' }).waitFor({ timeout: 15000 });
+    assert.match(await p.locator('.focus-row').textContent(), /Side delts \+ upper-chest press/);
+    const names = await p.locator('.ex-name').allTextContents();
+    assert.ok(names[0].includes('Rope Face Pulls') && names.some((n) => n.includes('Low-Incline DB Press')), names.join(', '));
+    assert.ok(!names.some((n) => /Chest Dips|Smith/.test(n)), 'Program C’s lifts are gone');
+    await p.waitForTimeout(2500);
+    await shot(p, 'i01-log-program-e', S9);
+    await p.getByRole('button', { name: 'Program E rules' }).click();
+    const rules = p.locator('.sheet.show');
+    await rules.locator('.rules-list li').first().waitFor();
+    assert.equal(await rules.locator('.rules-list li').count(), 4);
+    assert.match(await rules.textContent(), /call your surgeon the same day/);
+    await p.waitForTimeout(300);
+    await shot(p, 'i02-program-e-rules', S9);
+    await p.keyboard.press('Escape');
+    // travelling: the same day with comparable free-weight lifts (Walter, 2026-10-20), on Program E
+    await p.getByRole('button', { name: 'Travel workout' }).click();
+    await p.locator('.ex-cue', { hasText: 'Travel swap for Pec Deck Flyes' }).waitFor();
+    const tnames = await p.locator('.ex-name').allTextContents();
+    assert.ok(tnames[0].includes('Prone Reverse DB Flyes') && !tnames.some((n) => /Rope|Pec Deck|Machine|Cable/.test(n)), `travel lifts: ${tnames.join(', ')}`);
+    assert.match(await p.locator('.ex-card', { has: p.locator('.ex-name', { hasText: 'Flat DB Flyes' }) }).textContent(), /Stop at the shoulder line/);
+    assert.match(await p.locator('.header .label, .screen .label').first().textContent(), /· travel/);
+    await p.waitForTimeout(400);
+    await shot(p, 'i04-log-travel-program-e', S9);
+    await p.getByLabel('Prone Reverse DB Flyes weight', { exact: true }).fill('10');
+    await p.getByLabel('Prone Reverse DB Flyes reps', { exact: true }).fill('15');
+    await p.locator('.set-editor').getByRole('button', { name: /Log set|Done|Save/ }).click();
+    await p.waitForTimeout(400);
+    const travelSess = await p.evaluate(() => new Promise((resolve) => {
+      indexedDB.open('wmcoach').onsuccess = (e) => { e.target.result.transaction('sessions').objectStore('sessions').getAll().onsuccess = (r) => resolve(r.target.result.find((x) => x.local_date === '2026-11-16')); };
+    }));
+    assert.equal(travelSess.travel, true);
+    assert.equal(travelSess.day_name, 'Push A');
+    assert.ok(travelSess.exercises.every((e) => e.movement.startsWith('travel-')), 'own travel histories');
+    assert.equal(await p.getByRole('button', { name: 'Back to the gym version' }).count(), 0, 'fixed once a set is logged');
+    // Friday's carry is logged in metres (the Week tab's preview of Friday)
+    await tab(p, 'Week');
+    await p.locator('.day-row', { hasText: 'Fri' }).click();
+    await p.locator('.sheet.show', { hasText: 'KB Suitcase Carry' }).waitFor();
+    assert.match(await p.locator('.sheet.show').textContent(), /30–40 m each side/);
+    await p.keyboard.press('Escape');
+    await p.waitForTimeout(300);
+
+    await tab(p, 'Meals');
+    await p.locator('.card.changed', { hasText: 'New plan: Lean-gain plan' }).waitFor({ timeout: 15000 });
+    await p.locator('.hero', { hasText: '2,373' }).waitFor();
+    const meals = await p.locator('.meal-name').allTextContents();
+    assert.deepEqual(meals, ['M1', 'Lunch', 'Pre-workout', 'Post-workout', 'Evening']);
+    assert.match(await p.locator('.meal', { hasText: 'M1' }).textContent(), /2 slices Dave’s Killer Bread/);
+    const pre = p.locator('.meal', { hasText: 'Pre-workout' });
+    assert.match(await pre.textContent(), /2 bananas/);
+    await pre.getByRole('button', { name: 'Option B' }).click();
+    await p.locator('.meal', { hasText: 'Pre-workout' }).locator('.food', { hasText: '2 instant oatmeal packets' }).waitFor();
+    assert.match(await p.locator('.meal', { hasText: 'Pre-workout' }).textContent(), /442 kcal/);
+    await p.locator('[aria-label="Weekend guardrails"]').waitFor();
+    assert.match(await p.locator('[aria-label="Weekend guardrails"]').textContent(), /2,300–2,600 kcal.*Protein 170 g\+/s);
+    await p.waitForTimeout(400);
+    await shot(p, 'i03-meals-lean-gain', { ...S9, full: true });
+    const prep = await p.locator('.prep .item').allTextContents();
+    assert.ok(prep.some((t) => /Dave’s Killer Bread\s*10 slices/.test(t)), prep.join(' | '));
+    assert.ok(prep.some((t) => /Whey isolate\s*5 scoops/.test(t)), 'whey in every option is prepped');
+    await p.getByText('Pre-workout: stock per day of each option').waitFor();
+    await p.getByText('5 days (Mon–Fri)', { exact: false }).waitFor();
+    await c.close();
+  }
 
   const real = errors.filter((e) => !/favicon/.test(e));
   assert.deepEqual(real, [], `browser errors:\n${real.join('\n')}`);

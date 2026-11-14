@@ -5,6 +5,7 @@ import { live } from './records.js';
 import { newId } from './seed.js';
 import { planDay, trainingCalendar, roundToIncrement } from '../coach/progression.js';
 import { dayForWeekday } from '../coach/program.js';
+import { travelDay } from '../coach/travel.js';
 import { isoWeekday, stamp } from '../coach/time.js';
 import { remoteState, todaysTargets, weekTargets, healthMissing, healthShortcut } from './remote.js';
 import { cardioForDay, cardioItems, rxForWeek } from '../coach/cardio.js';
@@ -16,7 +17,7 @@ export async function loadTraining(ctx) {
   ]);
   const prefs = Object.fromEntries(prefsAll.map((p) => [p.id, p]));
   const today = ctx.today();
-  const { sessions, programStart, week, deload } = trainingCalendar(live(sAll), ctx.program, today);
+  const { sessions, programStart, week, deload, firstBlock } = trainingCalendar(live(sAll), ctx.program, today);
   // today's readiness from the daily run (spec §6.3), if it has run today
   const remote = await remoteState(ctx.db);
   const targets = todaysTargets(remote, today);
@@ -24,7 +25,7 @@ export async function loadTraining(ctx) {
   const readiness = targets ? targets.readiness : null;
   const addons = targets ? targets.addons || [] : [];
   return {
-    sessions, prefs, stairs, today, programStart, week, deload,
+    sessions, prefs, stairs, today, programStart, week, deload, firstBlock,
     readiness, addons, healthMissing: healthMissing(remote, today), healthUrl: healthShortcut(remote, today),
     // yesterday in review + today's focus, from this morning's run (Walter, 2026-10-13)
     daily: targets && targets.daily ? targets.daily : null,
@@ -58,16 +59,19 @@ export function planOptions(ctx, training) {
     mode: ctx.settings.mode,
     week: training.week,
     deload: training.deload.isDeload,
-    liftedLess: Boolean(ctx.settings.lifted_less_since_may),
+    liftedLess: Boolean(ctx.settings.lifted_less_since_may) && training.firstBlock !== false,
     readiness: training.readiness,
     prefs: training.prefs,
   };
 }
 
 // Today's plan for a program day, from finished sessions only.
-export function planFor(ctx, training, day, { excludeId = null } = {}) {
+// travel: the day's travel workout (coach/travel.js): comparable free-weight lifts on their
+// own histories; the gym's saved swaps don't apply.
+export function planFor(ctx, training, day, { excludeId = null, travel = false } = {}) {
   const sessions = training.sessions.filter((s) => s.id !== excludeId);
-  return planDay(day, sessions, planOptions(ctx, training));
+  const opts = planOptions(ctx, training);
+  return travel ? planDay(travelDay(day), sessions, { ...opts, prefs: {} }) : planDay(day, sessions, opts);
 }
 
 function defaultRir(planned) {
@@ -95,6 +99,7 @@ export function setFromPlan(planned) {
 export function exerciseFromPlan(p) {
   return {
     slot_id: p.ex.id, movement: p.movement, name: p.name, swapped_from: p.swapped_from,
+    ...(p.ex.travel_of && p.ex.travel_of !== p.name ? { travel_of: p.ex.travel_of } : {}),
     label: p.ex.label, group: p.ex.group, type: p.ex.type,
     reason: p.target.reason, change: p.target.change, delta_lb: p.target.delta_lb, calibration: p.target.calibration, last: p.target.last,
     skipped: false, note: null,
@@ -103,14 +108,16 @@ export function exerciseFromPlan(p) {
 }
 
 // An unsaved session for a day; the first logged set saves it (status in_progress).
-export function draftSession(ctx, training, day, now = new Date()) {
+export function draftSession(ctx, training, day, now = new Date(), { travel = false } = {}) {
   const at = stamp(now, ctx.tz());
   return {
     id: newId('sess'), local_date: at.local_date, tz: at.tz, utc: at.utc,
     started_utc: null, finished_utc: null, status: 'draft',
     day_dow: day.dow, day_name: day.name, program_id: ctx.program.id,
     week: training.week, deload: training.deload.isDeload,
-    exercises: planFor(ctx, training, day).map(exerciseFromPlan),
+    ...(travel ? { travel: true } : {}),
+    program_id: ctx.program.id, // a new program starts a new block (trainingCalendar)
+    exercises: planFor(ctx, training, day, { travel }).map(exerciseFromPlan),
     note: null, updated_utc: at.utc,
   };
 }

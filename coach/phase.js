@@ -144,7 +144,11 @@ export function checkinState(today, checkinDow, checkins, { windowDays = 3 } = {
 
 // Adherence from daily on-plan taps over the 7 days ending `end`: Yes 100, Partial 50, Off 0.
 const TAP_SCORE = { yes: 100, partial: 50, off: 0 };
-export function adherenceFromTaps(taps, end, days = 7) {
+// targetDays (the lean-gain plan's adherence_days: 5, Walter 2026-11-14): Mon–Fri is the
+// plan and weekends are best effort, so the week counts on-plan days (yes 1, partial ½)
+// against 5: five on-plan days are 100 %, and an off-plan weekend doesn't pull it down.
+// Without it, the average score of the tapped days (spec §10).
+export function adherenceFromTaps(taps, end, days = 7, { targetDays = null } = {}) {
   const start = addDays(end, -(days - 1));
   const byDate = new Map();
   for (const t of taps) {
@@ -153,6 +157,14 @@ export function adherenceFromTaps(taps, end, days = 7) {
     if (!prev || (t.updated_utc || '') > (prev.updated_utc || '')) byDate.set(t.local_date, t);
   }
   const scores = [...byDate.values()].map((t) => TAP_SCORE[t.status]);
-  if (!scores.length) return { pct: null, tapped: 0, days };
+  if (!scores.length) return { pct: null, tapped: 0, days, ...(targetDays ? { on_days: 0, target_days: targetDays } : {}) };
+  if (targetDays) {
+    const onDays = scores.reduce((a, b) => a + b, 0) / 100;
+    return { pct: Math.min(100, Math.round((onDays / targetDays) * 100)), tapped: scores.length, days, on_days: onDays, target_days: targetDays };
+  }
   return { pct: Math.round(scores.reduce((a, b) => a + b, 0) / scores.length), tapped: scores.length, days };
 }
+
+// The plan's adherence rule: the number of on-plan days that make a full week (lean-gain
+// plan: 5), or null for the classic every-day average.
+export const planAdherenceDays = (rec) => (rec && rec.plan && Number.isFinite(rec.plan.adherence_days) ? rec.plan.adherence_days : null);
