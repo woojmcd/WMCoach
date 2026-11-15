@@ -1,10 +1,14 @@
 {
   "schema_version": 1,
-  "id": "2026-11-08",
-  "week_start": "2026-11-08",
-  "week_end": "2026-11-14",
+  "id": "2026-11-15",
+  "week_start": "2026-11-15",
+  "week_end": "2026-11-21",
   "mode": "bulk",
   "plan": {
+    "title": "Lean-gain plan",
+    "template": "DENSITY-26",
+    "phase": "Bulk",
+    "based_on": "claude/NUTRITION_PLAN.md rev 4",
     "structure": "single",
     "days": {
       "MP": {
@@ -16,43 +20,23 @@
             "unit": "each"
           },
           {
-            "food": "ezekiel",
-            "name": "Ezekiel 4:9 bread",
-            "qty": 3,
+            "food": "daves_bread",
+            "name": "Dave’s Killer Bread 21 Whole Grains",
+            "qty": 2,
             "unit": "slice"
           }
         ],
-        "Pre-workout": [
+        "Lunch": [
           {
-            "food": "rice_cake",
-            "name": "Flavored rice cake",
-            "qty": 4,
-            "unit": "each"
-          },
-          {
-            "food": "nut_butter",
-            "name": "Natural peanut/almond butter",
-            "qty": 19,
-            "unit": "g"
-          },
-          {
-            "food": "whey_iso",
-            "name": "Whey protein isolate",
-            "qty": 1,
-            "unit": "scoop"
-          }
-        ],
-        "Post-workout": [
-          {
-            "food": "chicken",
-            "name": "Chicken breast, cooked",
-            "qty": 5,
+            "food": "lean_beef",
+            "name": "93/7 ground beef/turkey, cooked",
+            "qty": 6,
             "unit": "oz"
           },
           {
             "food": "rice",
             "name": "Jasmine/white rice, cooked",
-            "qty": 200,
+            "qty": 250,
             "unit": "g"
           },
           {
@@ -62,11 +46,31 @@
             "unit": "g"
           }
         ],
-        "M4": [
+        "Pre-workout": [
           {
-            "food": "lean_beef",
-            "name": "93/7 ground beef/turkey, cooked",
-            "qty": 6,
+            "food": "whey_iso",
+            "name": "Whey protein isolate",
+            "qty": 1,
+            "unit": "scoop"
+          },
+          {
+            "food": "banana",
+            "name": "Banana, medium",
+            "qty": 2,
+            "unit": "each"
+          },
+          {
+            "food": "applesauce",
+            "name": "Unsweetened applesauce cup",
+            "qty": 1,
+            "unit": "each"
+          }
+        ],
+        "Post-workout": [
+          {
+            "food": "chicken",
+            "name": "Chicken breast, cooked",
+            "qty": 5,
             "unit": "oz"
           },
           {
@@ -82,7 +86,7 @@
             "unit": "g"
           }
         ],
-        "Snack": [
+        "Evening": [
           {
             "food": "greek_yogurt",
             "name": "0% Greek yogurt, single-serve cup",
@@ -90,86 +94,270 @@
             "unit": "cup"
           },
           {
-            "food": "granola",
-            "name": "Granola (15 g carbs worth)",
-            "qty": 1,
-            "unit": "each"
+            "food": "granola_g",
+            "name": "Granola (weighed)",
+            "qty": 40,
+            "unit": "g"
           },
           {
-            "food": "blueberries",
-            "name": "Blueberries",
-            "qty": 70,
+            "food": "nut_butter",
+            "name": "Natural peanut/almond butter",
+            "qty": 16,
             "unit": "g"
           }
         ]
       }
     },
+    "options": {
+      "Pre-workout": [
+        {
+          "key": "A",
+          "label": "Whey in water, 2 bananas, applesauce cup",
+          "use": "Away from home, no prep; moist and portable.",
+          "foods": [
+            {
+              "food": "whey_iso",
+              "name": "Whey protein isolate",
+              "qty": 1,
+              "unit": "scoop"
+            },
+            {
+              "food": "banana",
+              "name": "Banana, medium",
+              "qty": 2,
+              "unit": "each"
+            },
+            {
+              "food": "applesauce",
+              "name": "Unsweetened applesauce cup",
+              "qty": 1,
+              "unit": "each"
+            }
+          ]
+        },
+        {
+          "key": "B",
+          "label": "2 instant oatmeal packets with whey stirred in",
+          "use": "At home, 90 s in the microwave. About 6 g fiber: eat it 90+ min before lifting.",
+          "foods": [
+            {
+              "food": "instant_oatmeal",
+              "name": "Instant oatmeal, flavored packet",
+              "qty": 2,
+              "unit": "each"
+            },
+            {
+              "food": "whey_iso",
+              "name": "Whey protein isolate",
+              "qty": 1,
+              "unit": "scoop"
+            }
+          ]
+        },
+        {
+          "key": "C",
+          "label": "70 g Cheerios, 1 cup fat-free milk, whey",
+          "use": "Cereal feel. Fat-free keeps pre-lift fat low (2 % adds ~5 g fat).",
+          "foods": [
+            {
+              "food": "cheerios",
+              "name": "Cheerios",
+              "qty": 70,
+              "unit": "g"
+            },
+            {
+              "food": "skim_milk",
+              "name": "Fat-free milk",
+              "qty": 1,
+              "unit": "cup"
+            },
+            {
+              "food": "whey_iso",
+              "name": "Whey protein isolate",
+              "qty": 1,
+              "unit": "scoop"
+            }
+          ]
+        }
+      ]
+    },
+    "meal_times": {
+      "M1": "7:30–8:30",
+      "Lunch": "12:00–1:00",
+      "Pre-workout": "60–90 min before lifting",
+      "Post-workout": "Within 90 min after lifting",
+      "Evening": "8:30–9:15"
+    },
+    "prep_days": 5,
+    "carb_lever": [
+      [
+        "Lunch",
+        "rice",
+        90
+      ]
+    ],
+    "carb_steps": 0,
+    "weekend": {
+      "kcal": [
+        2300,
+        2600
+      ],
+      "protein_min": 170,
+      "fat_min": 50,
+      "tips": [
+        "Anchors: M1, one prepped protein meal and the evening yogurt (≈1,350–1,500 kcal, ~105–115 g protein) leave ~900–1,100 kcal for social meals.",
+        "Get 40 g+ protein in the social meal: steak, burger, chicken or fish.",
+        "Big dinner planned? Skip the pre-workout meal for room.",
+        "Long cardio (over 60 min): add carbs ≈ half the logged kcal (an 800 kcal ride → +100 g carbs).",
+        "2–3 drinks at most, counted in the total. The muffin (689 kcal) lives here as a planned weekend treat."
+      ]
+    },
+    "timing_moves": [
+      "Lifting at lunch: M1 → pre-workout ~10:30 → post-workout ~1:30 → beef/turkey + rice as dinner ~6:00 → evening snack.",
+      "Lifting 7–8 pm: pre-workout ~5:30–6:30, post-workout by ~9:00, then fold the yogurt into the post meal or skip it.",
+      "The anchors: pre-workout 60–120 min before lifting, post-workout within ~2 h after. The daily protein total matters more than a 30-min window."
+    ],
+    "rules": [
+      "Surplus +100–200 kcal: aim for +0.1–0.2 % body weight a week (0.2–0.35 lb).",
+      "Protein ~1.0–1.1 g/lb over 5 feedings, 3–5 h apart.",
+      "About 75 % of the carbs between lunch and post-workout; pre-workout low in fat and fiber.",
+      "No meal over ~650 kcal; 3.5–4 L of fluid, mostly between meals; steady daily sodium."
+    ],
+    "adherence_days": 5,
+    "id": "DENSITY-2026-11-15",
+    "start": "2026-11-15",
     "macros": {
       "MP": {
-        "P": 186.5,
-        "C": 251,
-        "F": 51.7,
-        "kcal": 2215,
+        "P": 184,
+        "C": 286.3,
+        "F": 54.6,
+        "kcal": 2373,
         "per_meal": {
           "M1": {
-            "P": 33.9,
-            "C": 46.2,
-            "F": 15.9,
-            "kcal": 464
+            "P": 30.9,
+            "C": 45.2,
+            "F": 17.4,
+            "kcal": 461
+          },
+          "Lunch": {
+            "P": 53.4,
+            "C": 74.4,
+            "F": 15.4,
+            "kcal": 650
           },
           "Pre-workout": {
-            "P": 32.4,
-            "C": 49.2,
-            "F": 11.2,
-            "kcal": 427
+            "P": 26.8,
+            "C": 66,
+            "F": 1.2,
+            "kcal": 382
           },
           "Post-workout": {
-            "P": 51,
-            "C": 60.3,
-            "F": 5.9,
-            "kcal": 498
-          },
-          "M4": {
-            "P": 51.5,
+            "P": 50.4,
             "C": 64.2,
-            "F": 15,
-            "kcal": 597
+            "F": 5.6,
+            "kcal": 509
           },
-          "Snack": {
-            "P": 17.8,
-            "C": 31.1,
-            "F": 3.7,
-            "kcal": 229
+          "Evening": {
+            "P": 22.5,
+            "C": 36.5,
+            "F": 15,
+            "kcal": 371
           }
         }
       }
     },
     "weekly_avg": {
-      "P": 186.5,
-      "C": 251,
-      "F": 51.7,
-      "kcal": 2215
-    },
-    "id": "BULK-2026-11-08",
-    "phase": "Bulk",
-    "start": "2026-11-08",
-    "based_on": "CUT26-V4",
-    "carb_steps": -1,
-    "coach_note": "Week 1 of the bulk: CUT26-V4's high-carb day (MP2), +1 carb step to fit 2488 kcal."
+      "P": 184,
+      "C": 286.3,
+      "F": 54.6,
+      "kcal": 2373
+    }
   },
   "source": "routine",
-  "based_on": "2026-11-01",
+  "based_on": "2026-11-15",
   "changes": {
     "structure": null,
     "items": [
+      {
+        "where": null,
+        "meal": "M1",
+        "food": "ezekiel",
+        "name": "Ezekiel 4:9 bread",
+        "unit": "slice",
+        "from": 3,
+        "to": 0
+      },
+      {
+        "where": null,
+        "meal": "M1",
+        "food": "daves_bread",
+        "name": "Dave’s Killer Bread 21 Whole Grains",
+        "unit": "slice",
+        "from": 0,
+        "to": 2
+      },
+      {
+        "where": null,
+        "meal": "Lunch",
+        "food": "lean_beef",
+        "name": "93/7 ground beef/turkey, cooked",
+        "unit": "oz",
+        "from": 0,
+        "to": 6
+      },
+      {
+        "where": null,
+        "meal": "Lunch",
+        "food": "rice",
+        "name": "Jasmine/white rice, cooked",
+        "unit": "g",
+        "from": 0,
+        "to": 250
+      },
+      {
+        "where": null,
+        "meal": "Lunch",
+        "food": "green_veg",
+        "name": "Green beans/broccoli/asparagus",
+        "unit": "g",
+        "from": 0,
+        "to": 65
+      },
       {
         "where": null,
         "meal": "Pre-workout",
         "food": "rice_cake",
         "name": "Flavored rice cake",
         "unit": "each",
-        "from": 5,
-        "to": 4
+        "from": 4,
+        "to": 0
+      },
+      {
+        "where": null,
+        "meal": "Pre-workout",
+        "food": "nut_butter",
+        "name": "Natural peanut/almond butter",
+        "unit": "g",
+        "from": 19,
+        "to": 0
+      },
+      {
+        "where": null,
+        "meal": "Pre-workout",
+        "food": "banana",
+        "name": "Banana, medium",
+        "unit": "each",
+        "from": 0,
+        "to": 2
+      },
+      {
+        "where": null,
+        "meal": "Pre-workout",
+        "food": "applesauce",
+        "name": "Unsweetened applesauce cup",
+        "unit": "each",
+        "from": 0,
+        "to": 1
       },
       {
         "where": null,
@@ -177,41 +365,120 @@
         "food": "rice",
         "name": "Jasmine/white rice, cooked",
         "unit": "g",
-        "from": 270,
-        "to": 200
+        "from": 200,
+        "to": 0
+      },
+      {
+        "where": null,
+        "meal": "Post-workout",
+        "food": "sweet_potato",
+        "name": "Sweet potato",
+        "unit": "g",
+        "from": 0,
+        "to": 300
+      },
+      {
+        "where": null,
+        "meal": "M4",
+        "food": "lean_beef",
+        "name": "93/7 ground beef/turkey, cooked",
+        "unit": "oz",
+        "from": 6,
+        "to": 0
+      },
+      {
+        "where": null,
+        "meal": "M4",
+        "food": "sweet_potato",
+        "name": "Sweet potato",
+        "unit": "g",
+        "from": 300,
+        "to": 0
+      },
+      {
+        "where": null,
+        "meal": "M4",
+        "food": "green_veg",
+        "name": "Green beans/broccoli/asparagus",
+        "unit": "g",
+        "from": 65,
+        "to": 0
+      },
+      {
+        "where": null,
+        "meal": "Snack",
+        "food": "greek_yogurt",
+        "name": "0% Greek yogurt, single-serve cup",
+        "unit": "cup",
+        "from": 1,
+        "to": 0
+      },
+      {
+        "where": null,
+        "meal": "Snack",
+        "food": "granola",
+        "name": "Granola (15 g carbs worth)",
+        "unit": "each",
+        "from": 1,
+        "to": 0
+      },
+      {
+        "where": null,
+        "meal": "Snack",
+        "food": "blueberries",
+        "name": "Blueberries",
+        "unit": "g",
+        "from": 70,
+        "to": 0
+      },
+      {
+        "where": null,
+        "meal": "Evening",
+        "food": "greek_yogurt",
+        "name": "0% Greek yogurt, single-serve cup",
+        "unit": "cup",
+        "from": 0,
+        "to": 1
+      },
+      {
+        "where": null,
+        "meal": "Evening",
+        "food": "granola_g",
+        "name": "Granola (weighed)",
+        "unit": "g",
+        "from": 0,
+        "to": 40
+      },
+      {
+        "where": null,
+        "meal": "Evening",
+        "food": "nut_butter",
+        "name": "Natural peanut/almond butter",
+        "unit": "g",
+        "from": 0,
+        "to": 16
       }
     ],
     "kcal": {
-      "from": 2353,
-      "to": 2215,
-      "delta": -138
+      "from": 2215,
+      "to": 2373,
+      "delta": 158
     },
     "changed": true
   },
   "decision": {
-    "change": -1,
+    "change": 0,
     "stoppedAt": null,
-    "reason": "rate +0.73 %BW/wk, over the +0.35 cap, adherence 100 %",
-    "checks": [
-      {
-        "key": "adherence",
-        "ok": true,
-        "text": "adherence 100 %"
-      },
-      {
-        "key": "data",
-        "ok": true,
-        "text": "5 weigh-ins"
-      },
-      {
-        "key": "rate",
-        "ok": true,
-        "text": "rate +0.73 %BW/wk, over the +0.35 cap"
-      }
-    ]
+    "coach_plan": "DENSITY-2026-11-15",
+    "reason": "New lean-gain plan (claude/NUTRITION_PLAN.md rev 4): about 2,375 kcal on lift days, ~100 kcal over the estimated 2,300 maintenance, for +0.1–0.2 %BW a week.",
+    "checks": []
   },
-  "notes": [],
-  "reason": "Rate +0.73 %BW/wk, over the +0.35 cap, adherence 100 %.",
+  "notes": [
+    "Weekly changes now move lunch rice ±90 g (≈100 kcal).",
+    "Ignore the first 5–7 days on the scale: carbs and sodium shift water.",
+    "Adherence now counts on-plan days against 5: Mon–Fri on plan is 100 %. Tap weekends Partial with your estimate rather than Off, so the calorie math sees them."
+  ],
+  "reason": "New lean-gain plan (claude/NUTRITION_PLAN.md rev 4): about 2,375 kcal on lift days, ~100 kcal over the estimated 2,300 maintenance, for +0.1–0.2 %BW a week.",
   "cardio": {
     "schema_version": 1,
     "mode": "bulk",
@@ -227,8 +494,8 @@
     "reason": "Bulk: two easy sessions a week for heart health, recovery and appetite. Their calories count in your expenditure, so the food covers them and you keep gaining.",
     "change": null
   },
-  "generated_utc": "2026-11-07T15:00:55.602Z",
-  "generated_local_date": "2026-11-07",
-  "created_utc": "2026-11-07T15:00:55.602Z",
-  "updated_utc": "2026-11-08T17:08:06.088Z"
+  "generated_utc": "2026-11-15T17:08:51.163Z",
+  "generated_local_date": "2026-11-15",
+  "created_utc": "2026-11-15T17:08:51.163Z",
+  "updated_utc": "2026-11-15T17:08:51.163Z"
 }

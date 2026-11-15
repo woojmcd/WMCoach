@@ -90,6 +90,20 @@
       "stopped_at": "adherence",
       "cardio": "2 × 25 min stairs (Tue, Thu)",
       "cardio_changed": false
+    },
+    {
+      "week_start": "2026-11-15",
+      "local_date": "2026-11-15",
+      "generated_utc": "2026-11-15T17:08:51.163Z",
+      "mode": "bulk",
+      "changed": true,
+      "kcal_from": 2215,
+      "kcal_to": 2373,
+      "delta": 158,
+      "what": "New plan: Lean-gain plan",
+      "reason": "New lean-gain plan (claude/NUTRITION_PLAN.md rev 4): about 2,375 kcal on lift days, ~100 kcal over the estimated 2,300 maintenance, for +0.1–0.2 %BW a week.",
+      "stopped_at": null,
+      "coach_plan": "DENSITY-2026-11-15"
     }
   ]
 }

@@ -1,24 +1,17 @@
 {
   "schema_version": 1,
-  "local_date": "2026-11-14",
+  "local_date": "2026-11-15",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-11-14T19:37:49.228Z",
+  "generated_utc": "2026-11-15T17:08:51.163Z",
   "readiness": {
     "status": "green",
     "flags": [],
-    "reason": "recovery normal",
-    "missing": false,
-    "travel": null,
-    "hrv_ms": null,
-    "resting_hr": 60,
-    "sleep_h": 6.65,
-    "baseline": {
-      "hrv_ms": null,
-      "resting_hr": null
-    }
+    "reason": "no recovery data",
+    "missing": true,
+    "travel": null
   },
   "day": {
-    "dow": 6,
+    "dow": 7,
     "name": "Open: cardio / social",
     "rest_day": true
   },
@@ -31,7 +24,7 @@
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-11-14",
+    "date": "2026-11-15",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -60,8 +53,8 @@
       "to": "2026-11-15",
       "target_sessions": 2,
       "target_min": 50,
-      "done_sessions": 2,
-      "done_min": 59,
+      "done_sessions": 3,
+      "done_min": 86,
       "days": [
         2,
         4
@@ -84,54 +77,57 @@
           "avg_hr": 170,
           "source": "strava",
           "id": "20965385928"
+        },
+        {
+          "local_date": "2026-11-14",
+          "minutes": 27,
+          "type": "Run",
+          "name": "Afternoon Run",
+          "avg_hr": 159,
+          "source": "strava",
+          "id": "20989745288"
         }
       ]
     }
   },
   "daily": {
     "schema_version": 1,
-    "date": "2026-11-13",
-    "label": "Fri 13 Nov",
-    "tone": "warn",
-    "headline": "Only 16 of 24 sets were logged. Also: you were off plan. Good: 4 lifts beat last time, weighed in.",
-    "focus": "Log each set right after you finish it: the targets come from the logbook.",
+    "date": "2026-11-14",
+    "label": "Sat 14 Nov",
+    "tone": "good",
+    "headline": "Good day: cardio done, on plan, weighed in.",
+    "focus": "Same again today: hit the plan and beat the logbook.",
     "today": "Open day.",
     "points": [
       {
         "key": "recovery",
-        "tone": "good",
-        "title": "Last night",
-        "text": "6.7 h sleep, a bit short of 7. Resting HR 60 (your average builds over the first few nights). 3,673 steps yesterday. Readiness green."
+        "tone": "warn",
+        "title": "Recovery",
+        "text": "Last night isn’t in Apple Health yet: Oura sends it when its app opens. Open Oura, then tap Sync Health on the Log or Body tab."
       },
       {
         "key": "weight",
         "tone": "good",
         "title": "Weight",
-        "text": "180.6 lb. Trend 179.7 lb (+0.7 lb in a week)."
-      },
-      {
-        "key": "training",
-        "tone": "warn",
-        "title": "Training",
-        "text": "Upper Pull #2: 16 of 24 sets logged. Beat last time on 4: Reverse Pec Deck Flyes 110×15 (was 110×13); Cable Lat Pullovers 57.5×19 (was 57.5×15); Single Arm DB Rows 70×13 (was 70×10); and 1 more. 8 sets not logged: those can’t drive the next targets."
+        "text": "179.4 lb. Trend 179.7 lb (+0.7 lb in a week)."
       },
       {
         "key": "cardio",
-        "tone": "info",
+        "tone": "good",
         "title": "Cardio",
-        "text": "Nothing prescribed or done. 3-mile pace today: steady, 8:58–9:18/mi (about 27:24). Readiness green. Baseline 9:08/mi from your last 5 3-mile runs."
+        "text": "Extra: 27 min run (Strava). Average HR 159: above your Zone 2 (126–156), so a hard session rather than easy cardio. Week so far: 3 of 2 sessions. 3-mile pace today: steady, 7:48–8:08/mi (about 23:54). Readiness not in yet. Baseline 7:58/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",
-        "tone": "warn",
+        "tone": "good",
         "title": "Food",
-        "text": "Off plan. That day is left out of the expenditure estimate, so the macros learn nothing from it. If you meant to tap something else, change it on the Body tab."
+        "text": "On plan (2,215 kcal)."
       }
     ],
     "pace": {
       "kind": "steady",
-      "lo": 538,
-      "hi": 558
+      "lo": 468,
+      "hi": 488
     }
   }
 }
