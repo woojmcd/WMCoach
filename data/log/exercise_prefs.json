@@ -75,6 +75,12 @@
       "updated_utc": "2026-10-13T00:38:29.688Z"
     },
     {
+      "id": "mon-seated-lateral-db-raises",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-11-17T03:02:39.028Z"
+    },
+    {
       "id": "mon-single-cable-lateral-raise",
       "increment_lb": 2.5,
       "alternates": [],
