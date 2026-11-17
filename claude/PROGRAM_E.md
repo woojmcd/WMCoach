@@ -5,7 +5,7 @@
 
 ## Goals
 1. **Size:** get to 180+ lb and *hold* it as a natural lifter. Walter has about 4 consistent training years, so there's real room left. DEXA baseline before the bulk, rescan at 12–16 weeks.
-2. **Lower-body priority:** vastus lateralis (outer quad sweep) and hip abductors (glute med; hip width).
+2. **Lower-body priority:** vastus lateralis (outer quad sweep) and adductors (inner-thigh mass, for a thigh that looks thick from the front). Changed from abductors on 2026-11-16: Walter's glutes are already big and extra hip width works against the top-heavy look he wants.
 3. **Upper-body priority:** upper traps and upper-back thickness (the "football" look), plus side delts.
 4. **Abs:** train for muscle growth with loaded, progressive work, 3×/week.
 5. **Posture:** scapular pulling outweighs pressing about 2:1, plus postural endurance work (carries, long squeezes).
@@ -44,7 +44,7 @@ Tempo notation: lower–pause–lift–squeeze, in seconds. Superset = 15 s betw
 | 4 | Machine Fly / Pec Deck, stop at the shoulder line (single-arm cable fly) | 3 × 12–15 | 90 s · 3-0-1-1 | Chest | Chest volume without a loaded end-range stretch on tight pecs. Machine over a two-stack cable fly because paired cable stations are hard to get |
 | 5 | Superset: Seated → Standing DB Lateral, same weight | 3 rounds: 10 → failure | 15 s / 90 s | Side delt | Signature finisher. Light load, so failure costs nothing in IAP |
 | 6 | Superset: Rope Pushdown → Straight-Bar Pushdown, same weight | 3 rounds: 10–12 → AMRAP | 15 s / 90 s | Triceps | The stronger bar position extends the set without going overhead |
-| 7 | Superset: Strict Hanging Knee Raise with pelvic curl → Machine Hip Abduction | 3 rounds: 8–15 → 15–20 | 15 s / 90 s | Lower abs; glute med | Curling the pelvis up makes it ab work, not hip flexor. Abduction is the second weekly abductor hit: zero soreness, helps running stability. Alt for the knee raise: reverse crunch on a bench |
+| 7 | Superset: Strict Hanging Knee Raise with pelvic curl (captain's chair is fine) → Machine Adductors | 3 rounds: 8–15 → 15–20 | 15 s / 90 s | Lower abs; adductors | Curling the pelvis up makes it ab work, not hip flexor. Adductors' second weekly hit: no spinal load. Control the stretch; stop the set if the groin pinch shows up |
 
 ### Tue: Pull A, traps + upper-back thickness (~58 min)
 | # | Lift (alt) | Sets × reps | Rest / tempo | Targets | Mechanical justification |
@@ -57,17 +57,17 @@ Tempo notation: lower–pause–lift–squeeze, in seconds. Superset = 15 s betw
 | 6 | Reverse Pec Deck (single-arm cross-body reverse cable fly) | 3 × 12–15 | 90 s · 2-0-1-1 | Rear delt | Width from the side and back. Machine-supported |
 | 7 | Superset: Reverse Cable Curl → Cable Bar Curl, same weight | 3 rounds: 8–10 → failure | 15 s / 90 s | Forearms, biceps | Signature superset. Elbows pinned, no hip drive |
 
-### Wed: Legs + abs, outer quad and abductor focus (~60 min)
+### Wed: Legs + abs, outer quad and adductor focus (~60 min)
 Keep hard or long runs at least 48 h after this session. Easy runs are fine.
 
 | # | Lift (alt) | Sets × reps | Rest / tempo | Targets | Mechanical justification |
 |---|---|---|---|---|---|
-| 1 | Machine Hip Abduction, torso leaned forward | 3 × 12–15, last set + partials | 90 s · 2-0-1-1 | Glute med/upper glute | Priority first. Leaning forward shifts work into the upper glute for hip width. Low fatigue, and it gets the knees tracking before squatting |
+| 1 | Machine Adductors | 3 × 12–15 | 90 s · 2-0-1-1 | Adductors | Inner-thigh mass. Same slot as Program C's Wed Machine Adductors, so its history (160 × 17) carries over. Adductors attach beside the inguinal canal: lower with control, no bouncing, stop at any groin pinch |
 | 2 | Close-Stance Chain Squat, knees over toes (heel-elevated KB goblet squat) | 3 × 8–10, **≤225 lb at the top, RIR 3** | 120 s · 3-0-1-0 | Quads (outer quad bias) | Your outer-quad lift, kept under the ceiling. Chains lighten the bottom, where the brace is hardest. Exhale on the way up |
 | 3 | Leg Press, feet low and narrow (single-leg press) | 3 × 10–12 | 90–120 s · 3-1-1-0 · RIR 1–2 | Quads (outer quad) | Main lift. Low, narrow feet mean deep knee bend and outer-quad emphasis. Back pad, no spinal load. If the waistband pinch shows up, switch to single-leg |
 | 4 | Leg Extension, last set rest-pause (+2 mini-sets) | 3 × 12–15 | 90 s · 2-0-1-1 | Quads | Failure with no spine or IAP cost. Rest-pause adds volume to make up for one leg day a week |
 | 5 | Seated Ham Curl (lying curl) | 2 × 8–10 + 1 × 12–15 lighter | 90 s · 3-0-1-1 | Hamstrings | Hamstrings without a hinge, worked in the stretch. Running already loads the posterior chain |
-| 6 | Superset: Standing Cable Hip Abduction → Heavy Cable Crunch | 4 rounds: 12–15/side → 8–12 | 15 s / 90 s | Glute med; abs | Second abductor exercise, then abs trained like any other muscle: full spinal curl, forceful exhale, add load over time |
+| 6 | Superset: Standing Cable Hip Adduction → Heavy Cable Crunch | 3 rounds + 1 crunch set: 12–15/side → 8–12 | 15 s / 90 s | Adductors; abs | Second adductor exercise, then abs trained like any other muscle: full spinal curl, forceful exhale, add load over time |
 
 ### Thu: Push B, side delts + traps (~58 min)
 | # | Lift (alt) | Sets × reps | Rest / tempo | Targets | Mechanical justification |
@@ -100,7 +100,7 @@ Keep hard or long runs at least 48 h after this session. Easy runs are fine.
 | Chest | 11 | |
 | Triceps / biceps | 6 rounds each | Supersets |
 | Quads | 9 | Up from 5 in Program C, still 1 day |
-| Abductors | 8–9 | Wed + Mon |
+| Adductors | 9 | Mon + Wed (abduction dropped 2026-11-16) |
 | Hamstrings | 3 | Running covers the posterior chain |
 | Abs | ~13 loaded + carries | Mon, Tue, Wed, Fri. Progressed by load (see below) |
 | Calves | 0 | By design |
