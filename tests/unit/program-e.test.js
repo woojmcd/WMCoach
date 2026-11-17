@@ -51,7 +51,7 @@ test('supersets: same-weight partners point at their lead; leads rest 15 s', () 
     assert.ok(lead && lead.group === e.group && lead.type === 'superset_lead', e.id);
     assert.equal(lead.rest_s, 15);
   }
-  assert.deepEqual(['mon-hanging-knee-raises', 'mon-machine-hip-abduction'].map((id) => byId[id].label), ['C1', 'C2']);
+  assert.deepEqual(['mon-hanging-knee-raises', 'mon-machine-adductors'].map((id) => byId[id].label), ['C1', 'C2']);
 });
 
 test('chain squat: never targeted above 225 lb; at the ceiling it progresses in tempo, not load', () => {
