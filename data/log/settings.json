@@ -1,7 +1,7 @@
 {
   "schema_version": 4,
   "key": "settings",
-  "updated_utc": "2026-11-17T03:53:22.184Z",
+  "updated_utc": "2026-11-17T04:10:46.841Z",
   "value": {
     "tz_mode": "auto",
     "tz_manual": null,
@@ -25,7 +25,7 @@
     "carb_cycling": false,
     "lifted_less_since_may": true,
     "created_utc": "2026-10-09T16:19:36.712Z",
-    "updated_utc": "2026-11-17T03:53:22.184Z",
+    "updated_utc": "2026-11-17T04:10:46.841Z",
     "travel_mode": false
   }
 }
