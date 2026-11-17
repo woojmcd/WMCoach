@@ -57,6 +57,12 @@
       "updated_utc": "2026-10-13T00:19:54.979Z"
     },
     {
+      "id": "mon-rope-face-pulls",
+      "increment_lb": 2.5,
+      "alternates": [],
+      "updated_utc": "2026-11-17T02:27:25.633Z"
+    },
+    {
       "id": "mon-rope-pushdowns",
       "increment_lb": 2.5,
       "alternates": [],
