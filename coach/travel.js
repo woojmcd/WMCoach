@@ -20,7 +20,7 @@ export const TRAVEL = {
   'mon-pec-deck-flyes': { name: 'Flat DB Flyes', alternates: ['Feet-Elevated Push-ups'], ...DB, cue: STOP },
   'mon-rope-pushdowns': { name: 'DB Kickbacks', ...DB },
   'mon-straight-bar-pushdowns': { name: 'Close-Grip Push-ups', alternates: ['DB Kickbacks'] },
-  'mon-machine-hip-abduction': { name: 'Side-Lying Hip Abduction', alternates: ['Banded Lateral Walks'] },
+  'mon-machine-adductors': { name: 'Side-Lying Hip Adduction', alternates: ['Banded Hip Adduction'] },
   // Pull A
   'tue-chest-supported-machine-row': { name: 'Chest-Supported DB Rows', alternates: ['Single Arm DB Rows'], ...DB, cue: 'Chest on an incline bench, neutral grip, 2 s squeeze.' },
   'tue-neutral-grip-pulldown': { name: 'Neutral-Grip Pull-ups', alternates: ['Single Arm DB Rows'] },
@@ -30,12 +30,12 @@ export const TRAVEL = {
   'tue-reverse-cable-curls': { name: 'Reverse-Grip DB Curls', ...DB },
   'tue-cable-bar-curls': { name: 'DB Curls', ...DB },
   // Legs and abs
-  'wed-machine-hip-abduction': { name: 'Side-Lying Hip Abduction', alternates: ['Banded Lateral Walks'] },
+  'wed-machine-adductors': { name: 'Side-Lying Hip Adduction', alternates: ['Banded Hip Adduction'] },
   'wed-close-stance-chain-squat': { name: 'Heel-Elevated Goblet Squats', alternates: ['DB Front Squats'], ...DB, cue: 'Knees over toes. Exhale on the way up; no breath-hold.' },
   'wed-leg-press': { name: 'Bulgarian Split Squats (DB)', alternates: ['DB Reverse Lunges'], ...DB },
   'wed-leg-extensions': { name: 'Sissy Squats', alternates: ['Heel-Elevated Goblet Squats'] },
   'wed-seated-hamstring-curls': { name: 'Slider Leg Curls', alternates: ['Swiss Ball Leg Curls'] },
-  'wed-standing-cable-hip-abduction': { name: 'Banded Lateral Walks', alternates: ['Side-Lying Hip Abduction'] },
+  'wed-standing-cable-hip-adduction': { name: 'Banded Hip Adduction', alternates: ['Side-Lying Hip Adduction'] },
   'wed-heavy-cable-crunches': { name: 'Weighted Crunches (DB)', alternates: ['Bench Reverse Crunch'], ...DB },
   // Push B
   'thu-rope-face-pulls': { name: 'Prone Reverse DB Flyes', alternates: ['Band Pull-Aparts'], ...DB, cue: 'Primer: chest on an incline bench, light, 2 s squeeze.' },
@@ -53,7 +53,7 @@ export const TRAVEL = {
 };
 
 // Alternatives done with body weight (logged as reps, +lb only if weighted), whatever slot they fill.
-const BODYWEIGHT = new Set(['Feet-Elevated Push-ups', 'Close-Grip Push-ups', 'Pull-ups', 'Neutral-Grip Pull-ups', 'Inverted Rows', 'Pull-up Negatives', 'Hanging Knee Raises', 'Bench Reverse Crunch', 'Slider Leg Curls', 'Swiss Ball Leg Curls', 'Sissy Squats', 'Side-Lying Hip Abduction', 'Banded Lateral Walks', 'Band Pull-Aparts']);
+const BODYWEIGHT = new Set(['Feet-Elevated Push-ups', 'Close-Grip Push-ups', 'Pull-ups', 'Neutral-Grip Pull-ups', 'Inverted Rows', 'Pull-up Negatives', 'Hanging Knee Raises', 'Bench Reverse Crunch', 'Slider Leg Curls', 'Swiss Ball Leg Curls', 'Sissy Squats', 'Side-Lying Hip Adduction', 'Banded Hip Adduction', 'Band Pull-Aparts']);
 export const isBodyweightLift = (name) => BODYWEIGHT.has(name);
 
 export const travelMovement = (name) => `travel-${slug(name)}`;

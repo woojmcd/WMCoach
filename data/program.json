@@ -303,10 +303,10 @@
           ]
         },
         {
-          "id": "mon-machine-hip-abduction",
-          "movement": "machine-hip-abduction",
-          "name": "Machine Hip Abduction",
-          "source_name": "Machine Hip Abduction",
+          "id": "mon-machine-adductors",
+          "movement": "machine-adductors",
+          "name": "Machine Adductors",
+          "source_name": "Machine Adductors",
           "order": 10,
           "group": "Mon-C",
           "label": "C2",
@@ -323,13 +323,15 @@
             1
           ],
           "rest_s": 90,
-          "cue": "Second weekly abductor hit.",
+          "cue": "Second weekly adductor hit (inner thigh). Adductors attach beside the inguinal canal: lower with control, no bouncing out of the stretch; stop the set if the groin pinch shows up.",
           "equipment": "machine",
           "load_kind": "external",
           "increment_lb": 10,
-          "muscle": "abductors",
+          "muscle": "adductors",
           "main_lift": false,
-          "alternates": []
+          "alternates": [
+            "Standing Cable Hip Adduction"
+          ]
         }
       ]
     },
@@ -620,14 +622,14 @@
       "dow": 3,
       "day": "Wed",
       "name": "Legs and abs",
-      "focus": "Outer quad + abductors",
+      "focus": "Outer quad + adductors",
       "est_min": 60,
       "exercises": [
         {
-          "id": "wed-machine-hip-abduction",
-          "movement": "machine-hip-abduction",
-          "name": "Machine Hip Abduction",
-          "source_name": "Machine Hip Abduction",
+          "id": "wed-machine-adductors",
+          "movement": "machine-adductors",
+          "name": "Machine Adductors",
+          "source_name": "Machine Adductors",
           "order": 1,
           "group": null,
           "label": null,
@@ -644,13 +646,15 @@
             1
           ],
           "rest_s": 90,
-          "cue": "Lean the torso forward (upper glute). Last set: add partials. 2-0-1-1.",
+          "cue": "Inner-thigh mass for the 3D thigh. Same machine and slot as Program C, so your history carries over. 2-0-1-1. Adductors attach beside the inguinal canal: lower with control, no bouncing out of the stretch; stop the set if the groin pinch shows up.",
           "equipment": "machine",
           "load_kind": "external",
           "increment_lb": 10,
-          "muscle": "abductors",
+          "muscle": "adductors",
           "main_lift": false,
-          "alternates": []
+          "alternates": [
+            "Standing Cable Hip Adduction"
+          ]
         },
         {
           "id": "wed-close-stance-chain-squat",
@@ -787,14 +791,14 @@
           ]
         },
         {
-          "id": "wed-standing-cable-hip-abduction",
-          "movement": "standing-cable-hip-abduction",
-          "name": "Standing Cable Hip Abduction",
-          "source_name": "Standing Cable Hip Abduction",
+          "id": "wed-standing-cable-hip-adduction",
+          "movement": "standing-cable-hip-adduction",
+          "name": "Standing Cable Hip Adduction",
+          "source_name": "Standing Cable Hip Adduction",
           "order": 6,
           "group": "Wed-A",
           "label": "A1",
-          "sets": 4,
+          "sets": 3,
           "type": "range",
           "scheme": {
             "kind": "range",
@@ -802,19 +806,21 @@
             "max": 15,
             "per_side": true
           },
-          "prescription": "4 × 12–15 each side",
+          "prescription": "3 × 12–15 each side",
           "rir": [
             0,
             1
           ],
           "rest_s": 15,
-          "cue": null,
+          "cue": "Ankle strap, sweep the working leg across the body. 3 rounds with the crunch; its 4th set is done alone. Adductors attach beside the inguinal canal: lower with control, no bouncing out of the stretch; stop the set if the groin pinch shows up.",
           "equipment": "cable",
           "load_kind": "external",
           "increment_lb": 5,
-          "muscle": "abductors",
+          "muscle": "adductors",
           "main_lift": false,
-          "alternates": []
+          "alternates": [
+            "Machine Adductors"
+          ]
         },
         {
           "id": "wed-heavy-cable-crunches",

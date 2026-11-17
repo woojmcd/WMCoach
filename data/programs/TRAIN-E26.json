@@ -204,7 +204,7 @@
           "cue": "Strict: curl the pelvis up, never swing. 8–15 reps; once 3 × 15 is clean, hold a DB between the feet."
         },
         {
-          "name": "Machine Hip Abduction",
+          "name": "Machine Adductors",
           "sets": 3,
           "type": "range",
           "scheme": {
@@ -218,9 +218,12 @@
           ],
           "rest_s": 90,
           "equipment": "machine",
-          "muscle": "abductors",
+          "muscle": "adductors",
           "group": "Mon-C",
-          "cue": "Second weekly abductor hit."
+          "cue": "Second weekly adductor hit (inner thigh). Adductors attach beside the inguinal canal: lower with control, no bouncing out of the stretch; stop the set if the groin pinch shows up.",
+          "alternates": [
+            "Standing Cable Hip Adduction"
+          ]
         }
       ]
     },
@@ -420,11 +423,11 @@
     {
       "day": "Wed",
       "name": "Legs and abs",
-      "focus": "Outer quad + abductors",
+      "focus": "Outer quad + adductors",
       "est_min": 60,
       "exercises": [
         {
-          "name": "Machine Hip Abduction",
+          "name": "Machine Adductors",
           "sets": 3,
           "type": "range",
           "scheme": {
@@ -438,8 +441,11 @@
           ],
           "rest_s": 90,
           "equipment": "machine",
-          "muscle": "abductors",
-          "cue": "Lean the torso forward (upper glute). Last set: add partials. 2-0-1-1."
+          "muscle": "adductors",
+          "cue": "Inner-thigh mass for the 3D thigh. Same machine and slot as Program C, so your history carries over. 2-0-1-1. Adductors attach beside the inguinal canal: lower with control, no bouncing out of the stretch; stop the set if the groin pinch shows up.",
+          "alternates": [
+            "Standing Cable Hip Adduction"
+          ]
         },
         {
           "name": "Close-Stance Chain Squat",
@@ -536,8 +542,8 @@
           "cue": "3-0-1-1."
         },
         {
-          "name": "Standing Cable Hip Abduction",
-          "sets": 4,
+          "name": "Standing Cable Hip Adduction",
+          "sets": 3,
           "type": "range",
           "scheme": {
             "kind": "range",
@@ -551,8 +557,12 @@
           ],
           "rest_s": 15,
           "equipment": "cable",
-          "muscle": "abductors",
-          "group": "Wed-A"
+          "muscle": "adductors",
+          "group": "Wed-A",
+          "alternates": [
+            "Machine Adductors"
+          ],
+          "cue": "Ankle strap, sweep the working leg across the body. 3 rounds with the crunch; its 4th set is done alone. Adductors attach beside the inguinal canal: lower with control, no bouncing out of the stretch; stop the set if the groin pinch shows up."
         },
         {
           "name": "Heavy Cable Crunches",
