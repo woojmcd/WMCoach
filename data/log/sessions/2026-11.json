@@ -6947,6 +6947,635 @@
       ],
       "note": null,
       "updated_utc": "2026-11-18T00:09:01.716Z"
+    },
+    {
+      "id": "sess-74bf635d-ea2a-4f93-ae3d-437367dd9a9d",
+      "local_date": "2026-11-18",
+      "tz": "America/Los_Angeles",
+      "utc": "2026-11-19T01:03:34.661Z",
+      "started_utc": "2026-11-19T01:03:34.661Z",
+      "finished_utc": "2026-11-19T02:01:29.012Z",
+      "status": "finished",
+      "day_dow": 3,
+      "day_name": "Legs and abs",
+      "program_id": "TRAIN-E26",
+      "week": 1,
+      "deload": false,
+      "exercises": [
+        {
+          "slot_id": "wed-machine-adductors",
+          "movement": "machine-adductors",
+          "name": "Machine Adductors",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Aim +1 rep where below 15",
+          "change": "hold",
+          "delta_lb": 0,
+          "calibration": false,
+          "last": "160 × 17, 15, 13",
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": 160,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 15,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 160,
+              "reps": 15,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:03:34.661Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 160,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 15,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 160,
+              "reps": 15,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:06:52.289Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": 160,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": 14,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 160,
+              "reps": 14,
+              "rir": 0,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:09:43.598Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-close-stance-chain-squat",
+          "movement": "close-stance-chain-squat",
+          "name": "Close-Stance Chain Squat",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Calibration: pick a weight for 8–10 reps at RIR 3, no more than 225 lb",
+          "change": null,
+          "delta_lb": 0,
+          "calibration": true,
+          "last": null,
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": null,
+                "rir": [
+                  3,
+                  3
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 180,
+              "reps": 15,
+              "rir": 3,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:14:47.229Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": null,
+                "rir": [
+                  3,
+                  3
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 225,
+              "reps": 14,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:18:41.537Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": null,
+                "rir": [
+                  3,
+                  3
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 225,
+              "reps": 14,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:21:54.519Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-leg-press",
+          "movement": "leg-press",
+          "name": "Leg Press (feet low, narrow)",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Calibration: pick a weight for 10–12 reps at RIR 1–2",
+          "change": null,
+          "delta_lb": 0,
+          "calibration": true,
+          "last": null,
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": null,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 180,
+              "reps": 14,
+              "rir": 2,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:25:35.938Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": null,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 225,
+              "reps": 13,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:29:10.823Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 10,
+                "reps_max": 12,
+                "aim": null,
+                "rir": [
+                  1,
+                  2
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 225,
+              "reps": 13,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:34:03.286Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-leg-extensions",
+          "movement": "leg-extensions",
+          "name": "Leg Extensions",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "range",
+          "reason": "Calibration: pick a weight for 12–15 reps at RIR 0–1",
+          "change": null,
+          "delta_lb": 0,
+          "calibration": true,
+          "last": null,
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 130,
+              "reps": 13,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:36:46.466Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 130,
+              "reps": 12,
+              "rir": 0,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:39:36.038Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 130,
+              "reps": 11,
+              "rir": 0,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:43:14.626Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-seated-hamstring-curls",
+          "movement": "seated-hamstring-curls",
+          "name": "Seated Hamstring Curls",
+          "swapped_from": null,
+          "label": null,
+          "group": null,
+          "type": "top_backoff",
+          "reason": "Calibration: pick a weight for 8–10 reps at RIR 1",
+          "change": null,
+          "delta_lb": 0,
+          "calibration": true,
+          "last": null,
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "top",
+              "target": {
+                "load": null,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": null,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 115,
+              "reps": 11,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:46:43.904Z"
+            },
+            {
+              "kind": "top",
+              "target": {
+                "load": null,
+                "reps_min": 8,
+                "reps_max": 10,
+                "aim": null,
+                "rir": [
+                  1,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 115,
+              "reps": 10,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:49:28.926Z"
+            },
+            {
+              "kind": "backoff",
+              "target": {
+                "load": null,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 115,
+              "reps": 9,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:52:31.919Z"
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-standing-cable-hip-adduction",
+          "movement": "standing-cable-hip-adduction",
+          "name": "Standing Cable Hip Adduction",
+          "swapped_from": null,
+          "label": "A1",
+          "group": "Wed-A",
+          "type": "range",
+          "reason": "Calibration: pick a weight for 12–15 reps at RIR 0–1",
+          "change": null,
+          "delta_lb": 0,
+          "calibration": true,
+          "last": null,
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": null,
+              "reps": 12,
+              "rir": 1,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": null,
+              "reps": 12,
+              "rir": 1,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 12,
+                "reps_max": 15,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": null,
+              "reps": 12,
+              "rir": 1,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            }
+          ]
+        },
+        {
+          "slot_id": "wed-heavy-cable-crunches",
+          "movement": "heavy-cable-crunches",
+          "name": "Heavy Cable Crunches",
+          "swapped_from": null,
+          "label": "A2",
+          "group": "Wed-A",
+          "type": "range",
+          "reason": "Calibration: pick a weight for 8–12 reps at RIR 0–1",
+          "change": null,
+          "delta_lb": 0,
+          "calibration": true,
+          "last": null,
+          "skipped": false,
+          "note": null,
+          "sets": [
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 8,
+                "reps_max": 12,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 65,
+              "reps": 12,
+              "rir": 3,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:55:04.786Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 8,
+                "reps_max": 12,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 72.5,
+              "reps": 12,
+              "rir": 1,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T01:58:29.620Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 8,
+                "reps_max": 12,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 72.5,
+              "reps": 11,
+              "rir": 0,
+              "seconds": null,
+              "done": true,
+              "skipped": false,
+              "utc": "2026-11-19T02:01:29.012Z"
+            },
+            {
+              "kind": "work",
+              "target": {
+                "load": null,
+                "reps_min": 8,
+                "reps_max": 12,
+                "aim": null,
+                "rir": [
+                  0,
+                  1
+                ],
+                "seconds": null,
+                "amrap": false
+              },
+              "load": 72.5,
+              "reps": 8,
+              "rir": 1,
+              "seconds": null,
+              "done": false,
+              "skipped": false,
+              "utc": null
+            }
+          ]
+        }
+      ],
+      "note": null,
+      "updated_utc": "2026-11-19T16:44:25.862Z",
+      "auto_finished": true
     }
   ]
 }
