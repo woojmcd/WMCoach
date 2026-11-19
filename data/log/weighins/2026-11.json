@@ -142,6 +142,16 @@
       "source": "app",
       "backdated": false,
       "updated_utc": "2026-11-19T00:01:58.693Z"
+    },
+    {
+      "id": "w-dfd69410-0c58-4491-8799-b28e373e2a75",
+      "local_date": "2026-11-19",
+      "utc": "2026-11-19T16:44:31.998Z",
+      "tz": "America/Los_Angeles",
+      "weight_lb": 179,
+      "source": "app",
+      "backdated": false,
+      "updated_utc": "2026-11-19T16:44:31.998Z"
     }
   ]
 }
