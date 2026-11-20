@@ -798,7 +798,7 @@
           "order": 6,
           "group": "Wed-A",
           "label": "A1",
-          "sets": 3,
+          "sets": 4,
           "type": "range",
           "scheme": {
             "kind": "range",
@@ -806,13 +806,13 @@
             "max": 15,
             "per_side": true
           },
-          "prescription": "3 × 12–15 each side",
+          "prescription": "4 × 12–15 each side",
           "rir": [
             0,
             1
           ],
           "rest_s": 15,
-          "cue": "Ankle strap, sweep the working leg across the body. 3 rounds with the crunch; its 4th set is done alone. Adductors attach beside the inguinal canal: lower with control, no bouncing out of the stretch; stop the set if the groin pinch shows up.",
+          "cue": "Ankle strap, sweep the working leg across the body. 4 rounds with the crunch. Adductors attach beside the inguinal canal: lower with control, no bouncing out of the stretch; stop the set if the groin pinch shows up.",
           "equipment": "cable",
           "load_kind": "external",
           "increment_lb": 5,
