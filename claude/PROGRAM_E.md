@@ -67,7 +67,7 @@ Keep hard or long runs at least 48 h after this session. Easy runs are fine.
 | 3 | Leg Press, feet low and narrow (single-leg press) | 3 × 10–12 | 90–120 s · 3-1-1-0 · RIR 1–2 | Quads (outer quad) | Main lift. Low, narrow feet mean deep knee bend and outer-quad emphasis. Back pad, no spinal load. If the waistband pinch shows up, switch to single-leg |
 | 4 | Leg Extension, last set rest-pause (+2 mini-sets) | 3 × 12–15 | 90 s · 2-0-1-1 | Quads | Failure with no spine or IAP cost. Rest-pause adds volume to make up for one leg day a week |
 | 5 | Seated Ham Curl (lying curl) | 2 × 8–10 + 1 × 12–15 lighter | 90 s · 3-0-1-1 | Hamstrings | Hamstrings without a hinge, worked in the stretch. Running already loads the posterior chain |
-| 6 | Superset: Standing Cable Hip Adduction → Heavy Cable Crunch | 3 rounds + 1 crunch set: 12–15/side → 8–12 | 15 s / 90 s | Adductors; abs | Second adductor exercise, then abs trained like any other muscle: full spinal curl, forceful exhale, add load over time |
+| 6 | Superset: Standing Cable Hip Adduction → Heavy Cable Crunch | 4 rounds: 12–15/side → 8–12 | 15 s / 90 s | Adductors; abs | Second adductor exercise, then abs trained like any other muscle: full spinal curl, forceful exhale, add load over time |
 
 ### Thu: Push B, side delts + traps (~58 min)
 | # | Lift (alt) | Sets × reps | Rest / tempo | Targets | Mechanical justification |
@@ -100,7 +100,7 @@ Keep hard or long runs at least 48 h after this session. Easy runs are fine.
 | Chest | 11 | |
 | Triceps / biceps | 6 rounds each | Supersets |
 | Quads | 9 | Up from 5 in Program C, still 1 day |
-| Adductors | 9 | Mon + Wed (abduction dropped 2026-11-16) |
+| Adductors | 10 | Mon + Wed (abduction dropped 2026-11-16) |
 | Hamstrings | 3 | Running covers the posterior chain |
 | Abs | ~13 loaded + carries | Mon, Tue, Wed, Fri. Progressed by load (see below) |
 | Calves | 0 | By design |
