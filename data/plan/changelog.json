@@ -104,6 +104,21 @@
       "reason": "New lean-gain plan (claude/NUTRITION_PLAN.md rev 4): about 2,375 kcal on lift days, ~100 kcal over the estimated 2,300 maintenance, for +0.1–0.2 %BW a week.",
       "stopped_at": null,
       "coach_plan": "DENSITY-2026-11-15"
+    },
+    {
+      "week_start": "2026-11-22",
+      "local_date": "2026-11-21",
+      "generated_utc": "2026-11-21T17:08:26.436Z",
+      "mode": "bulk",
+      "changed": false,
+      "kcal_from": 2215,
+      "kcal_to": 2215,
+      "delta": 0,
+      "what": "",
+      "reason": "No macro change: rate on target (+0.12 %BW/wk), adherence 100 %.",
+      "stopped_at": null,
+      "cardio": "2 × 25 min stairs (Tue, Thu)",
+      "cardio_changed": false
     }
   ]
 }

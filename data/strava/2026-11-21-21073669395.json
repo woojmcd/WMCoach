@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "21073669395",
+  "name": "Morning HIIT",
+  "type": "HighIntensityIntervalTraining",
+  "start_local": "2026-11-21T08:04:35",
+  "local_date": "2026-11-21",
+  "duration_s": 3260,
+  "elapsed_s": 3260,
+  "distance_km": 0,
+  "elevation_m": 0,
+  "avg_hr": 131,
+  "max_hr": 172,
+  "hr_zones_s": null,
+  "relative_effort": 23,
+  "kcal": 513,
+  "location": null,
+  "source": "strava"
+}

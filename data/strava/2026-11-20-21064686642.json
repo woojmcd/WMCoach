@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "21064686642",
+  "name": "Afternoon Stair-Stepper",
+  "type": "StairStepper",
+  "start_local": "2026-11-20T16:08:01",
+  "local_date": "2026-11-20",
+  "duration_s": 1549,
+  "elapsed_s": 1549,
+  "distance_km": 0,
+  "elevation_m": 0,
+  "avg_hr": 123,
+  "max_hr": 134,
+  "hr_zones_s": null,
+  "relative_effort": 5,
+  "kcal": 238,
+  "location": null,
+  "source": "strava"
+}
