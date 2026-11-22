@@ -164,6 +164,24 @@
       "status": "yes",
       "kcal": null,
       "updated_utc": "2026-11-20T17:30:31.755Z"
+    },
+    {
+      "id": "plan-1e4dc0f8-1654-44a0-9dc8-2dad1ed152d4",
+      "local_date": "2026-11-21",
+      "utc": "2026-11-22T18:31:31.670Z",
+      "tz": "America/Los_Angeles",
+      "status": "off",
+      "kcal": null,
+      "updated_utc": "2026-11-22T18:31:31.670Z"
+    },
+    {
+      "id": "plan-6d812114-1810-452b-a605-accb03125e0c",
+      "local_date": "2026-11-22",
+      "utc": "2026-11-22T18:31:34.000Z",
+      "tz": "America/Los_Angeles",
+      "status": "off",
+      "kcal": null,
+      "updated_utc": "2026-11-22T18:31:34.000Z"
     }
   ]
 }
