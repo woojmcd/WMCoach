@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "local_date": "2026-11-21",
+  "local_date": "2026-11-22",
   "tz": "America/Los_Angeles",
-  "generated_utc": "2026-11-21T17:08:26.436Z",
+  "generated_utc": "2026-11-22T17:08:51.245Z",
   "readiness": {
     "status": "green",
     "flags": [],
@@ -11,7 +11,7 @@
     "travel": null
   },
   "day": {
-    "dow": 6,
+    "dow": 7,
     "name": "Open: cardio / social",
     "rest_day": true
   },
@@ -24,7 +24,7 @@
   "addons": [],
   "cardio": {
     "schema_version": 1,
-    "date": "2026-11-21",
+    "date": "2026-11-22",
     "rx": {
       "schema_version": 1,
       "mode": "bulk",
@@ -90,11 +90,11 @@
   },
   "daily": {
     "schema_version": 1,
-    "date": "2026-11-20",
-    "label": "Fri 20 Nov",
-    "tone": "good",
-    "headline": "Good day: cardio done, on plan, weighed in.",
-    "focus": "Same again today: hit the plan and beat the logbook.",
+    "date": "2026-11-21",
+    "label": "Sat 21 Nov",
+    "tone": "warn",
+    "headline": "Food wasn’t logged. Also: no weigh-in; the prescribed cardio was missed.",
+    "focus": "Eat the plan and tap “On plan” before bed.",
     "today": "Open day. Cardio: 25 min stairs at 126–156 bpm (make-up).",
     "points": [
       {
@@ -105,27 +105,21 @@
       },
       {
         "key": "weight",
-        "tone": "good",
-        "title": "Weight",
-        "text": "179.6 lb. Trend 179.7 lb (−0.0 lb in a week)."
-      },
-      {
-        "key": "training",
         "tone": "warn",
-        "title": "Training",
-        "text": "Push B: 23 of 27 sets logged. Below last time: Pec Deck Flyes. 6 baselines set (first time logged): next time they get real targets. 4 sets not logged: those can’t drive the next targets."
+        "title": "Weight",
+        "text": "No weigh-in (5 of the last 7 days). The trend needs 5+ a week: every morning, after the bathroom, before food."
       },
       {
         "key": "cardio",
-        "tone": "good",
+        "tone": "warn",
         "title": "Cardio",
-        "text": "Prescribed 25 min make-up cardio: done. 26 min stairs (Strava). Average HR 123: easy. Week so far: 1 of 2 sessions. 3-mile pace today: steady, 7:48–8:08/mi (about 23:54). Readiness not in yet. Baseline 7:58/mi from your last 5 3-mile runs."
+        "text": "Prescribed 25 min easy stairs: not done. Week so far: 1 of 2 sessions. It moves to the next free day. 3-mile pace today: steady, 7:48–8:08/mi (about 23:54). Readiness not in yet. Baseline 7:58/mi from your last 5 3-mile runs."
       },
       {
         "key": "food",
-        "tone": "good",
+        "tone": "warn",
         "title": "Food",
-        "text": "On plan (2,215 kcal)."
+        "text": "Not logged. Tap “On plan” on the Body tab every day; without it the coach can’t tell a plan that isn’t working from a plan that wasn’t followed."
       }
     ],
     "pace": {

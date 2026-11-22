@@ -159,13 +159,9 @@
     }
   ],
   "progression": {},
-  "last_daily_run_local_date": "2026-11-21",
+  "last_daily_run_local_date": "2026-11-22",
   "last_weekly_run_week": "2026-11-22",
   "readiness_history": [
-    {
-      "local_date": "2026-11-01",
-      "status": "red"
-    },
     {
       "local_date": "2026-11-02",
       "status": "green"
@@ -245,10 +241,14 @@
     {
       "local_date": "2026-11-21",
       "status": "green"
+    },
+    {
+      "local_date": "2026-11-22",
+      "status": "green"
     }
   ],
-  "health_missing_on": "2026-11-21",
-  "last_daily_run_utc": "2026-11-21T17:08:26.436Z",
+  "health_missing_on": "2026-11-22",
+  "last_daily_run_utc": "2026-11-22T17:08:51.245Z",
   "last_daily_run_tz": "America/Los_Angeles",
   "health_rerun_on": "2026-11-14",
   "hr_zones": {
@@ -274,7 +274,7 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-11-21"
+    "updated_local_date": "2026-11-22"
   },
   "weekly_history": [
     {
@@ -342,7 +342,7 @@
     }
   ],
   "health_seen": {
-    "local_date": "2026-11-21",
+    "local_date": "2026-11-22",
     "sig": null
   },
   "health_reruns": {
@@ -376,7 +376,7 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-11-21"
+    "updated_local_date": "2026-11-22"
   },
   "notified": {
     "checkin": "2026-11-17"
