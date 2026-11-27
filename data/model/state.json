@@ -89,7 +89,7 @@
     "last_local_date": "2026-11-23",
     "last_weight_lb": 180.6,
     "trend_lb": 179.9,
-    "rate_14d_pct_bw_wk": 0.04
+    "rate_14d_pct_bw_wk": 0.05
   },
   "tdee": {
     "method": "blend",
@@ -159,13 +159,9 @@
     }
   ],
   "progression": {},
-  "last_daily_run_local_date": "2026-11-26",
+  "last_daily_run_local_date": "2026-11-27",
   "last_weekly_run_week": "2026-11-22",
   "readiness_history": [
-    {
-      "local_date": "2026-11-06",
-      "status": "green"
-    },
     {
       "local_date": "2026-11-07",
       "status": "amber"
@@ -245,10 +241,14 @@
     {
       "local_date": "2026-11-26",
       "status": "green"
+    },
+    {
+      "local_date": "2026-11-27",
+      "status": "green"
     }
   ],
-  "health_missing_on": "2026-11-26",
-  "last_daily_run_utc": "2026-11-26T17:09:17.476Z",
+  "health_missing_on": "2026-11-27",
+  "last_daily_run_utc": "2026-11-27T17:09:39.239Z",
   "last_daily_run_tz": "America/Los_Angeles",
   "health_rerun_on": "2026-11-14",
   "hr_zones": {
@@ -274,7 +274,7 @@
         "max": -1
       }
     ],
-    "updated_local_date": "2026-11-26"
+    "updated_local_date": "2026-11-27"
   },
   "weekly_history": [
     {
@@ -342,7 +342,7 @@
     }
   ],
   "health_seen": {
-    "local_date": "2026-11-26",
+    "local_date": "2026-11-27",
     "sig": null
   },
   "health_reruns": {
@@ -353,30 +353,30 @@
     "zones": [
       {
         "min": 0,
-        "max": 2.771
+        "max": 2.756
       },
       {
-        "min": 2.771,
-        "max": 3.219
+        "min": 2.756,
+        "max": 3.201
       },
       {
-        "min": 3.219,
-        "max": 3.585
+        "min": 3.201,
+        "max": 3.566
       },
       {
-        "min": 3.585,
-        "max": 3.83
+        "min": 3.566,
+        "max": 3.809
       },
       {
-        "min": 3.83,
-        "max": 4.074
+        "min": 3.809,
+        "max": 4.052
       },
       {
-        "min": 4.074,
+        "min": 4.052,
         "max": -1
       }
     ],
-    "updated_local_date": "2026-11-26"
+    "updated_local_date": "2026-11-27"
   },
   "notified": {
     "checkin": "2026-11-24"
